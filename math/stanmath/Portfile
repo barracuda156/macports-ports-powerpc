@@ -1,0 +1,89 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               boost 1.0
+PortGroup               github 1.0
+
+github.setup            stan-dev math 4.4.0 v
+name                    stanmath
+categories              math
+maintainers             {@barracuda156 gmail.com:vital.had} {@catap korins.ky:kirill} openmaintainer
+license                 BSD-3-Clause
+description             C++ template library for automatic differentiation
+long_description        The Stan Math Library is a C++, reverse-mode automatic differentiation library designed to be usable, \
+                        extensive and extensible, efficient, scalable, stable, portable and redistributable in order to facilitate \
+                        the construction and utilization of algorithms that utilize derivatives.
+homepage                https://mc-stan.org/math/
+checksums               rmd160  a0b4ce501d1c0ab12d46d5ad7a8ac60002624ff3 \
+                        sha256  09cf0cd534aa7420b721f81067f8a261ce66c7135c0fd4843216b6d1b3c6f286 \
+                        size    29803896
+
+# Condition is to be dropped once external libs are used properly.
+if {![variant_isset tests]} {
+    supported_archs     noarch
+    installs_libs       no
+}
+
+# Choice of upstream:
+boost.version           1.78
+boost.depends_type      run
+
+depends_run-append      port:eigen3 \
+                        port:sundials
+
+if {${os.platform} eq "darwin" && ${os.major} < 9} {
+    depends_run-append  path:include/tbb/task_arena.h:tbb
+} else {
+    depends_run-append  path:include/tbb/task_arena.h:onetbb
+}
+
+use_configure           no
+
+build                   {}
+
+destroot {
+    copy ${worksrcpath}/stan ${destroot}${prefix}/include
+}
+
+# Below is implemented the complete build with tests.
+variant tests description "Build and run tests" {
+
+    set py_ver          3.10
+    set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+    depends_test-append port:cppunit \
+                        port:gtest \
+                        port:gtest \
+                        port:python${py_ver_nodot} \
+                        port:py${py_ver_nodot}-setuptools
+
+    configure.args-append \
+                        TBB=${prefix} \
+                        TBB_INC=${prefix}include/tbb \
+                        TBB_LIB=${prefix}/lib
+
+    # Alternatively, a compiler define -DTBB_INTERFACE_NEW chooses oneTBB over TBB
+    if {${os.platform} eq "darwin" && ${os.major} >= 9} {
+        configure.args-append \
+                        TBB_INTERFACE_NEW=true
+    }
+
+    compiler.cxx_standard 2011
+
+    # Tests are not fixed.
+    test.run            yes
+    test.cmd            "${prefix}/bin/python${py_ver} ./runTests.py"
+    # At the moment stanmath uses for tests dependencies provided by upstream. We would want to use ours.
+    # To sterilize environment and avoid duplicate linking use:
+    # test.env            DYLD_LIBRARY_PATH=${workpath}
+    # The following code fails to work correctly, but we need to pass -D_BOOST_LGAMMA somehow, as minimum:
+    if {${os.platform} eq "darwin" && ([string match *gcc* ${configure.compiler}])} {
+        test.env-append CXX="${configure.cxx} [get_canonical_archflags cxx] -D_DARWIN_C_SOURCE -D_BOOST_LGAMMA"
+    } else {
+        test.env-append CXX="${configure.cxx} [get_canonical_archflags cxx] -D_BOOST_LGAMMA"
+    }
+    if {${configure.build_arch} in [list i386 ppc]} {
+        test.env-append BENCHMARK_BUILD_32_BITS=ON
+    }
+    test.args-append    -j${build.jobs}
+}

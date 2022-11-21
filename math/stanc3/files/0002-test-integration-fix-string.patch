@@ -1,0 +1,38 @@
+From 2cbd57f266de56aa148432c1c8650f00060342f9 Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 05:56:57 +0800
+Subject: [PATCH 2/2] test/integration: fix string
+
+---
+ test/integration/dune               | 2 +-
+ test/integration/run_bin_on_args.ml | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/test/integration/dune b/test/integration/dune
+index 867445fa..381ab58f 100644
+--- a/test/integration/dune
++++ b/test/integration/dune
+@@ -1,7 +1,7 @@
+ (executable
+  (name run_bin_on_args)
+  (public_name run_bin_on_args)
+- (libraries core core_unix core_unix.sys_unix))
++ (libraries base core core_unix core_unix.sys_unix))
+ 
+ (cram
+  (applies_to :whole_subtree)
+diff --git a/test/integration/run_bin_on_args.ml b/test/integration/run_bin_on_args.ml
+index 53402aa1..53123a9f 100644
+--- a/test/integration/run_bin_on_args.ml
++++ b/test/integration/run_bin_on_args.ml
+@@ -1,5 +1,7 @@
+ open Core_unix
+ module Unix = Sys_unix
++open Base
++module String
+ 
+ let maybe_convert_cmd_to_windows cmd =
+   let pattern = "/install/default/bin/" in
+-- 
+2.38.1
+

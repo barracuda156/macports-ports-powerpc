@@ -1,0 +1,38 @@
+From 7debe79b89156774c1bbc0d0c97570da4fa8d94c Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 02:53:30 +0800
+Subject: [PATCH 1/2] test/integration: use Sys_unix
+
+---
+ test/integration/dune               | 2 +-
+ test/integration/run_bin_on_args.ml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/test/integration/dune b/test/integration/dune
+index a53efd44..867445fa 100644
+--- a/test/integration/dune
++++ b/test/integration/dune
+@@ -1,7 +1,7 @@
+ (executable
+  (name run_bin_on_args)
+  (public_name run_bin_on_args)
+- (libraries core_kernel core_kernel.caml_unix))
++ (libraries core core_unix core_unix.sys_unix))
+ 
+ (cram
+  (applies_to :whole_subtree)
+diff --git a/test/integration/run_bin_on_args.ml b/test/integration/run_bin_on_args.ml
+index e1bc6727..53402aa1 100644
+--- a/test/integration/run_bin_on_args.ml
++++ b/test/integration/run_bin_on_args.ml
+@@ -1,5 +1,5 @@
+-open Core_kernel
+-module Unix = Caml_unix
++open Core_unix
++module Unix = Sys_unix
+ 
+ let maybe_convert_cmd_to_windows cmd =
+   let pattern = "/install/default/bin/" in
+-- 
+2.38.1
+

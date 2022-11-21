@@ -11,7 +11,6 @@ conflicts           tbb
 name                onetbb
 revision            0
 categories          devel parallel
-platforms           darwin
 license             Apache-2
 maintainers         {outlook.com:mohd.akram @mohd-akram} openmaintainer
 
@@ -27,6 +26,29 @@ checksums           rmd160  0648cff27e3683eb6583c0e4db56f259e2aae113 \
 
 depends_lib-append  port:hwloc
 
+# PPC kinda fixed, but tests should be improved: https://github.com/oneapi-src/oneTBB/pull/840
+# Likely alignments problem, like it was with i2pd.
+patch.pre_args      -p1
+patchfiles-append   0001-oneTBB-restore-32-bit-support-and-PPC.patch
+
 compiler.cxx_standard  2011
 
+# Temporary fix for linking failure. To be dropped upon the next gcc12 update.
+# Related info: https://github.com/iains/darwin-toolchains-start-here/discussions/41
+compiler.blacklist-append \
+                    macports-gcc-12
+
 configure.args-append  -DTBB_TEST=OFF
+
+platform powerpc {
+    # proxy_overload_osx.h:115:15: error: 'size_t impl_pressure_relief(_malloc_zone_t*, size_t)' defined but not used
+    # task_group.h:304:82: error: suggest parentheses around assignment used as truth value
+    configure.cxxflags-append \
+                    -Wno-unused-function -Wno-parentheses
+}
+
+variant tests description {Enable tests} {
+    configure.args-replace \
+                    -DTBB_TEST=OFF -DTBB_TEST=ON
+    test.run        yes
+}

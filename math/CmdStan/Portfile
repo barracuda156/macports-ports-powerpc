@@ -1,0 +1,115 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               boost 1.0
+PortGroup               github 1.0
+
+github.setup            stan-dev cmdstan 2.30.1 v
+name                    CmdStan
+revision                0
+categories              math science
+maintainers             {@barracuda156 gmail.com:vital.had} {@catap korins.ky:kirill} openmaintainer
+license                 BSD-3-Clause
+description             Command line interface to Stan
+long_description        ${description}
+homepage                https://mc-stan.org/users/interfaces/cmdstan \
+                        https://mc-stan.org/docs/cmdstan-guide/index.html
+
+# Unlike the rest, this port is just a draft. It does not build yet.
+# Some discussion, partly outdated, here: https://discourse.mc-stan.org/t/stan-in-r-on-powerpc-g5-10-6-ppc-help-needed/25176
+# https://discourse.mc-stan.org/t/stan-in-r-on-powerpc-g5-10-6-ppc-help-needed/25176
+# In particular, it may be needed to make a rather special setting for Stan platform, since a user is expected to run Stan
+# from the build environment: it uses makefiles to build models executables. So apparently normal Macports setup wonʼt do.
+
+fetch.type              git
+post-fetch {
+    system -W ${worksrcpath} "git submodule update --init"
+}
+
+# Extract fails: Cannot mkdir: No such file or directory
+# checksums               rmd160  3411d358053d82b366d5439007eddf4c3ab2f3d0 \
+#                         sha256  00d0b93c945f03db9023d74db2aae2191a3e17bc2e3405ee9fd622f24c577e51 \
+#                         size    1652560
+
+boost.version           1.78
+
+depends_lib-append      path:lib/pkgconfig/RapidJSON.pc:rapidjson \
+                        port:CLI11 \
+                        port:eigen3 \
+                        port:stan \
+                        port:stanc3 \
+                        port:sundials
+
+if {${os.platform} eq "darwin" && ${os.major} < 9} {
+    depends_lib-append  path:lib/libtbb.dylib:tbb
+} else {
+    depends_lib-append  path:lib/libtbb.dylib:onetbb
+}
+
+# CmdStan uses gmake to build model executables.
+depends_run-append      port:gmake
+
+if {[variant_isset mpi]} {
+    patchfiles-append   0001-make-add-MPI-variant-template.patch \
+                        0002-make-use-right-compiler.patch \
+                        0003-make-local-add-path-to-stanc3-folder.patch \
+                        0004-makefile-set-variables-for-external-deps.patch
+}
+
+compiler.cxx_standard   2011
+
+post-patch {
+    if {[variant_isset mpi]} {
+        move ${worksrcpath}/make/local.mpi ${worksrcpath}/make/local
+        set mpicxx      ${prefix}/bin/${mpi.cxx}
+        reinplace "s|@MPICXX@|${mpicxx}|" ${worksrcpath}/make/local
+    } else {
+        move ${worksrcpath}/make/local.example ${worksrcpath}/make/local
+    }
+    # Use the right compiler:
+    reinplace "s|@CXX@|${configure.cxx}|g" ${worksrcpath}/makefile
+    reinplace "s|@CXX@|${configure.cxx}|g" ${worksrcpath}/make/local
+    reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/make/local
+    reinplace "s|@STANINC@|${prefix}/include/stan|g" ${worksrcpath}/makefile
+    reinplace "s|@RAPIDJSON@|${prefix}/include/rapidjson|" ${worksrcpath}/makefile
+    reinplace "s|@CLI11@|${prefix}/include/CLI|" ${worksrcpath}/makefile
+
+    if {${build_arch} in [list i386 ppc]} {
+        # https://mc-stan.org/docs/2_30/cmdstan-guide/cmdstan-installation.html
+        system "echo BIT=32 >> ${worksrcpath}/make/local"
+        build.env-append BIT=32
+    }
+}
+
+use_configure           no
+
+configure.args-append   TBB=${prefix} \
+                        TBB_INC=${prefix}include/tbb \
+                        TBB_LIB=${prefix}/lib
+
+# Alternatively, a compiler define -DTBB_INTERFACE_NEW chooses oneTBB over TBB
+if {${os.platform} eq "darwin" && ${os.major} >= 9} {
+    configure.args-append \
+                        TBB_INTERFACE_NEW=true
+}
+
+if {${os.platform} eq "darwin" && ([string match *gcc* ${configure.compiler}])} {
+    configure.cxxflags-append "-D_DARWIN_C_SOURCE -D_BOOST_LGAMMA"
+} else {
+    configure.cxxflags-append "-D_BOOST_LGAMMA"
+}
+
+variant mpi description "Use mpich" {
+    PortGroup           mpi 1.0
+
+    build.env-append    STAN_MPI=1
+}
+
+set py_ver              3.10
+set py_ver_nodot        [string map {. {}} ${py_ver}]
+
+depends_test-append     port:python${py_ver_nodot} \
+                        port:py${py_ver_nodot}-setuptools
+
+test.run                yes
+test.cmd                "${prefix}/bin/python${py_ver} ./runCmdStanTests.py"

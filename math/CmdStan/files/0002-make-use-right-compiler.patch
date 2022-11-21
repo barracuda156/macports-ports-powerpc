@@ -1,0 +1,39 @@
+From d4aef4ad77cf5cba419e1cc2da038460a81d900e Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Fri, 18 Nov 2022 07:35:44 +0800
+Subject: [PATCH 2/4] make: use right compiler
+
+---
+ make/local.example | 2 +-
+ makefile           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/make/local.example b/make/local.example
+index 7c108cf..2f75b57 100644
+--- a/make/local.example
++++ b/make/local.example
+@@ -2,7 +2,7 @@
+ # Be sure to run `make clean-all` before compiling a model to make sure everything gets rebuilt.
+ 
+ # Change the C++ compiler
+-# CXX=clang++
++CXX=@CXX@
+ 
+ # Enable threading
+ # STAN_THREADS=true
+diff --git a/makefile b/makefile
+index 1758238..d89eeec 100644
+--- a/makefile
++++ b/makefile
+@@ -34,7 +34,7 @@ endif
+ ## Set default compiler
+ ifeq (default,$(origin CXX))
+   ifeq ($(OS),Darwin)  ## Darwin is Mac OS X
+-    CXX := clang++
++    CXX := @CXX@
+   endif
+   ifeq ($(OS),Linux)
+     CXX := g++
+-- 
+2.38.1
+

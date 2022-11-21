@@ -1,0 +1,31 @@
+From 5e6a7dfd841f19800603945029705233189b5605 Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 08:01:02 +0800
+Subject: [PATCH 4/4] makefile: set variables for external deps
+
+---
+ makefile | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/makefile b/makefile
+index d89eeec..91cf51c 100644
+--- a/makefile
++++ b/makefile
+@@ -19,10 +19,10 @@ help:
+ -include $(HOME)/.config/stan/make.local  # user-defined variables
+ -include make/local                       # user-defined variables
+ 
+-STAN ?= stan/
+-MATH ?= $(STAN)lib/stan_math/
+-RAPIDJSON ?= lib/rapidjson_1.1.0/
+-CLI11 ?= lib/CLI11-1.9.1/
++STAN := @STANINC@
++MATH := @STANINC@/math/
++RAPIDJSON := @RAPIDJSON@
++CLI11 := @CLI11@
+ INC_FIRST ?= -I src -I $(STAN)src -I $(RAPIDJSON) -I $(CLI11)
+ USER_HEADER ?= $(dir $<)user_header.hpp
+ 
+-- 
+2.38.1
+

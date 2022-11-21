@@ -1,0 +1,51 @@
+From 5132b0318a192ccd419907b15c5554f2f3070aba Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Fri, 18 Nov 2022 07:26:30 +0800
+Subject: [PATCH 1/4] make: add MPI variant template
+
+---
+ make/local.mpi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 make/local.mpi
+
+diff --git a/make/local.mpi b/make/local.mpi
+new file mode 100644
+index 0000000..c08af47
+--- /dev/null
++++ b/make/local.mpi
+@@ -0,0 +1,32 @@
++# To use this template, make a copy from make/local.example to make/local and uncomment options as needed.
++# Be sure to run `make clean-all` before compiling a model to make sure everything gets rebuilt.
++
++# Change the C++ compiler
++# CXX=clang++
++
++# Enable threading
++# STAN_THREADS=true
++
++# Enable the MPI backend (requires also setting (replace gcc with clang on Mac)
++STAN_MPI=true
++CXX=@MPICXX@
++TBB_CXX_TYPE=@CXX@
++
++# Enable the OpenCL backend
++# STAN_OPENCL=true
++
++# Add flags that are forwarded to the Stan-to-C++ compiler (stanc3).
++# This example enables pedantic mode
++# STANCFLAGS+= --warn-pedantic
++
++# Enable C++ compiler and linker optimization recommended by Stan developers.
++# Can significantly slow down compilation.
++# STAN_CPP_OPTIMS=true
++
++# Remove range checks from the model for faster runtime. Use this flag with caution
++# and only once the indexing has been validated. In case of any unexpected behavior
++# remove the flag for easier debugging.
++# STAN_NO_RANGE_CHECKS=true
++
++# Adding other arbitrary C++ compiler flags
++# CXXFLAGS+= -funroll-loops
+-- 
+2.38.1
+

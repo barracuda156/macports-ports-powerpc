@@ -1,0 +1,25 @@
+From 67f40189f185f98f4cdb3a25cedb33687e111b70 Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 07:29:00 +0800
+Subject: [PATCH 3/4] make/local: add path to stanc3 folder
+
+---
+ make/local     | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/make/local b/make/local
+index 2f75b57..1ebd476 100644
+--- a/make/local
++++ b/make/local
+@@ -15,6 +15,8 @@ CXX=@CXX@
+ # Enable the OpenCL backend
+ # STAN_OPENCL=true
+ 
++STANC3=@PREFIX@/lib/ocaml/site-lib/stanc
++
+ # Add flags that are forwarded to the Stan-to-C++ compiler (stanc3).
+ # This example enables pedantic mode
+ # STANCFLAGS+= --warn-pedantic
+-- 
+2.38.1
+

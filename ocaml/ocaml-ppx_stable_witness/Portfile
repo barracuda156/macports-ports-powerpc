@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_stable_witness 0a686cfcead3b74e50b1884d14dd9d2d64828fbf
+name                ocaml-ppx_stable_witness
+version             2022.10.13
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx extension for deriving a witness that a type is intended to be stable.
+long_description    ${description}
+
+checksums           rmd160  0ef381617f19869472b43ed45b9078129cee4151 \
+                    sha256  d17053692444a2b5aee67f9d423d54cfe021d58e805b8d8afc5120fc4637d535 \
+                    size    7572
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

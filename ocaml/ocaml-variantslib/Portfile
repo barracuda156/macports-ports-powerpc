@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet variantslib 0.15.0 v
+name                ocaml-variantslib
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         OCaml variants as first class values.
+long_description    ${description}
+
+checksums           rmd160  ac797c3c866f0c35cbe2f87565486752c9afdd3a \
+                    sha256  b99533dd30619581ed1d87ab8d31e61c8e0bafcf3f9fd2c4f16536327e742e2f \
+                    size    2953
+
+ocaml.build_type    dune

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_base 0.15.0 v
+name                ocaml-ppx_base
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Base set of ppx rewriters
+long_description    ${description}
+
+checksums           rmd160  2b2c449e0acbf85982fa3c60dcdd94fa9de440dc \
+                    sha256  7ab0518241278b5d0051c5c8945300828089d9977444c39144af9764d684f92b \
+                    size    2948
+
+depends_lib-append  port:ocaml-ppx_cold \
+                    port:ocaml-ppx_compare \
+                    port:ocaml-ppx_enumerate \
+                    port:ocaml-ppx_hash \
+                    port:ocaml-ppx_sexp_conv \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

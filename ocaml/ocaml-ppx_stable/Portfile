@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_stable 0.15.0 v
+name                ocaml-ppx_stable
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx extension for easier implementation of conversion functions between almost identical types.
+long_description    ${description}
+
+checksums           rmd160  8e2f65147704323657dc101f3e1d3c48da3deee6 \
+                    sha256  13f38ea75b9fd718844976513110787fa2c30b09085d8ba7ee857fcfc1ed3698 \
+                    size    18143
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-compiler-libs \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

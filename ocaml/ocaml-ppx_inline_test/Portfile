@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_inline_test 0.15.0 v
+name                ocaml-ppx_inline_test
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Syntax extension for writing in-line tests in OCaml code.
+long_description    ${description}
+
+checksums           rmd160  812b8eeab16f92de69dd24feb86f0b38afb5ac80 \
+                    sha256  778d28190681563cae340ec4c5952d652d0e873f3a802fa77a4f76cc7c928795 \
+                    size    20733
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-time_now
+
+ocaml.build_type    dune

@@ -1,0 +1,86 @@
+--- src/fsevents/fsevents_stubs.c.orig	2022-11-14 22:11:03.000000000 +0800
++++ src/fsevents/fsevents_stubs.c	2022-11-19 02:23:03.000000000 +0800
+@@ -7,8 +7,10 @@
+ #include <caml/threads.h>
+ 
+ #if defined(__APPLE__)
++#include <AvailabilityMacros.h>
++#endif
+ 
+-#include <Availability.h>
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070 // Fine-tuned code below fails to link, adopt an ugly workaround like here: https://github.com/ocaml/dune/pull/5431
+ #include <CoreFoundation/CoreFoundation.h>
+ #include <CoreServices/CoreServices.h>
+ 
+@@ -64,8 +66,10 @@
+ }
+ 
+ static FSEventStreamEventFlags interesting_flags =
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+     kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemRemoved |
+     kFSEventStreamEventFlagItemRenamed | kFSEventStreamEventFlagItemModified |
++#endif
+     kFSEventStreamEventFlagMustScanSubDirs;
+ 
+ static void dune_fsevents_callback(const FSEventStreamRef streamRef,
+@@ -157,7 +161,10 @@
+ #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 101300
+       kFSEventStreamCreateFlagUseExtendedData |
+ #endif
+-      kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagFileEvents;
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
++      kFSEventStreamCreateFlagFileEvents |
++#endif
++      kFSEventStreamCreateFlagUseCFTypes;
+ 
+   dune_fsevents_t *t;
+   t = caml_stat_alloc(sizeof(dune_fsevents_t));
+@@ -176,6 +183,7 @@
+   CAMLreturn(caml_copy_nativeint((intnat)t));
+ }
+ 
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+ CAMLprim value dune_fsevents_set_exclusion_paths(value v_t, value v_paths) {
+   CAMLparam2(v_t, v_paths);
+   CAMLlocal1(path);
+@@ -190,6 +198,7 @@
+   }
+   CAMLreturn(Val_unit);
+ }
++#endif
+ 
+ CAMLprim value dune_fsevents_start(value v_t, value v_runloop) {
+   CAMLparam2(v_t, v_runloop);
+@@ -249,6 +258,7 @@
+   CAMLreturn(Val_unit);
+ }
+ 
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+ CAMLprim value dune_fsevents_kind(value v_flags) {
+   CAMLparam1(v_flags);
+   CAMLlocal1(v_kind);
+@@ -284,6 +294,8 @@
+ 
+   CAMLreturn(v_action);
+ }
++#endif
++
+ static const FSEventStreamEventFlags all_flags[] = {
+     kFSEventStreamEventFlagMustScanSubDirs,
+     kFSEventStreamEventFlagUserDropped,
+@@ -293,6 +305,7 @@
+     kFSEventStreamEventFlagRootChanged,
+     kFSEventStreamEventFlagMount,
+     kFSEventStreamEventFlagUnmount,
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+     kFSEventStreamEventFlagItemCreated,
+     kFSEventStreamEventFlagItemRemoved,
+     kFSEventStreamEventFlagItemInodeMetaMod,
+@@ -310,6 +323,7 @@
+ #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 101300
+     kFSEventStreamEventFlagItemCloned,
+ #endif
++#endif
+ };
+ 
+ CAMLprim value dune_fsevents_raw(value v_flags) {

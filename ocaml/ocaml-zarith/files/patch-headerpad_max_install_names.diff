@@ -1,0 +1,11 @@
+--- Makefile.orig	2022-11-19 18:06:21.000000000 +0800
++++ Makefile	2022-11-19 18:11:01.000000000 +0800
+@@ -10,7 +10,7 @@
+ OCAMLOPTFLAGS=
+ OCAMLINC=
+ CFLAGS=-I/opt/local/lib/ocaml -I/opt/local/include -DHAS_GMP  -pipe -Os
+-LIBS=-L/opt/local/lib -Wl,-headerpad_max_install_names -lgmp
++LIBS=-L/opt/local/lib -lgmp
+ INSTALLDIR=/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_macports_release_tarballs_ports_ocaml_ocaml-zarith/ocaml-zarith/work/destroot/opt/local/lib/ocaml/site-lib
+ INSTALL=install
+ OCAMLFIND=ocamlfind

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet textutils_kernel 0.15.0 v
+name                ocaml-textutils_kernel
+revision            0
+github.tarball_from archive
+categories          ocaml textproc
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         The subset of textutils using only core_kernel and working in javascript.
+long_description    ${description}
+
+checksums           rmd160  520f426c1c43b491bdce50ad3370f51cc723cbd6 \
+                    sha256  be8ea1ea18ed143918ffd8703d1b419fed9eedfc4336e9cf01073c6bf501c38c \
+                    size    17691
+
+depends_lib-append  port:ocaml-core \
+                    port:ocaml-ppx_jane \
+                    port:ocaml-uutf
+
+ocaml.build_type    dune

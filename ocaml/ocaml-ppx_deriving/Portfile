@@ -1,24 +1,19 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup github    1.0
-PortGroup ocaml     1.1
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
 
-name                ocaml-ppx_deriving
 github.setup        ocaml-ppx ppx_deriving 5.2.1 v
+name                ocaml-ppx_deriving
 revision            1
-
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
 license             MIT
 description         Type-driven code generation for OCaml
 long_description    Common infrastructure for generating OCaml code based \
-                    on type definitions, and a set of useful plugins for \
-                    common tasks.
+                    on type definitions, and a set of useful plugins for common tasks.
 
-platforms           darwin
-
-#distname            ${version}
 checksums           rmd160  7d9df12164fa4d5060b0c505d5e2d0fc1d3bbf11 \
                     sha256  e73f328de5aa4115852589ed0fa6e4f7b27bdb1f19f213c1fa3bbe1e6bcde18f \
                     size    46156
@@ -27,7 +22,7 @@ ocaml.build_type    dune
 
 depends_build       port:ocaml-cppo
 
-depends_lib         port:ocaml-ppxlib \
+depends_lib-append  port:ocaml-ppxlib \
                     port:ocaml-findlib \
                     port:ocaml-ppx_derivers \
                     port:ocaml-ppx_tools \

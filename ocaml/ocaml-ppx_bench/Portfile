@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_bench 0.15.0 v
+name                ocaml-ppx_bench
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Syntax extension for writing in-line benchmarks in OCaml code.
+long_description    ${description}
+
+checksums           rmd160  03a1ed4fbb8223a45659a7a1b1a13616726d39ae \
+                    sha256  e793d7780edb65bd011ee196094aa1a29663169f92724d3da6af5b4bbd96d319 \
+                    size    9542
+
+depends_lib-append  port:ocaml-ppxlib \
+                    port:ocaml-ppx_inline_test
+
+ocaml.build_type    dune

@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        ocaml-community lambda-term 3.3.1
+name                ocaml-lambda-term
+revision            0
+categories          ocaml devel editors
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             BSD-3-Clause
+description         Cross-platform library for manipulating the terminal
+long_description    Lambda-Term is a cross-platform library for manipulating the terminal. It provides \
+                    an abstraction for keys, mouse events, colors, as well as a set of widgets to write curses-like applications.
+
+checksums           rmd160  f8880557f11c82805c9aab41fde867c7ef0c4763 \
+                    sha256  9c73055b0cfde2adf633e7217cb8d63f2c24dfd1015b77e3fe6291cca1a2f6eb \
+                    size    142581
+
+depends_lib-append  port:ocaml-logs \
+                    port:ocaml-lwt \
+                    port:ocaml-lwt_react \
+                    port:ocaml-mew_vi \
+                    port:ocaml-react \
+                    port:ocaml-zed
+
+ocaml.build_type    dune

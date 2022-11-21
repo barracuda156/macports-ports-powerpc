@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_module_timer 0.15.0 v
+name                ocaml-ppx_module_timer
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx extension to record module startup times.
+long_description    ${description}
+
+checksums           rmd160  65b25ab7b935e38b7f2efd0d17c6de23b9325858 \
+                    sha256  818a86f1e6a5eb3aad0d7472c7ee4bc6a00b925dbaeed2b0689b126b6b0ef7d2 \
+                    size    7242
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppx_base \
+                    port:ocaml-ppxlib \
+                    port:ocaml-stdio \
+                    port:ocaml-time_now
+
+ocaml.build_type    dune

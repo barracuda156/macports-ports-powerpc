@@ -27,6 +27,8 @@ checksums           rmd160  0040c5f2352266123125e6ad0593e124aefeb9d5 \
 
 depends_build       port:ocaml
 
+compiler.cxx_standard 2011
+
 # This prevents configure from trying to use a program to fetch dependencies.
 # We don't need or want one.
 configure.env-append  FETCH=no
@@ -39,6 +41,11 @@ configure.env-append  FETCH=no
 #   doc/opam-installer, and there is no /opt/local/doc.
 patchfiles          patch-stop-fetch-check.diff \
                     patch-makefile.diff
+
+platform darwin powerpc {
+    configure.args-append \
+                    --without-mccs
+}
 
 use_parallel_build  no
 build.target        lib-ext all

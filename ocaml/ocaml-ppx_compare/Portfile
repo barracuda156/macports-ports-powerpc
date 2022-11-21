@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_compare 0.15.0 v
+name                ocaml-ppx_compare
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Generation of fast comparison and equality functions from type expressions and definitions.
+long_description    ${description}
+
+checksums           rmd160  cbc0972cee03ad57977bc3233e9c51e376d26c2e \
+                    sha256  604d4e83a1c871e8e60d923d6a4d813b620c4738293b5e9c8ed786d549b8e541 \
+                    size    13909
+
+depends_lib-append  port:ocaml-base
+
+ocaml.build_type    dune

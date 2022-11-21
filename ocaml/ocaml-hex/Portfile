@@ -5,21 +5,15 @@ PortGroup           github 1.0
 PortGroup           ocaml 1.1
 
 name                ocaml-hex
-github.setup        mirage ${name} 1.4.0 v
-revision            1
+github.setup        mirage ${name} 1.5.0 v
+revision            0
 
 categories          ocaml devel
-platforms           darwin
 license             ISC
 maintainers         {landonf @landonf} openmaintainer
 
 description         Hexadecimal converter library for OCaml
 long_description    {*}${description}.
-
-github.tarball_from releases
-
-use_bzip2           yes
-extract.suffix      .tbz
 
 distname            hex-${git.branch}
 checksums           rmd160  9ad9d12ae46e3f97ee6c55a185724a3091171407 \

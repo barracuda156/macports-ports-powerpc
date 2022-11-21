@@ -1,0 +1,42 @@
+--- otherlibs/csexp/src/dune.orig	2022-11-14 22:11:03.000000000 +0800
++++ otherlibs/csexp/src/dune	2022-11-19 15:10:46.000000000 +0800
+@@ -1,5 +1,4 @@
+ (library
+  (name csexp)
+- ;; note that this library is deleted in release mode so that the one from opam
+- ;; is used
+- (public_name stdune.csexp))
++ ;; dune fails to use an external package.
++ (public_name csexp))
+
+--- boot/libs.ml.orig	2022-11-14 22:11:03.000000000 +0800
++++ boot/libs.ml	2022-11-19 15:15:36.000000000 +0800
+@@ -8,7 +8,7 @@
+   ; ("otherlibs/dyn", Some "Dyn", false, None)
+   ; ("otherlibs/stdune/dune_filesystem_stubs", Some "Dune_filesystem_stubs",
+     false, None)
+-  ; ("vendor/csexp/src", Some "Csexp", false, None)
++  ; ("otherlibs/csexp/src", Some "Csexp", false, None)
+   ; ("otherlibs/stdune", Some "Stdune", false, None)
+   ; ("src/dune_graph", Some "Dune_graph", false, None)
+   ; ("vendor/incremental-cycles/src", Some "Incremental_cycles", false, None)
+
+--- dune-project.orig	2022-11-14 22:11:03.000000000 +0800
++++ dune-project	2022-11-19 15:29:56.000000000 +0800
+@@ -101,6 +101,16 @@
+ - generate config.h file
+ "))
+ 
++
++(package
++ (name csexp)
++ (synopsis "Support for canonical S-expressions")
++ (depends
++  (ocaml (>= 4.03.0))
++  (dune (>= 1.11)))
++ (description "Dynamic type"))
++
++
+ (package
+  (name dune-action-plugin)
+  (synopsis "[experimental] API for writing dynamic Dune actions")

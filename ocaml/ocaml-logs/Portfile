@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        dbuenzli logs 0.7.0 v
+name                ocaml-logs
+revision            0
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             ISC
+description         Logging infrastructure for OCaml
+long_description    ${description}
+homepage            http://erratique.ch/software/logs
+checksums           rmd160  8b8df1a04ba72c5e18b5963563159d6cd0392c09 \
+                    sha256  9b0cc79ec0fc4dfb019e3bb04859e4752857c1b380422670d3a664bf159a2876 \
+                    size    21531
+
+depends_build-append \
+                    port:ocaml-ocamlbuild
+depends_lib-append  port:ocaml-cmdliner \
+                    port:ocaml-fmt \
+                    port:ocaml-js_of_ocaml \
+                    port:ocaml-lwt
+depends_test-append port:ocaml-mtime
+
+ocaml.build_type    topkg

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_optional 0.15.0 v
+name                ocaml-ppx_optional
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx rewriter that rewrites simple match statements with an if then else expression.
+long_description    ${description}
+
+checksums           rmd160  0d6cd91b98503e863f60a2bea6e22fddf3ba8d38 \
+                    sha256  7b43aa27f9dcf87cb62b77ba75217d8efac2b56b66287163e7504a727b91c9e9 \
+                    size    6091
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

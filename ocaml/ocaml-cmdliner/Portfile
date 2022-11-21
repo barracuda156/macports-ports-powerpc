@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        dbuenzli cmdliner 1.1.1 v
+name                ocaml-cmdliner
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             ISC
+description         ${name} allows the declarative definition of command line interfaces for OCaml.
+long_description    ${description}
+homepage            http://erratique.ch/software/cmdliner
+checksums           rmd160  5b25ea01d910fa88a7221fb73820147d6fa31032 \
+                    sha256  86a4f17a10515f26e1c97f197c2254ed0904a131a65d61c21ccc196fb3364c1e \
+                    size    70723
+
+ocaml.build_type    dune

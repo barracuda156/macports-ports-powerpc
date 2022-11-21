@@ -1,0 +1,27 @@
+From 78b727fd2be66368ebb2a0f3c3272ef143ad245c Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 00:23:40 +0800
+Subject: [PATCH] ocaml-extlib: fix Makefile to include bytecode-only target
+
+---
+ Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index e122783..e6ad866 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,6 +13,10 @@ endif
+ build:
+ 	$(MAKE) -C src build
+ 
++# bytecode-only target:
++all:
++	$(MAKE) -C src all
++
+ install:
+ 	$(MAKE) -C src VERSION=$(VERSION) install
+ 
+-- 
+2.38.1
+

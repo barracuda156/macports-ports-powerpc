@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet patdiff 0.12.1 v
+name                ocaml-patdiff
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Colored patience diffs with word-level refinement
+long_description    Patdiff is an OCaml implementation of Bram Cohenʼs patience diff algorithm, \
+                    with a few extra conveniences for comparing code and config files.
+homepage            https://opensource.janestreet.com/patdiff
+
+checksums           rmd160  9dbb82b53c209390c6a0fb48245c05757495a5fb \
+                    sha256  af17e2278b56ca99f02c695b8ab5a24c9a093aff6c1c2cbc35256d14ab2603f0 \
+                    size    213097
+
+depends_lib-append  port:ocaml-core \
+                    port:ocaml-core_extended \
+                    port:ocaml-core_kernel \
+                    port:ocaml-core_unix \
+                    port:ocaml-expect_test_helpers \
+                    port:ocaml-expect_test_helpers_core \
+                    port:ocaml-patience_diff \
+                    port:ocaml-pcre \
+                    port:ocaml-ppx_jane \
+                    port:ocaml-re \
+                    port:ocaml-shell
+
+# Broken due to ocaml-expect_test_helpers.
+
+ocaml.build_type    dune

@@ -5,8 +5,8 @@ PortGroup github    1.0
 PortGroup ocaml     1.1
 
 name                ocaml-ppx_deriving_yojson
-github.setup        whitequark ppx_deriving_yojson 3.6.1 v
-revision            1
+github.setup        whitequark ppx_deriving_yojson 3.7.0 v
+revision            0
 
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
@@ -15,12 +15,10 @@ description         OCaml ppx_deriving plugin for Yojson
 long_description    An OCaml ppx_deriving plugin that generates JSON serializers and \
                     deserializers using the Yjoson library.
 
-platforms           darwin
-
 distname            ${version}
-checksums           rmd160  fffaaf857dfc409df5305f3f6da266f2ff611bff \
-                    sha256  74c34253322fd60b776e690640828b86b7e47abf8670502f1f8cdd7dd1422ace \
-                    size    19492
+checksums           rmd160  966d1be7d3e1838086c0e574c622602f82370b21 \
+                    sha256  f417cad0a51086219d2b8fd756c1fe8fb9aaa13c84c62eb0cc8efebf704f6d09 \
+                    size    20038
 
 ocaml.build_type    dune
 

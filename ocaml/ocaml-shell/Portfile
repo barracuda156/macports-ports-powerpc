@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet shell 0.15.0 v
+name                ocaml-shell
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Implementation of fork&exec and related functionality.
+long_description    Yet another implementation of fork&exec and related functionality. \
+                    Functions for invoking executables and for running bash in a subprocess.
+
+checksums           rmd160  f7c9be5fe8ff824b6c4fd881e2a26b2fd64a52ab \
+                    sha256  40d6d64177bbc3db15b7e551d122c47a9b1326c9dd16e59e82a46a3a5481a0fa \
+                    size    40784
+
+depends_lib-append  port:ocaml-core \
+                    port:ocaml-core_unix \
+                    port:ocaml-jst-config \
+                    port:ocaml-ppx_jane \
+                    port:ocaml-textutils \
+                    port:ocaml-spawn
+
+ocaml.build_type    dune

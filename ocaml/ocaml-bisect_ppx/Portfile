@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        aantron bisect_ppx 2.8.1
+name                ocaml-bisect_ppx
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Code coverage tool for OCaml and Reason
+long_description    ${description}
+
+checksums           rmd160  75d3e33bb0c9cc44d1c2c5dbb4c18ca7fbaa3bc3 \
+                    sha256  e3a264e1303606dc104c6674738754b4ab67bc3c428925851f54362fe6d9ffbc \
+                    size    327206
+
+depends_lib-append  port:ocaml-cmdliner \
+                    port:ocaml-ppxlib
+
+patchfiles          patch-ppxlib-compatibility.diff
+
+ocaml.build_type    dune

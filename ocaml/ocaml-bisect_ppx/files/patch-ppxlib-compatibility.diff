@@ -1,0 +1,68 @@
+# https://github.com/aantron/bisect_ppx/pull/400
+
+--- bisect_ppx.opam.orig	2022-03-14 15:39:55.000000000 +0800
++++ bisect_ppx.opam	2022-11-21 01:49:29.000000000 +0800
+@@ -22,7 +22,7 @@
+   "cmdliner" {>= "1.0.0"}
+   "dune" {>= "2.7.0"}
+   "ocaml" {>= "4.03.0"}
+-  "ppxlib" {>= "0.21.0"}
++  "ppxlib" {>= "0.26.0"}
+ 
+   "ocamlformat" {with-test & = "0.16.0"}
+ ]
+
+--- src/ppx/instrument.ml.orig	2022-03-14 15:39:55.000000000 +0800
++++ src/ppx/instrument.ml	2022-11-21 01:57:27.000000000 +0800
+@@ -490,10 +490,10 @@
+         |> List.map (fun (location_trace, p'') ->
+           (location_trace, Pat.alias ~loc ~attrs p'' x))
+ 
+-      | Ppat_construct (c, Some p') ->
++      | Ppat_construct (c, Some (exnames, p')) ->
+         recur ~enclosing_loc p'
+         |> List.map (fun (location_trace, p'') ->
+-          (location_trace, Pat.construct ~loc ~attrs c (Some p'')))
++          (location_trace, Pat.mk  ~loc ~attrs Pat.(Ppat_construct (c, Some(exnames, p'')))))
+ 
+       | Ppat_variant (c, Some p') ->
+         recur ~enclosing_loc p'
+@@ -708,7 +708,7 @@
+       List.map (fun (_, p') -> bound_variables p') fields
+       |> List.flatten
+ 
+-    | Ppat_construct (_, Some p') | Ppat_variant (_, Some p')
++    | Ppat_construct (_, Some (_, p')) | Ppat_variant (_, Some p')
+     | Ppat_constraint (p', _) | Ppat_lazy p' | Ppat_exception p'
+     | Ppat_open (_, p') ->
+       bound_variables p'
+@@ -725,7 +725,7 @@
+     | Ppat_type _ | Ppat_variant _ ->
+       true
+ 
+-    | Ppat_alias (p', _) | Ppat_construct (_, Some p')
++    | Ppat_alias (p', _) | Ppat_construct (_, Some (_, p'))
+     | Ppat_constraint (p', _) | Ppat_lazy p' | Ppat_exception p'
+     | Ppat_open (_, p') ->
+       has_polymorphic_variant p'
+@@ -1039,7 +1039,7 @@
+   let instrument_cases = Generated_code.instrument_cases points in
+ 
+   object (self)
+-    inherit Ppxlib.Ast_traverse.map_with_expansion_context as super
++    inherit Ppxlib.Ast_traverse.map_with_expansion_context_and_errors as super
+ 
+     method! class_expr ctxt ce =
+       let loc = ce.pcl_loc in
+
+--- src/ppx/instrument.mli.orig	2022-03-14 15:39:55.000000000 +0800
++++ src/ppx/instrument.mli	2022-11-21 01:54:54.000000000 +0800
+@@ -5,7 +5,7 @@
+ 
+ 
+ class instrumenter : object
+-   inherit Ppxlib.Ast_traverse.map_with_expansion_context
++   inherit Ppxlib.Ast_traverse.map_with_expansion_context_and_errors
+ 
+    method transform_impl_file:
+       Ppxlib.Expansion_context.Base.t ->

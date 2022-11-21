@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet bin_prot 0.15.0 v
+name                ocaml-bin_prot
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         OCaml Type Converter for Binary Protocols
+long_description    ${description}
+
+checksums           rmd160  8c9f96280dfabd6b8249cb3ddb8634413f4976e1 \
+                    sha256  095c07e6416330bbfaeaa703ad356b9b133e4376d9b74ef0d34d6aebe7dd2d8a \
+                    size    345344
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-bigarray-compat \
+                    port:ocaml-ppx_compare \
+                    port:ocaml-ppx_sexp_conv \
+                    port:ocaml-ppx_fields_conv \
+                    port:ocaml-ppx_variants_conv
+
+ocaml.build_type    dune

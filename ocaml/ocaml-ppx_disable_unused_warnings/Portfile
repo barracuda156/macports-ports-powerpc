@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_disable_unused_warnings 0.15.0 v
+name                ocaml-ppx_disable_unused_warnings
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Extension that disables many OCaml compiler warnings.
+long_description    ${description}
+
+checksums           rmd160  1e629a40ee2a02ff468ebf2de42160cbd96681a0 \
+                    sha256  12c3fa409a23045c250bdaab4460684fcdccf114f8c1d7c11bc88171421e6193 \
+                    size    3968
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

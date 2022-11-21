@@ -26,7 +26,7 @@ checksums           rmd160  433a8afe819e703d028afa3eba2fcb7f7c4ada06 \
 depends_build       port:perl5
 depends_lib         port:ocaml port:ocaml-findlib port:gmp
 
-if {${build_arch} ne "ppc" || ${build_arch} ne "ppc64"} {
+if {${build_arch} ni [list ppc ppc64]} {
     # The following patch forces ocamlopt to be seen as available, but it is not on PPC
     # See: https://github.com/ocaml/Zarith/issues/125
     patchfiles      patch-configure.diff

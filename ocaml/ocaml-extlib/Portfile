@@ -3,21 +3,23 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        ygrek ocaml-extlib 1.7.6
+github.setup        ygrek ocaml-extlib 1.7.9
 revision            0
 categories          ocaml devel
 maintainers         {pmetzger @pmetzger} openmaintainer
 license             LGPL-2.1
-platforms           darwin
 description         Extended Standard Library for OCaml
 long_description    A User-supported Extended Standard Library for OCaml
 
-checksums           rmd160  f1e4572a6bd83f789c1493fc1389b56ab0849943 \
-                    sha256  f2d81ede59ec0c0f074623276638a3947c2fcbe5bdd810db84ee37d192169f1d \
-                    size    88084
+checksums           rmd160  67be2c9a21da459d321d66bea8f885f2fb16508a \
+                    sha256  1d4c8910c7c9a0132918d8699cf94783749267a69d48d455625cc89037219cbb \
+                    size    91104
 
 depends_build       port:ocaml-cppo
 depends_lib         port:ocaml port:ocaml-findlib
+
+patch.pre_args      -p1
+patchfiles          0001-ocaml-extlib-fix-Makefile-to-include-bytecode-only-t.patch
 
 use_configure       no
 
@@ -26,7 +28,13 @@ post-patch           {
 }
 
 use_parallel_build  no
-build.target        minimal=1 build
+
+if {${build_arch} in [list ppc ppc64]} {
+    build.target    minimal=1 all
+} else {
+    build.target    minimal=1 build
+}
+
 destroot.target     minimal=1 install
 
 pre-destroot {

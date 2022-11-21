@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet record_builder 0.15.0 v
+name                ocaml-record_builder
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Library which provides traversal of records with an applicative.
+long_description    ${description}
+
+checksums           rmd160  3b36146ec014d426c82cdc36b1491984b562c379 \
+                    sha256  7de99267ed6b800dff023b2c513b569af101794cc0706975d71e17087f6751cd \
+                    size    6927
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppx_jane
+
+ocaml.build_type    dune

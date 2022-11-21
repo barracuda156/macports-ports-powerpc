@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet fieldslib 0.15.0 v
+name                ocaml-fieldslib
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         OCaml record fields as first class values.
+long_description    ${description}
+
+checksums           rmd160  d5eef3d59e1e03a44756a3a3abcaf2135d2e0fd4 \
+                    sha256  14173c3c741eed33bff82b4a49e17a53c79be7a014b920f6a87517f072906ddf \
+                    size    3684
+
+ocaml.build_type    dune

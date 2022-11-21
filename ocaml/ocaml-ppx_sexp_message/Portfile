@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_sexp_message 0.15.0 v
+name                ocaml-ppx_sexp_message
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Easy construction of s-expressions
+long_description    ${description}
+
+checksums           rmd160  9773366e27230543a953f2fa1600064754ebdf49 \
+                    sha256  bcac22e8ea797d6b982211b173a16c17457c0c699eb6dec279e7ea318519654d \
+                    size    7772
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppxlib \
+                    port:ocaml-ppx_here \
+                    port:ocaml-ppx_sexp_conv
+
+ocaml.build_type    dune

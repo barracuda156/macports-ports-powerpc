@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_here 0.15.0 v
+name                ocaml-ppx_here
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx rewriter that defines an extension node whose value is its source position.
+long_description    ${description}
+
+checksums           rmd160  7a171bccd19c59af1b8887db244b108beac60b21 \
+                    sha256  24814f390dc8039d12529d6f41ca28fe46216fa3f223712f629e83534cc79535 \
+                    size    5009
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

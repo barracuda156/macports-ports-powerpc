@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_string 0.15.0 v
+name                ocaml-ppx_string
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         This extension provides a syntax for string interpolation.
+long_description    ${description}
+
+checksums           rmd160  5613a75f0794230f686e8a7d355f2eaac71c7074 \
+                    sha256  e0056f51eec8029edfc127f9686762c4134ec66bb10b855cfc33220947988d91 \
+                    size    6071
+
+depends_lib-append  port:ocaml-ppx_base
+
+ocaml.build_type    dune

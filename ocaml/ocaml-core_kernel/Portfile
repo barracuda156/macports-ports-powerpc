@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet core_kernel 0.15.0 v
+name                ocaml-core_kernel
+revision            0
+github.tarball_from archive
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Jane Streetʼs standard library overlay 
+long_description    ${description}
+
+checksums           rmd160  f2ee232c71b5087e334769708aed2abde6c74edd \
+                    sha256  6f84cf97a0eb08f9f8f6281a3138ab11959ff7f2c8d187763495fbd4cc24b71d \
+                    size    265183
+
+depends_lib-append  port:ocaml-core \
+                    port:ocaml-ppx_jane
+
+ocaml.build_type    dune

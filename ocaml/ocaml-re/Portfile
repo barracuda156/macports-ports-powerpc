@@ -5,7 +5,7 @@ PortGroup github    1.0
 PortGroup ocaml     1.1
 
 name                ocaml-re
-github.setup        ocaml ocaml-re 1.9.0
+github.setup        ocaml ocaml-re 1.10.4
 
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
@@ -15,11 +15,13 @@ long_description    A pure OCaml regular expression library with support for \
                     Perl, POSIX extended, and Emacs-style regular expressions \
                     as well as shell-style file globbing.
 
-checksums           rmd160  624bbd68034f2b68c2a11d980498a5724e2d3c30 \
-                    sha256  4a2408bb270e0d1aef101d6b5edfeec6753874a6bcf54eb43d9fd3a7ddd777c1 \
-                    size    83642
+checksums           rmd160  ab07ed6eb3d68481a3067e53b7d85f063007d371 \
+                    sha256  20e60a82d6976e9680f339d63ad456bdeda124d5be99d3f5b7f207d2c602101a \
+                    size    90379
 
 github.tarball_from archive
+
+depends_lib-append  port:ocaml-seq
 
 depends_test        port:ocaml-ounit
 

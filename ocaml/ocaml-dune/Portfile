@@ -5,32 +5,45 @@ PortGroup           github 1.0
 PortGroup           ocaml 1.1
 
 name                ocaml-dune
-github.setup        ocaml dune 2.9.1
+github.setup        ocaml dune 3.6.0
+revision            0
 categories          ocaml devel
-platforms           darwin
 license             MIT
 maintainers         {landonf @landonf} openmaintainer
 
 description         Composable build system for OCaml
 long_description    Dune is a build system for OCaml and Reason.
 
-checksums           rmd160  21482d60a4cbc761d2f4cd538d9ab3d97b343ef0 \
-                    sha256  f54527c88ccc72ecd88b5a36c84055e6fdc9a5386009d4c4052147a1363158e9 \
-                    size    1385454
+checksums           rmd160  4f3d0036285a4966b72b4fba0bdb490184e1d3cb \
+                    sha256  f270331219b0ce6c2caa67d27f8dd3f3336fd802f25069e192ca825066777de4 \
+                    size    1840475
+
+patchfiles          patch-fsevents.diff
 
 if { ${subport} eq ${name} } {
     depends_lib         port:ocaml \
                         port:ocaml-findlib
-
     configure.pre_args
-    configure.args      --libdir ${ocaml.package_dir} \
+    configure.args      --bindir ${prefix}/bin \
+                        --datadir ${prefix}/share/${name} \
+                        --docdir ${prefix}/share/doc \
+                        --etcdir ${prefix}/etc \
+                        --libdir ${ocaml.package_dir} \
                         --mandir ${prefix}/share/man \
-                        --docdir ${prefix}/share/doc
+                        --sbindir ${prefix}/sbin
 
     build.target        release
 }
 
 subport ocaml-dune-configurator {
+    # Sources are broken: they remove internal csexp package, recommending external installation;
+    # however, when that is done, Dune fails to find the library: https://github.com/ocaml/dune/issues/6156
+
+    # Notice that this may still fail. Worked for me locally, reproducibility is unsure. Fix it?
+    post-extract {
+        copy ${filespath}/csexp.opam ${worksrcpath}
+        move ${worksrcpath}/vendor/csexp ${worksrcpath}/otherlibs
+    }
+    patchfiles-append   patch-broken-libs.diff
     ocaml.build_type    dune
-    depends_lib-append  port:ocaml-csexp
 }

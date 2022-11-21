@@ -1,0 +1,37 @@
+--- src/fsevents/fsevents_stubs.c.orig	2022-11-14 22:11:03.000000000 +0800
++++ src/fsevents/fsevents_stubs.c	2022-11-21 12:46:25.000000000 +0800
+@@ -7,8 +7,10 @@
+ #include <caml/threads.h>
+ 
+ #if defined(__APPLE__)
++#include <AvailabilityMacros.h>
++#endif
+ 
+-#include <Availability.h>
++#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 100700
+ #include <CoreFoundation/CoreFoundation.h>
+ #include <CoreServices/CoreServices.h>
+ 
+@@ -92,7 +94,7 @@
+     CFDictionaryRef details = CFArrayGetValueAtIndex(eventPaths, i);
+     cf_path = CFDictionaryGetValue(details, kFSEventStreamEventExtendedDataPathKey);
+ #else
+-    cf_path = (CFStringRef) CFArrayGetValueAtIndex(eventPaths, i);
++    cf_path = (CFStringRef)CFArrayGetValueAtIndex(eventPaths, i);
+ #endif
+     CFIndex len = CFStringGetLength(cf_path);
+     CFIndex byte_len;
+@@ -331,7 +333,12 @@
+ 
+ #else
+ 
+-static char *unavailable_message = "fsevents is only available on macos";
++static char *unavailable_message =
++#if defined(__APPLE__)
++    "upgrade your macos sdk to enable watch mode";
++#else
++    "fsevents is only available on macos";
++#endif
+ 
+ CAMLprim value dune_fsevents_stop(value v_t) {
+   caml_failwith(unavailable_message);

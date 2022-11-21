@@ -5,22 +5,19 @@ PortGroup github    1.0
 PortGroup ocaml     1.1
 
 name                ocaml-ppxlib
-github.setup        ocaml-ppx ppxlib 0.22.0
-revision            1
-
+github.setup        ocaml-ppx ppxlib 0.28.0
+revision            0
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
 license             MIT
 description         Standard library for ppx rewriters
 long_description    Ppxlib is the standard library for ppx rewriters and other \
-                    programs that manipulate the in-memory reprensation of the \
-                    OCaml parsetree.
+                    programs that manipulate the in-memory reprensation \
+                    of the OCaml parsetree.
 
-platforms           darwin
-
-checksums           rmd160  c3b0fbf69842c40e2e1e89f813b3c8aa521745cf \
-                    sha256  4ee397d7f9dd8b65a43c44aada464e6ab532db722cdfe7fa1afefbebe962f76b \
-                    size    202244
+checksums           rmd160  a640b74a68b5f1fb7d3f9a3d511b5dddf24554fe \
+                    sha256  ba5cddb6061a829e7defd815657fc089136f1285ba96552c71cb35a8021aa2e5 \
+                    size    422359
 
 depends_lib         port:ocaml-ppx_derivers \
                     port:ocaml-migrate-parsetree \

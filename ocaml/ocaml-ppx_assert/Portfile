@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_assert 0.15.0 v
+name                ocaml-ppx_assert
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Extension nodes to compare value and raise useful errors if they differ.
+long_description    ${description}
+
+checksums           rmd160  6647bbb8d9fb0c9fe1c686ad84387d3d0e377606 \
+                    sha256  5609650cfe167523c18cf036a9887f84690fb7fe5c9c20bb5813682f501d7e06 \
+                    size    7390
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-ppx_sexp_conv
+
+ocaml.build_type    dune

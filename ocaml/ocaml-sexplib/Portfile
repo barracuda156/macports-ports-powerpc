@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet sexplib 0.15.1 v
+name                ocaml-sexplib
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         S-Expressions for OCaml
+long_description    ${description}
+
+checksums           rmd160  ee47b7b97869d7cee44da68ec12c4deea32d6a49 \
+                    sha256  f077aa631c3ace35aafc5b2d1bb2280280157dc901e5367b000ddea3b814fe11 \
+                    size    55004
+
+depends_lib-append  port:ocaml-num \
+                    port:ocaml-parsexp \
+                    port:ocaml-sexplib0
+
+ocaml.build_type    dune

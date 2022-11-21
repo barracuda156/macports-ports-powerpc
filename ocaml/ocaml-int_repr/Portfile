@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+github.setup        janestreet int_repr 0.15.0 v
+name                ocaml-int_repr
+revision            0
+github.tarball_from archive
+categories          ocaml
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Integers of various widths.
+long_description    ${description}
+
+checksums           rmd160  3b4b6851f2ab8b062ca90fd02859acecbd0d0756 \
+                    sha256  11331205c817ad112ffc5a3127178038cb1c3798900f35efdfdabeb7b0efde41 \
+                    size    9105
+
+depends_lib         port:ocaml-base \
+                    port:ocaml-ppx_jane
+
+ocaml.build_type    dune

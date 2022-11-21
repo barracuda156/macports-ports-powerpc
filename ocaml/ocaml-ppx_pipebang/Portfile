@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_pipebang 0.15.0 v
+name                ocaml-ppx_pipebang
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         ppx rewriter that inlines reverse application operators |> and |!.
+long_description    ${description}
+
+checksums           rmd160  ee80f05838462e6044915244dfe92feb91b364e1 \
+                    sha256  140f1da5d90dfb72445d46e2f239740487f6ba114366eb9bbd8df3cc727d7038 \
+                    size    3768
+
+ocaml.build_type    dune

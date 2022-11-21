@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+PortGroup           github 1.0
+
+github.setup        janestreet ppx_fields_conv 0.15.0 v
+name                ocaml-ppx_fields_conv
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Generation of accessor and iteration functions for OCaml records.
+long_description    ${description}
+
+checksums           rmd160  070accda924b9211efe8281ca28884dd3acd6154 \
+                    sha256  05ab18f3f3c443852449d6f4781f7a21ca2575d53caa308df7be0ab5731c9164 \
+                    size    16444
+
+depends_lib-append  port:ocaml-base \
+                    port:ocaml-fieldslib \
+                    port:ocaml-ppxlib
+
+ocaml.build_type    dune

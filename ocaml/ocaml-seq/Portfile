@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+github.setup        c-cube seq 0.3.1 v
+name                ocaml-seq
+
+categories          ocaml
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             LGPL-2.1
+description         Compatibility package for OCamlʼs standard iterator type.
+long_description    ${description}
+
+checksums           rmd160  84d0fc4cec84434fe17e48c291e29c7e3b3c617d \
+                    sha256  edaf118eba414b0be4b99097df5dcb06ca9963da71ce937f60569f7293fa63ba \
+                    size    12294
+
+ocaml.build_type    dune

@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+
+github.setup        jvdp1 stdlib 1243ad93cc3a6f228cbf9544e84aa0d9c14caeee
+name                fortran-stdlib
+revision            0
+categories-append   lang
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Fortran Standard Library
+long_description    {*}${description}
+checksums           rmd160  f0fd4d34608161c93d02e5f44254a6087bef2d37 \
+                    sha256  be67ee7b4f0e9564cb44bedb6e16ab4d85d9312dbdeb223196bada2e1bee0d52 \
+                    size    54470
+
+test.run            yes

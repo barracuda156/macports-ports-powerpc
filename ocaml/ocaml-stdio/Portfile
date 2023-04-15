@@ -5,7 +5,7 @@ PortGroup github    1.0
 PortGroup ocaml     1.1
 
 name                ocaml-stdio
-github.setup        janestreet stdio 0.14.0 v
+github.setup        janestreet stdio 0.15.0 v
 
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
@@ -15,17 +15,9 @@ long_description    Stdio implements simple input/output functionalities for OCa
                     re-exporting the input/output functions of the OCaml standard \
                     libraries using a more consistent API.
 
-platforms           darwin
-
-# Strip everything but <major>.<minor> from version
-set janestreet_ver [regsub {^([^\.]+\.[^\.]+).*} ${version} {\1}]
-master_sites        https://ocaml.janestreet.com/ocaml-core/v${janestreet_ver}/files/
-
-distname            stdio-${git.branch}
-
-checksums           rmd160  04cbcbc40e3b974584f94ed92c1a057446807488 \
-                    sha256  14ccd6a8b8a6fb4c906903a380644a6b7f2d7d081424a3408ac2e37c558645c2 \
-                    size    7738
+checksums           rmd160  765b201e898a9f36315d6192ba699f4b39d99c17 \
+                    sha256  00c2521cc25d5e2ccee68aa461c3d2e5b8fd8eb56f9e08f58bb67f224bfadcda \
+                    size    7819
 
 depends_lib         port:ocaml-base
 

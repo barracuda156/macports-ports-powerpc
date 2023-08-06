@@ -1,0 +1,75 @@
+From 3ca3a235b329d94dff6dda4ab449debbe2816fad Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Sat, 5 Aug 2023 04:28:27 +0800
+Subject: [PATCH] Some experimental hacks to configure.ac
+
+---
+ configure.ac | 38 +++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
+
+diff --git configure.ac configure.ac
+index 3568ea7ccd..0765197f71 100644
+--- configure.ac
++++ configure.ac
+@@ -144,22 +144,23 @@
+     SYS=dragonfly
+     ;;
+   darwin*)
+-
+-    dnl Force gcc "-arch" flag
+-    ARCH_flag=""
+     case "${host}" in
+       i?86*)
+-        ARCH_flag="-arch i386"
+         YASMFLAGS="-f macho32"
+       ;;
+       ppc64*)
+-        ARCH_flag="-arch ppc64"
++        CPPFLAGS="${CPPFLAGS} -I/usr/X11/include"
++        CFLAGS="${CFLAGS} -I/usr/X11/include -march=native"
++        CXXFLAGS="${CXXFLAGS} -march=native"
++        LDFLAGS="${LDFLAGS} -L/usr/X11/lib"
+       ;;
+       ppc*)
+-        ARCH_flag="-arch ppc"
++        CPPFLAGS="${CPPFLAGS} -I/usr/X11/include"
++        CFLAGS="${CFLAGS} -I/usr/X11/include -march=native"
++        CXXFLAGS="${CXXFLAGS} -march=native"
++        LDFLAGS="${LDFLAGS} -L/usr/X11/lib"
+       ;;
+       x86_64*)
+-        ARCH_flag="-arch x86_64"
+         YASMFLAGS="-f macho64"
+       ;;
+       arm*)
+@@ -169,13 +170,13 @@
+     esac
+ 
+     SYS=darwin
+-    CFLAGS="${CFLAGS} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"
+-    CXXFLAGS="${CXXFLAGS} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"
+-    CPPFLAGS="${CPPFLAGS} ${ARCH_flag}"
+-    OBJCFLAGS="${OBJCFLAGS} -D_INTL_REDIRECT_MACROS -std=gnu99 ${ARCH_flag}"
+-    LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names ${ARCH_flag}"
++    CFLAGS="${CFLAGS} -D_INTL_REDIRECT_MACROS"
++    CXXFLAGS="${CXXFLAGS} -D_INTL_REDIRECT_MACROS"
++    OBJCFLAGS="${OBJCFLAGS} -D_INTL_REDIRECT_MACROS -std=gnu99"
++    LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
+     VLC_ADD_LIBS([libvlc vlc],[-Wl,-undefined,dynamic_lookup,-framework,AppKit])
+-    VLC_ADD_LIBS([libvlccore],[-Wl,-framework,CoreFoundation,-framework,CoreServices])
++    VLC_ADD_LIBS([avcodec access_avio swscale postproc i420_rgb_mmx x262 x264 x26410b],[-Wl,-read_only_relocs,suppress])
++    VLC_ADD_LIBS([libvlccore],[-Wl,-framework,CoreFoundation,-framework,CoreServices,-framework,SystemConfiguration])
+ 
+     AC_EGREP_CPP(yes,
+             [#import <TargetConditionals.h>
+@@ -3218,10 +3219,6 @@
+ if test "${enable_sdl}" != "no"
+ then
+    PKG_CHECK_MODULES(SDL, [sdl >= 1.2.10], [
+-      # SDL on Darwin is heavily patched and can only run SDL_image
+-      if test "${SYS}" != "darwin"; then
+-        VLC_ADD_PLUGIN([vout_sdl])
+-      fi
+       if test "${SYS}" != "mingw32" -a "${SYS}" != "os2"; then
+         VLC_ADD_LIBS([vout_sdl],[${X_LIBS} ${X_PRE_LIBS} -lX11])
+       fi

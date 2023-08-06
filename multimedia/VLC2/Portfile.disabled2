@@ -1,9 +1,8 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem              1.0
-PortGroup               active_variants 1.1
 PortGroup               compiler_blacklist_versions 1.0
-PortGroup               openssl 1.0
+PortGroup               active_variants 1.1
 
 name                    VLC2
 
@@ -133,6 +132,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         port:ncurses \
                         port:nettle \
                         port:openjpeg15 \
+                        path:lib/libssl.dylib:openssl \
                         port:orc \
                         port:p11-kit \
                         port:readline \
@@ -144,8 +144,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         port:twolame \
                         port:vcdimager \
                         port:x264 \
-                        port:x265 \
-                        port:zlib
+                        port:x265
     depends_run-append  port:libaacs \
                         port:libbdplus
 
@@ -171,14 +170,14 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
 
     compiler.cxx_standard 2011
 
-    patchfiles          patch-buildsystem.diff \
-                        PR-34741-no__clang_version__.patch \
+    patchfiles          PR-34741-no__clang_version__.patch \
                         no-sparkle.patch \
                         patch-vlc-no-O4.diff \
                         patch-soundfont-path.diff
 
     if {[string match *clang* ${configure.compiler}]} {
         patchfiles-append \
+                        patch-buildsystem.diff \
                         patch-static_assert.diff \
                         patch-buildsystem-fp-flags.diff
     } elseif {[string match *gcc* ${configure.compiler}]} {
@@ -309,7 +308,6 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         --enable-upnp
 
     # 20150209: Jack really would require a newer variant than what's currently in MacPorts
-    # Do not make a default for 32-bit platforms unless this bug is fixed: https://github.com/jackaudio/jack2/issues/950
     variant jack description {Enable jack plugin for audio output} {
         depends_lib-append      port:jack port:portaudio
         configure.args-delete   --disable-jack
@@ -325,6 +323,8 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
         PortGroup               qt4 1.0
 
         configure.args-replace  --disable-qt --enable-qt
+        # Broken:
+        # configure.args-append   --enable-minimal-macosx
     }
 
     if {${os.major} <= 15} {
@@ -357,6 +357,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
     }
 
     variant x11 {
+        if {${os.platform} eq "linux"} {
         depends_lib-append \
             port:xorg-libX11 \
             port:xorg-libXau \
@@ -372,6 +373,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
             port:xorg-libXxf86vm \
             port:xorg-xcb-util \
             port:xorg-xcb-util-keysyms
+        }
 
         configure.args-delete   --without-x --disable-xcb \
                                 --x-includes=${destroot} --x-libraries=${destroot}

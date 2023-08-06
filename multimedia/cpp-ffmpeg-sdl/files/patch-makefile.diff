@@ -1,0 +1,17 @@
+--- makefile.ori	2020-05-04 05:51:14.000000000 +0800
++++ makefile	2023-08-05 10:16:15.000000000 +0800
+@@ -1,5 +1,5 @@
+-CC = g++ -std=c++11
+-CFLAGS = -g -Wall
++CXX = @CXX@
++CXXFLAGS = -std=c++11 -g -Wall @CXXFLAGS@
+ SRCS = *.cpp
+ PROG = player
+ 
+@@ -8,4 +8,4 @@
+ LIBS := $(LIBS_CONFIG)
+ 
+ $(PROG):$(SRCS) 
+-	$(CC) $(CFLAGS) -o $(PROG) $(SRCS) $(LIBS)
+\ No newline at end of file
++	$(CXX) $(CXXFLAGS) -o $(PROG) $(SRCS) $(LIBS)

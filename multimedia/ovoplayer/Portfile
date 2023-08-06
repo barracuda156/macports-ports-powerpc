@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+github.setup        varianus ovoplayer 382f6f7395c9ccc2d8339a0488efcccf7acaeafb
+version             20230605
+revision            0
+categories          multimedia
+license             GPL-2
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+homepage            https://ovoplayer.altervista.org
+description         ${name} is a free multi-platform music manager and player
+long_description    ${name} is a free music manager and player developed for Linux and Windows. \
+                    It has a simple and clean interface and support all the most common music file format.
+checksums           rmd160  a145604dbb26203f76103d884650e696ba8e4a93 \
+                    sha256  6e216e05b6a90364177542032486f5915dd8fa23298183e96bd88a9209b1b9bb \
+                    size    6790
+github.tarball_from archive
+
+depends_lib-append  path:lib/libavcodec.dylib:ffmpeg \
+                    port:libsdl2
+
+depends_build-append \
+                    port:fpc \
+                    port:lazarus
+

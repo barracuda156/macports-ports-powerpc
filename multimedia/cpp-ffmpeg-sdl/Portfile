@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+name                cpp-ffmpeg-sdl
+github.setup        raullalves player-cpp-ffmpeg-sdl 5c2863ba6c4af2892c2ea233e286bf4c2b8ed2d0
+version             20200504
+revision            0
+categories          multimedia
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Light-weight SDL2 and FFmpeg Video Player in C++
+long_description    {*}${description}
+checksums           rmd160  a145604dbb26203f76103d884650e696ba8e4a93 \
+                    sha256  6e216e05b6a90364177542032486f5915dd8fa23298183e96bd88a9209b1b9bb \
+                    size    6790
+github.tarball_from archive
+
+depends_lib-append  path:lib/libavcodec.dylib:ffmpeg \
+                    port:libsdl2
+
+depends_build-append \
+                    port:pkgconfig
+
+patchfiles          patch-makefile.diff
+
+post-patch {
+    reinplace "s,@CXX@,${configure.cxx}," ${worksrcpath}/makefile
+    reinplace "s,@CXXFLAGS@,${configure.cxxflags} [get_canonical_archflags cxx]," ${worksrcpath}/makefile
+}
+
+compiler.cxx_standard 2011
+
+#compiler.cxxflags-append \
+                    -D_GLIBCXX_USE_CXX11_ABI=0
+
+build.target

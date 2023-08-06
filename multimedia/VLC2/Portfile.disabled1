@@ -1,9 +1,8 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem              1.0
-PortGroup               active_variants 1.1
 PortGroup               compiler_blacklist_versions 1.0
-PortGroup               openssl 1.0
+PortGroup               active_variants 1.1
 
 name                    VLC2
 
@@ -119,8 +118,8 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         port:libpng \
                         port:libproxy \
                         port:libsamplerate \
-                        port:libsdl2 \
-                        port:libsdl2_image \
+                        port:libsdl \
+                        port:libsdl_image \
                         port:libsndfile \
                         port:libssh2 \
                         port:libtheora \
@@ -133,6 +132,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         port:ncurses \
                         port:nettle \
                         port:openjpeg15 \
+                        path:lib/libssl.dylib:openssl \
                         port:orc \
                         port:p11-kit \
                         port:readline \
@@ -144,8 +144,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         port:twolame \
                         port:vcdimager \
                         port:x264 \
-                        port:x265 \
-                        port:zlib
+                        port:x265
     depends_run-append  port:libaacs \
                         port:libbdplus
 
@@ -155,8 +154,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         --prefix=${prefix} \
                         --prefix=${vlcprefix}
     configure.args-append \
-                        --bindir=${prefix}/bin \
-                        --with-sdl-config-path=${prefix}/include/SDL2
+                        --bindir=${prefix}/bin
     pre-fetch {
         if {${os.platform} eq "darwin" && ${os.major} < 9} {
             ui_error "${name} ${version} requires Mac OS X 10.5 or greater."
@@ -166,7 +164,9 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
 
     depends_lib-append  port:lua
 
-    compiler.blacklist-append \
+    # May be fixable, but as of now fails: Undefined symbols: "___builtin_parity"
+    # ld: library not found for -latomic
+#    compiler.blacklist-append \
                         *gcc-4.0 *gcc-4.2 {clang < 300}
 
     compiler.cxx_standard 2011
@@ -197,11 +197,11 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         0002-Fix-for-Qt4-module.patch \
                         0003-Alt-fix-for-searchlineedit-in-Qt4.patch \
                         0004-Enable-gnutls-on-macOS.patch \
-                        0005-Do-not-build-a-broken-securetransport-module.patch \
-                        0006-Fix-macosx.m-in-video_output.patch \
-                        0007-Makefile.am-avoid-breaking-destroot.patch \
-                        0008-Some-experimental-hacks-to-configure.ac.patch \
-                        0009-Do-not-err-out-on-no-acceleration.patch
+                        0005-Do-not-build-a-broken-securetransport-module.patch
+        }
+        if {[string match *gcc-4.* ${configure.compiler}]} {
+            patchfiles-append \
+                        0004-Avoid-builtin_parity-with-Apple-gcc.patch
         }
     }
     # FFMpeg 4 compatibility (by RJVB)
@@ -252,7 +252,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         --disable-debug --disable-update-check --enable-gnutls \
                         --disable-notify --disable-dbus --enable-lua \
                         --disable-gnomevfs --disable-growl --disable-macosx-vlc-app \
-                        --disable-atmo --disable-macosx-quartztext
+                        --disable-atmo
 
     # Input Plugins
     configure.args-append \
@@ -309,7 +309,6 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
                         --enable-upnp
 
     # 20150209: Jack really would require a newer variant than what's currently in MacPorts
-    # Do not make a default for 32-bit platforms unless this bug is fixed: https://github.com/jackaudio/jack2/issues/950
     variant jack description {Enable jack plugin for audio output} {
         depends_lib-append      port:jack port:portaudio
         configure.args-delete   --disable-jack
@@ -373,14 +372,9 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
             port:xorg-xcb-util \
             port:xorg-xcb-util-keysyms
 
-        configure.args-delete   --without-x --disable-xcb \
+        configure.args-delete   --without-x --disable-xvideo --disable-xcb \
                                 --x-includes=${destroot} --x-libraries=${destroot}
-        configure.args-append   --with-x --enable-xcb
-
-        if {${os.platform} eq "linux"} {
-            configure.args-delete   --disable-xvideo
-            configure.args-append   --enable-xvideo
-        }
+        configure.args-append   --with-x --enable-xvideo --enable-xcb
     }
 
     variant quartz {
@@ -388,24 +382,17 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
         depends_lib-append      port:BGHUDAppKit
 
         configure.args-delete   --disable-macosx \
-                                --disable-macosx-quartztext \
-                                --enable-samplerate
-        configure.args-append   --enable-macosx \
-                                --enable-macosx-quartztext
+                                --enable-samplerate \
+                                --disable-realrtsp
+        configure.args-append   --enable-macosx
         # taken from VLC's own configure.sh script for OS X:
-        configure.args-append   --disable-samplerate \
-                                --enable-merge-ffmpeg
-    }
-
-    # This is a generic Unix-like installation:
-    if {![variant_isset quartz]} {
-        depends_lib-append      port:desktop-file-utils
+        configure.args-append   --disable-samplerate
     }
 
     platform macosx {
-        configure.args-delete   --disable-realrtsp
         # taken from VLC's own configure.sh script for OS X:
-        configure.args-append   --enable-realrtsp
+        configure.args-append   --enable-merge-ffmpeg \
+                                --enable-realrtsp
     }
 
     # VLC is not currently compatible with FreeRDP 2
@@ -448,6 +435,8 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
         }
 
         if {[string match macports-gcc* ${configure.compiler}]} {
+#            configure.cxxflags-append \
+                                -std=c++11
             configure.objcflags-append \
                                 -fobjc-exceptions
         }
@@ -481,7 +470,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
             configure.args-replace  --disable-macosx-eyetv --enable-macosx-eyetv
         }
 
-        if {${subport} ne "lib${name}" && ${os.major} > 10} {
+        if {${subport} ne "lib${name}"} {
             configure.args-replace  --disable-macosx-vlc-app --enable-macosx-vlc-app
         }
 
@@ -540,12 +529,7 @@ if {(${subport} eq ${name}) || (${subport} eq "lib${name}")} {
 #                 ${destroot}${vlcprefix}/lib/pkgconfig/vlc-plugin.pc
         }
         post-activate {
-            system "${vlcprefix}/lib/vlc/vlc-cache-gen -f ${vlcprefix}/lib/vlc"
-
-            if {![variant_isset quartz]} {
-                system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
-                system "${prefix}/bin/update-mime-database ${prefix}/share/mime"
-            }
+            system "${prefix}/lib/vlc/vlc-cache-gen -f ${prefix}/lib/vlc"
         }
     }
     notes-append "MIDI support requires installing one or more SoundFont files,\

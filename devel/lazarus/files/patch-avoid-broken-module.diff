@@ -1,0 +1,52 @@
+--- components/Makefile.fpc	2023-03-04 21:24:23.000000000 +0800
++++ components/Makefile.fpc.new	2023-08-06 21:19:29.000000000 +0800
+@@ -85,7 +85,6 @@
+ 	$(MAKE) -C PascalScript/Source
+ 	$(MAKE) -C macroscript
+ 	$(MAKE) -C lclextensions
+-	$(MAKE) -C virtualtreeview
+ 	$(MAKE) -C onlinepackagemanager
+ 	$(MAKE) -C pas2js
+ 
+@@ -132,7 +131,6 @@
+ 	$(MAKE) -C PascalScript/Source clean
+ 	$(MAKE) -C macroscript clean
+ 	$(MAKE) -C lclextensions clean
+-	$(MAKE) -C virtualtreeview clean
+ 	$(MAKE) -C onlinepackagemanager clean
+ 	$(MAKE) -C pas2js clean
+ 
+@@ -179,7 +177,6 @@
+ 	$(MAKE) -C PascalScript/Source distclean
+ 	$(MAKE) -C macroscript distclean
+ 	$(MAKE) -C lclextensions distclean
+-	$(MAKE) -C virtualtreeview distclean
+ 	$(MAKE) -C onlinepackagemanager distclean
+ 	$(MAKE) -C pas2js distclean
+ 
+
+--- components/Makefile	2023-03-04 21:24:23.000000000 +0800
++++ components/Makefile.new	2023-08-06 21:26:05.000000000 +0800
+@@ -1851,7 +1851,6 @@
+ 	$(MAKE) -C PascalScript/Source
+ 	$(MAKE) -C macroscript
+ 	$(MAKE) -C lclextensions
+-	$(MAKE) -C virtualtreeview
+ 	$(MAKE) -C onlinepackagemanager
+ 	$(MAKE) -C pas2js
+ all: base
+@@ -1896,7 +1895,6 @@
+ 	$(MAKE) -C PascalScript/Source clean
+ 	$(MAKE) -C macroscript clean
+ 	$(MAKE) -C lclextensions clean
+-	$(MAKE) -C virtualtreeview clean
+ 	$(MAKE) -C onlinepackagemanager clean
+ 	$(MAKE) -C pas2js clean
+ cleanall: clean
+@@ -1941,6 +1939,5 @@
+ 	$(MAKE) -C PascalScript/Source distclean
+ 	$(MAKE) -C macroscript distclean
+ 	$(MAKE) -C lclextensions distclean
+-	$(MAKE) -C virtualtreeview distclean
+ 	$(MAKE) -C onlinepackagemanager distclean
+ 	$(MAKE) -C pas2js distclean

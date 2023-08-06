@@ -30,7 +30,6 @@ checksums           rmd160  d3c226a2ef7d9caaf0215c21af5f1e729edfca7a \
                     size    78351752
 
 depends_lib         port:fpc port:fpc-sources
-supported_archs     x86_64 arm64
 
 use_configure       no
 worksrcdir          lazarus
@@ -67,6 +66,12 @@ post-patch {
         arm64 {
             set defaultCompiler ppca64
         }
+        ppc {
+            set defaultCompiler ppcppc
+        }
+        ppc64 {
+            set defaultCompiler ppcppc64
+        }
         default {
             set defaultCompiler unsupported
         }
@@ -95,8 +100,18 @@ post-patch {
 }
 
 build.target       bigide
-build.post_args    OPT=-gl LCL_PLATFORM=cocoa
+
+patchfiles-append  patch-avoid-broken-module.diff
+
 use_parallel_build no
+
+if {${os.platform} eq "darwin" && ${os.major} > 10} {
+    build.post_args    OPT=-gl LCL_PLATFORM=cocoa
+} else {
+    PortGroup          qt4 1.0
+
+    build.post_args    OPT="-WM10.6 -gl crt1.o" LCL_PLATFORM=qt
+}
 
 destroot.post_args INSTALL_PREFIX=${destroot}${prefix}
 

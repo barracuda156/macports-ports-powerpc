@@ -1,7 +1,7 @@
 From b6e895e20f039c0b0b39d9303a3beb60c562e130 Mon Sep 17 00:00:00 2001
 From: Sergey Fedorov <vital.had@gmail.com>
 Date: Tue, 2 Jan 2024 16:43:10 +0800
-Subject: [PATCH 3/3] Fix CMakeLists for Qt4
+Subject: [PATCH 3/4] Fix CMakeLists for Qt4
 
 ---
  src/gui/CMakeLists.txt | 4 ++--

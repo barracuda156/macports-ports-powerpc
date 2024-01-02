@@ -41,9 +41,10 @@ if { ${os.major} < 11 } {
     PortGroup  qt4 1.0
 
     patchfiles-append \
-        0001-Add-CMake-build-option-for-GUI.patch
-        0002-Fix-bonjour-linkage-on-non-Windows-platforms.patch
-        0003-Fix-CMakeLists-for-Qt4.patch
+        0001-Add-CMake-build-option-for-GUI.patch \
+        0002-Fix-bonjour-linkage-on-non-Windows-platforms.patch \
+        0003-Fix-CMakeLists-for-Qt4.patch \
+        0004-Remove-wrong-options-from-main-CMakeLists.patch
 
 } elseif { ${os.major} < 16 } {
     # New gui requires metal

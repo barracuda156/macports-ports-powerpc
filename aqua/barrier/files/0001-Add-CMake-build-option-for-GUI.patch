@@ -1,7 +1,7 @@
 From 253ed0c7c64c8a96d4f900ce1f5ebf5f122fdf5f Mon Sep 17 00:00:00 2001
 From: Andrew Nelless <andrew@symless.com>
 Date: Mon, 19 Dec 2016 17:41:01 +0000
-Subject: [PATCH 1/3] Add CMake build option for GUI
+Subject: [PATCH 1/4] Add CMake build option for GUI
 
 ---
  src/gui/CMakeLists.txt | 30 ++++++++++++++++++++++++++++++

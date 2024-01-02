@@ -1,7 +1,7 @@
-From 3f133752090caab94f7f4a5be8654a5bde685d93 Mon Sep 17 00:00:00 2001
+From f45a6ba3f6b6a791749f818646495908ba013e56 Mon Sep 17 00:00:00 2001
 From: Sergey Fedorov <vital.had@gmail.com>
 Date: Tue, 2 Jan 2024 16:50:59 +0800
-Subject: [PATCH 4/4] Remove wrong options from main CMakeLists
+Subject: [PATCH 3/6] Remove wrong options from main CMakeLists
 
 ---
  CMakeLists.txt | 18 +-----------------

@@ -1,7 +1,7 @@
 From 7588f6c4ef27115d428ad9fde1f52ac9fc2eb2c1 Mon Sep 17 00:00:00 2001
 From: Sergey Fedorov <vital.had@gmail.com>
 Date: Tue, 2 Jan 2024 16:35:03 +0800
-Subject: [PATCH 2/4] Fix bonjour linkage on non-Windows platforms
+Subject: [PATCH 2/6] Fix bonjour linkage on non-Windows platforms
 
 Backport of https://github.com/debauchee/barrier/commit/e3f3b7424cc8d27606ef7a832c084511aff8cf61
 ---

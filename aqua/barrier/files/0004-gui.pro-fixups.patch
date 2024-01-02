@@ -1,0 +1,50 @@
+From ad1a76f4ba92b28eba08f7b34044a340a34e3350 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Tue, 2 Jan 2024 18:43:17 +0800
+Subject: [PATCH 4/6] gui.pro fixups
+
+---
+ src/gui/gui.pro | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git src/gui/gui.pro src/gui/gui.pro
+index 73368b84..d78fdbfc 100644
+--- src/gui/gui.pro
++++ src/gui/gui.pro
+@@ -4,20 +4,23 @@ TEMPLATE = app
+ TARGET = synergy
+ DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
+ DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
++DEFINES -= UNICODE
++DEFINES += _MBCS
++
+ DEPENDPATH += . \
+     res
+ INCLUDEPATH += . \
+     src
+-FORMS += res/MainWindowBase.ui \
+-    res/AboutDialogBase.ui \
+-    res/ServerConfigDialogBase.ui \
+-    res/ScreenSettingsDialogBase.ui \
+-    res/ActionDialogBase.ui \
+-    res/HotkeyDialogBase.ui \
+-    res/SettingsDialogBase.ui \
+-    res/SetupWizardBase.ui \
+-    res/AddClientDialogBase.ui \
+-    res/PluginWizardPageBase.ui
++FORMS += src/MainWindowBase.ui \
++    src/AboutDialogBase.ui \
++    src/ServerConfigDialogBase.ui \
++    src/ScreenSettingsDialogBase.ui \
++    src/ActionDialogBase.ui \
++    src/HotkeyDialogBase.ui \
++    src/SettingsDialogBase.ui \
++    src/SetupWizardBase.ui \
++    src/AddClientDialogBase.ui \
++    src/PluginWizardPageBase.ui
+ SOURCES += src/main.cpp \
+     src/MainWindow.cpp \
+     src/AboutDialog.cpp \
+-- 
+2.43.0
+

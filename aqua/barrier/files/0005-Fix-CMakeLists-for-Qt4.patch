@@ -1,0 +1,47 @@
+From 6a22f0eff2d4bc47d2923bde2b4f25b0ca302f21 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Tue, 2 Jan 2024 16:43:10 +0800
+Subject: [PATCH 5/6] Fix CMakeLists for Qt4
+
+---
+ src/gui/CMakeLists.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git src/gui/CMakeLists.txt src/gui/CMakeLists.txt
+index e1e75a12..b554dd72 100644
+--- src/gui/CMakeLists.txt
++++ src/gui/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ cmake_minimum_required (VERSION 3.4)
+ 
+-find_package (Qt5 COMPONENTS Widgets Network)
++find_package(Qt4 REQUIRED QtCore QtGui QtNetwork)
+ set (CMAKE_AUTOMOC ON)
+ set (CMAKE_AUTORCC ON)
+ set (CMAKE_AUTOUIC ON)
+@@ -9,7 +9,7 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
+ file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
+ file (GLOB LEGACY_GUI_UI_FILES res/*.ui)
+ 
+-add_executable (synergyx
++add_executable (synergy
+ 	${LEGACY_GUI_SOURCE_FILES}
+ 	${LEGACY_GUI_UI_FILES}
+ 	res/Synergy.qrc
+@@ -24,10 +24,10 @@ if (WIN32)
+ 			      PATH_SUFFIXES "Lib/x64")
+ endif()
+ 
+-qt5_use_modules (synergyx Widgets Network)
+-target_link_libraries (synergyx ${DNSSD_LIB} shared)
++qt4_use_modules (synergy Core Gui Network)
++target_link_libraries (synergy ${DNSSD_LIB} shared)
+ 
+ if (WIN32)
+-    set_target_properties (synergyx PROPERTIES 
++    set_target_properties (synergy PROPERTIES 
+                            LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+ endif()
+-- 
+2.43.0
+

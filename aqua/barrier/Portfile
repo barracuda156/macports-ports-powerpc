@@ -43,8 +43,10 @@ if { ${os.major} < 11 } {
     patchfiles-append \
         0001-Add-CMake-build-option-for-GUI.patch \
         0002-Fix-bonjour-linkage-on-non-Windows-platforms.patch \
-        0003-Fix-CMakeLists-for-Qt4.patch \
-        0004-Remove-wrong-options-from-main-CMakeLists.patch
+        0003-Remove-wrong-options-from-main-CMakeLists.patch \
+        0004-gui.pro-fixups.patch \
+        0005-Fix-CMakeLists-for-Qt4.patch \
+        0006-Move-ui-files-to-src.patch
 
 } elseif { ${os.major} < 16 } {
     # New gui requires metal

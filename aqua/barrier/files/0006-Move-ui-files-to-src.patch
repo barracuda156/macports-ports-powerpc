@@ -1,0 +1,4029 @@
+From 9dc995166295f19fc84314c8d0555ab19b8c0711 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Tue, 2 Jan 2024 18:38:47 +0800
+Subject: [PATCH 6/6] Move ui files to src
+
+Backport of https://github.com/debauchee/barrier/commit/14aa1cfd82fd0422b8c425f73ad60611bbc3148d
+https://github.com/debauchee/barrier/commit/71f24c0664abe1d3797d0a070b8a1615b7d6492e
+---
+ src/gui/CMakeLists.txt                        |    2 +-
+ src/gui/res/PluginWizardPageBase.ui           |  137 --
+ src/gui/{res => src}/AboutDialogBase.ui       |  446 +++----
+ src/gui/{res => src}/ActionDialogBase.ui      | 1162 ++++++++---------
+ src/gui/src/ActivationDialog.ui               |  163 +++
+ src/gui/{res => src}/AddClientDialogBase.ui   |    0
+ src/gui/src/CancelActivationDialog.ui         |   89 ++
+ src/gui/src/FailedLoginDialog.ui              |  108 ++
+ src/gui/{res => src}/HotkeyDialogBase.ui      |  162 +--
+ src/gui/{res => src}/MainWindowBase.ui        |   65 +-
+ .../{res => src}/ScreenSettingsDialogBase.ui  | 1086 +++++++--------
+ .../{res => src}/ServerConfigDialogBase.ui    |  100 +-
+ src/gui/{res => src}/SettingsDialogBase.ui    |   48 +-
+ src/gui/{res => src}/SetupWizardBase.ui       |  187 ---
+ 14 files changed, 1942 insertions(+), 1813 deletions(-)
+ delete mode 100644 src/gui/res/PluginWizardPageBase.ui
+ rename src/gui/{res => src}/AboutDialogBase.ui (94%)
+ rename src/gui/{res => src}/ActionDialogBase.ui (96%)
+ create mode 100644 src/gui/src/ActivationDialog.ui
+ rename src/gui/{res => src}/AddClientDialogBase.ui (100%)
+ create mode 100644 src/gui/src/CancelActivationDialog.ui
+ create mode 100644 src/gui/src/FailedLoginDialog.ui
+ rename src/gui/{res => src}/HotkeyDialogBase.ui (95%)
+ rename src/gui/{res => src}/MainWindowBase.ui (88%)
+ rename src/gui/{res => src}/ScreenSettingsDialogBase.ui (96%)
+ rename src/gui/{res => src}/ServerConfigDialogBase.ui (97%)
+ rename src/gui/{res => src}/SettingsDialogBase.ui (89%)
+ rename src/gui/{res => src}/SetupWizardBase.ui (60%)
+
+diff --git src/gui/CMakeLists.txt src/gui/CMakeLists.txt
+index b554dd72..97c14724 100644
+--- src/gui/CMakeLists.txt
++++ src/gui/CMakeLists.txt
+@@ -7,7 +7,7 @@ set (CMAKE_AUTOUIC ON)
+ set (CMAKE_INCLUDE_CURRENT_DIR ON)
+ 
+ file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
+-file (GLOB LEGACY_GUI_UI_FILES res/*.ui)
++file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
+ 
+ add_executable (synergy
+ 	${LEGACY_GUI_SOURCE_FILES}
+diff --git src/gui/res/PluginWizardPageBase.ui src/gui/res/PluginWizardPageBase.ui
+deleted file mode 100644
+index dfb7a978..00000000
+--- src/gui/res/PluginWizardPageBase.ui
++++ /dev/null
+@@ -1,137 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<ui version="4.0">
+- <class>PluginWizardPage</class>
+- <widget class="QWizardPage" name="PluginWizardPage">
+-  <property name="geometry">
+-   <rect>
+-    <x>0</x>
+-    <y>0</y>
+-    <width>400</width>
+-    <height>300</height>
+-   </rect>
+-  </property>
+-  <property name="windowTitle">
+-   <string>Setup Synergy</string>
+-  </property>
+-  <property name="title">
+-   <string/>
+-  </property>
+-  <layout class="QVBoxLayout" name="verticalLayout">
+-   <item>
+-    <spacer name="verticalSpacer">
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>40</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-   <item>
+-    <layout class="QGridLayout" name="gridLayout">
+-     <item row="0" column="0">
+-      <spacer name="horizontalSpacer">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-     <item row="0" column="1">
+-      <widget class="QLabel" name="m_pLabelSpinning">
+-       <property name="text">
+-        <string> </string>
+-       </property>
+-      </widget>
+-     </item>
+-     <item row="0" column="2">
+-      <spacer name="horizontalSpacer_2">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-    </layout>
+-   </item>
+-   <item>
+-    <spacer name="verticalSpacer_3">
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>40</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-   <item>
+-    <layout class="QGridLayout" name="gridLayout_2">
+-     <item row="0" column="0">
+-      <spacer name="horizontalSpacer_3">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-     <item row="0" column="1">
+-      <widget class="QLabel" name="m_pLabelStatus">
+-       <property name="text">
+-        <string>Please wait...</string>
+-       </property>
+-      </widget>
+-     </item>
+-     <item row="0" column="2">
+-      <spacer name="horizontalSpacer_4">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-    </layout>
+-   </item>
+-   <item>
+-    <spacer name="verticalSpacer_2">
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>40</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-  </layout>
+- </widget>
+- <resources/>
+- <connections/>
+-</ui>
+diff --git src/gui/res/AboutDialogBase.ui src/gui/src/AboutDialogBase.ui
+similarity index 94%
+rename from src/gui/res/AboutDialogBase.ui
+rename to src/gui/src/AboutDialogBase.ui
+index bd2e993d..b20e3a50 100644
+--- src/gui/res/AboutDialogBase.ui
++++ src/gui/src/AboutDialogBase.ui
+@@ -1,223 +1,223 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<ui version="4.0">
+- <class>AboutDialogBase</class>
+- <widget class="QDialog" name="AboutDialogBase">
+-  <property name="windowModality">
+-   <enum>Qt::ApplicationModal</enum>
+-  </property>
+-  <property name="enabled">
+-   <bool>true</bool>
+-  </property>
+-  <property name="geometry">
+-   <rect>
+-    <x>0</x>
+-    <y>0</y>
+-    <width>450</width>
+-    <height>300</height>
+-   </rect>
+-  </property>
+-  <property name="sizePolicy">
+-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+-    <horstretch>0</horstretch>
+-    <verstretch>0</verstretch>
+-   </sizepolicy>
+-  </property>
+-  <property name="minimumSize">
+-   <size>
+-    <width>450</width>
+-    <height>300</height>
+-   </size>
+-  </property>
+-  <property name="maximumSize">
+-   <size>
+-    <width>450</width>
+-    <height>300</height>
+-   </size>
+-  </property>
+-  <property name="windowTitle">
+-   <string>About Synergy</string>
+-  </property>
+-  <property name="modal">
+-   <bool>true</bool>
+-  </property>
+-  <layout class="QGridLayout">
+-   <item row="2" column="1" colspan="2">
+-    <widget class="QLabel" name="label_3">
+-     <property name="sizePolicy">
+-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+-       <horstretch>0</horstretch>
+-       <verstretch>0</verstretch>
+-      </sizepolicy>
+-     </property>
+-     <property name="text">
+-      <string>&lt;p&gt;
+-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+-Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
+-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+-Visit our website for help and info (synergy-project.org).
+-&lt;/p&gt;</string>
+-     </property>
+-     <property name="margin">
+-      <number>1</number>
+-     </property>
+-    </widget>
+-   </item>
+-   <item row="3" column="1" colspan="2">
+-    <spacer>
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeType">
+-      <enum>QSizePolicy::Preferred</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>100</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-   <item row="0" column="1">
+-    <widget class="QLabel" name="label_2">
+-     <property name="text">
+-      <string/>
+-     </property>
+-     <property name="pixmap">
+-      <pixmap resource="Synergy.qrc">:/res/image/about.png</pixmap>
+-     </property>
+-     <property name="margin">
+-      <number>0</number>
+-     </property>
+-    </widget>
+-   </item>
+-   <item row="1" column="1" colspan="2">
+-    <spacer name="spacer">
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeType">
+-      <enum>QSizePolicy::Fixed</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>5</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-   <item row="5" column="1" colspan="2">
+-    <layout class="QHBoxLayout" name="horizontalLayout">
+-     <item>
+-      <widget class="QLabel" name="label">
+-       <property name="sizePolicy">
+-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+-         <horstretch>0</horstretch>
+-         <verstretch>0</verstretch>
+-        </sizepolicy>
+-       </property>
+-       <property name="text">
+-        <string>Version:</string>
+-       </property>
+-       <property name="margin">
+-        <number>1</number>
+-       </property>
+-      </widget>
+-     </item>
+-     <item>
+-      <widget class="QLabel" name="m_pLabelSynergyVersion">
+-       <property name="sizePolicy">
+-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+-         <horstretch>0</horstretch>
+-         <verstretch>0</verstretch>
+-        </sizepolicy>
+-       </property>
+-       <property name="text">
+-        <string>Unknown</string>
+-       </property>
+-       <property name="margin">
+-        <number>1</number>
+-       </property>
+-      </widget>
+-     </item>
+-     <item>
+-      <spacer name="horizontalSpacer">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-    </layout>
+-   </item>
+-   <item row="6" column="1">
+-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+-     <item>
+-      <widget class="QLabel" name="label_5">
+-       <property name="text">
+-        <string>Build Date: </string>
+-       </property>
+-      </widget>
+-     </item>
+-     <item>
+-      <widget class="QLabel" name="m_pLabelBuildDate">
+-       <property name="text">
+-        <string>Unknown</string>
+-       </property>
+-      </widget>
+-     </item>
+-     <item>
+-      <spacer name="horizontalSpacer_2">
+-       <property name="orientation">
+-        <enum>Qt::Horizontal</enum>
+-       </property>
+-       <property name="sizeHint" stdset="0">
+-        <size>
+-         <width>40</width>
+-         <height>20</height>
+-        </size>
+-       </property>
+-      </spacer>
+-     </item>
+-     <item>
+-      <widget class="QPushButton" name="buttonOk">
+-       <property name="text">
+-        <string>&amp;Ok</string>
+-       </property>
+-      </widget>
+-     </item>
+-    </layout>
+-   </item>
+-  </layout>
+- </widget>
+- <resources>
+-  <include location="Synergy.qrc"/>
+- </resources>
+- <connections>
+-  <connection>
+-   <sender>buttonOk</sender>
+-   <signal>clicked()</signal>
+-   <receiver>AboutDialogBase</receiver>
+-   <slot>accept()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>315</x>
+-     <y>374</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>301</x>
+-     <y>3</y>
+-    </hint>
+-   </hints>
+-  </connection>
+- </connections>
+-</ui>
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>AboutDialogBase</class>
++ <widget class="QDialog" name="AboutDialogBase">
++  <property name="windowModality">
++   <enum>Qt::ApplicationModal</enum>
++  </property>
++  <property name="enabled">
++   <bool>true</bool>
++  </property>
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>450</width>
++    <height>300</height>
++   </rect>
++  </property>
++  <property name="sizePolicy">
++   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
++    <horstretch>0</horstretch>
++    <verstretch>0</verstretch>
++   </sizepolicy>
++  </property>
++  <property name="minimumSize">
++   <size>
++    <width>450</width>
++    <height>300</height>
++   </size>
++  </property>
++  <property name="maximumSize">
++   <size>
++    <width>450</width>
++    <height>300</height>
++   </size>
++  </property>
++  <property name="windowTitle">
++   <string>About Synergy</string>
++  </property>
++  <property name="modal">
++   <bool>true</bool>
++  </property>
++  <layout class="QGridLayout">
++   <item row="2" column="1" colspan="2">
++    <widget class="QLabel" name="label_3">
++     <property name="sizePolicy">
++      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
++       <horstretch>0</horstretch>
++       <verstretch>0</verstretch>
++      </sizepolicy>
++     </property>
++     <property name="text">
++      <string>&lt;p&gt;
++Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
++Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
++Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
++Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
++Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
++The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
++Visit our website for help and info (symless.com).
++&lt;/p&gt;</string>
++     </property>
++     <property name="margin">
++      <number>1</number>
++     </property>
++    </widget>
++   </item>
++   <item row="3" column="1" colspan="2">
++    <spacer>
++     <property name="orientation">
++      <enum>Qt::Vertical</enum>
++     </property>
++     <property name="sizeType">
++      <enum>QSizePolicy::Preferred</enum>
++     </property>
++     <property name="sizeHint" stdset="0">
++      <size>
++       <width>20</width>
++       <height>100</height>
++      </size>
++     </property>
++    </spacer>
++   </item>
++   <item row="0" column="1">
++    <widget class="QLabel" name="label_2">
++     <property name="text">
++      <string/>
++     </property>
++     <property name="pixmap">
++      <pixmap resource="Synergy.qrc">:/res/image/about.png</pixmap>
++     </property>
++     <property name="margin">
++      <number>0</number>
++     </property>
++    </widget>
++   </item>
++   <item row="1" column="1" colspan="2">
++    <spacer name="spacer">
++     <property name="orientation">
++      <enum>Qt::Vertical</enum>
++     </property>
++     <property name="sizeType">
++      <enum>QSizePolicy::Fixed</enum>
++     </property>
++     <property name="sizeHint" stdset="0">
++      <size>
++       <width>20</width>
++       <height>5</height>
++      </size>
++     </property>
++    </spacer>
++   </item>
++   <item row="5" column="1" colspan="2">
++    <layout class="QHBoxLayout" name="horizontalLayout">
++     <item>
++      <widget class="QLabel" name="label">
++       <property name="sizePolicy">
++        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
++         <horstretch>0</horstretch>
++         <verstretch>0</verstretch>
++        </sizepolicy>
++       </property>
++       <property name="text">
++        <string>Version:</string>
++       </property>
++       <property name="margin">
++        <number>1</number>
++       </property>
++      </widget>
++     </item>
++     <item>
++      <widget class="QLabel" name="m_pLabelSynergyVersion">
++       <property name="sizePolicy">
++        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
++         <horstretch>0</horstretch>
++         <verstretch>0</verstretch>
++        </sizepolicy>
++       </property>
++       <property name="text">
++        <string>Unknown</string>
++       </property>
++       <property name="margin">
++        <number>1</number>
++       </property>
++      </widget>
++     </item>
++     <item>
++      <spacer name="horizontalSpacer">
++       <property name="orientation">
++        <enum>Qt::Horizontal</enum>
++       </property>
++       <property name="sizeHint" stdset="0">
++        <size>
++         <width>40</width>
++         <height>20</height>
++        </size>
++       </property>
++      </spacer>
++     </item>
++    </layout>
++   </item>
++   <item row="6" column="1">
++    <layout class="QHBoxLayout" name="horizontalLayout_2">
++     <item>
++      <widget class="QLabel" name="label_5">
++       <property name="text">
++        <string>Build Date: </string>
++       </property>
++      </widget>
++     </item>
++     <item>
++      <widget class="QLabel" name="m_pLabelBuildDate">
++       <property name="text">
++        <string>Unknown</string>
++       </property>
++      </widget>
++     </item>
++     <item>
++      <spacer name="horizontalSpacer_2">
++       <property name="orientation">
++        <enum>Qt::Horizontal</enum>
++       </property>
++       <property name="sizeHint" stdset="0">
++        <size>
++         <width>40</width>
++         <height>20</height>
++        </size>
++       </property>
++      </spacer>
++     </item>
++     <item>
++      <widget class="QPushButton" name="buttonOk">
++       <property name="text">
++        <string>&amp;Ok</string>
++       </property>
++      </widget>
++     </item>
++    </layout>
++   </item>
++  </layout>
++ </widget>
++ <resources>
++  <include location="Synergy.qrc"/>
++ </resources>
++ <connections>
++  <connection>
++   <sender>buttonOk</sender>
++   <signal>clicked()</signal>
++   <receiver>AboutDialogBase</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>315</x>
++     <y>374</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>301</x>
++     <y>3</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/res/ActionDialogBase.ui src/gui/src/ActionDialogBase.ui
+similarity index 96%
+rename from src/gui/res/ActionDialogBase.ui
+rename to src/gui/src/ActionDialogBase.ui
+index c6d86304..f6dff784 100644
+--- src/gui/res/ActionDialogBase.ui
++++ src/gui/src/ActionDialogBase.ui
+@@ -1,581 +1,581 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<ui version="4.0">
+- <class>ActionDialogBase</class>
+- <widget class="QDialog" name="ActionDialogBase">
+-  <property name="geometry">
+-   <rect>
+-    <x>0</x>
+-    <y>0</y>
+-    <width>372</width>
+-    <height>484</height>
+-   </rect>
+-  </property>
+-  <property name="windowTitle">
+-   <string>Configure Action</string>
+-  </property>
+-  <layout class="QVBoxLayout">
+-   <item>
+-    <widget class="QGroupBox" name="m_pGroupType">
+-     <property name="title">
+-      <string>Choose the action to perform</string>
+-     </property>
+-     <layout class="QVBoxLayout">
+-      <item>
+-       <widget class="QRadioButton" name="m_pRadioPress">
+-        <property name="text">
+-         <string>Press a hotkey</string>
+-        </property>
+-        <property name="checked">
+-         <bool>true</bool>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="QRadioButton" name="m_pRadioRelease">
+-        <property name="text">
+-         <string>Release a hotkey</string>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="QRadioButton" name="m_pRadioPressAndRelease">
+-        <property name="text">
+-         <string>Press and release a hotkey</string>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey">
+-        <property name="sizePolicy">
+-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+-          <horstretch>1</horstretch>
+-          <verstretch>0</verstretch>
+-         </sizepolicy>
+-        </property>
+-        <property name="minimumSize">
+-         <size>
+-          <width>256</width>
+-          <height>0</height>
+-         </size>
+-        </property>
+-        <property name="text">
+-         <string/>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="QGroupBox" name="m_pGroupBoxScreens">
+-        <property name="title">
+-         <string>only on these screens</string>
+-        </property>
+-        <property name="flat">
+-         <bool>true</bool>
+-        </property>
+-        <property name="checkable">
+-         <bool>true</bool>
+-        </property>
+-        <layout class="QHBoxLayout">
+-         <item>
+-          <spacer>
+-           <property name="orientation">
+-            <enum>Qt::Horizontal</enum>
+-           </property>
+-           <property name="sizeHint" stdset="0">
+-            <size>
+-             <width>40</width>
+-             <height>20</height>
+-            </size>
+-           </property>
+-          </spacer>
+-         </item>
+-         <item>
+-          <widget class="QListWidget" name="m_pListScreens">
+-           <property name="minimumSize">
+-            <size>
+-             <width>128</width>
+-             <height>64</height>
+-            </size>
+-           </property>
+-           <property name="selectionMode">
+-            <enum>QAbstractItemView::ExtendedSelection</enum>
+-           </property>
+-          </widget>
+-         </item>
+-        </layout>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="Line" name="line">
+-        <property name="orientation">
+-         <enum>Qt::Horizontal</enum>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <layout class="QHBoxLayout">
+-        <item>
+-         <widget class="QRadioButton" name="m_pRadioSwitchToScreen">
+-          <property name="text">
+-           <string>Switch to screen</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item>
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Horizontal</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>40</width>
+-            <height>20</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-        <item>
+-         <widget class="QComboBox" name="m_pComboSwitchToScreen">
+-          <property name="enabled">
+-           <bool>false</bool>
+-          </property>
+-         </widget>
+-        </item>
+-       </layout>
+-      </item>
+-      <item>
+-       <layout class="QHBoxLayout">
+-        <item>
+-         <widget class="QRadioButton" name="m_pRadioSwitchInDirection">
+-          <property name="text">
+-           <string>Switch in direction</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item>
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Horizontal</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>40</width>
+-            <height>20</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-        <item>
+-         <widget class="QComboBox" name="m_pComboSwitchInDirection">
+-          <property name="enabled">
+-           <bool>false</bool>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>left</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>right</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>up</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>down</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-       </layout>
+-      </item>
+-      <item>
+-       <layout class="QHBoxLayout">
+-        <item>
+-         <widget class="QRadioButton" name="m_pRadioLockCursorToScreen">
+-          <property name="text">
+-           <string>Lock cursor to screen</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item>
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Horizontal</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>40</width>
+-            <height>20</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-        <item>
+-         <widget class="QComboBox" name="m_pComboLockCursorToScreen">
+-          <property name="enabled">
+-           <bool>false</bool>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>toggle</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>on</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>off</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-       </layout>
+-      </item>
+-     </layout>
+-    </widget>
+-   </item>
+-   <item>
+-    <widget class="QGroupBox" name="groupBox_2">
+-     <property name="title">
+-      <string>This action is performed when</string>
+-     </property>
+-     <layout class="QHBoxLayout">
+-      <item>
+-       <widget class="QRadioButton" name="m_pRadioHotkeyPressed">
+-        <property name="text">
+-         <string>the hotkey is pressed</string>
+-        </property>
+-        <property name="checked">
+-         <bool>true</bool>
+-        </property>
+-       </widget>
+-      </item>
+-      <item>
+-       <widget class="QRadioButton" name="m_pRadioHotkeyReleased">
+-        <property name="text">
+-         <string>the hotkey is released</string>
+-        </property>
+-       </widget>
+-      </item>
+-     </layout>
+-    </widget>
+-   </item>
+-   <item>
+-    <widget class="QDialogButtonBox" name="buttonBox">
+-     <property name="orientation">
+-      <enum>Qt::Horizontal</enum>
+-     </property>
+-     <property name="standardButtons">
+-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+-     </property>
+-    </widget>
+-   </item>
+-  </layout>
+- </widget>
+- <customwidgets>
+-  <customwidget>
+-   <class>KeySequenceWidget</class>
+-   <extends>QLineEdit</extends>
+-   <header>KeySequenceWidget.h</header>
+-  </customwidget>
+- </customwidgets>
+- <resources/>
+- <connections>
+-  <connection>
+-   <sender>buttonBox</sender>
+-   <signal>accepted()</signal>
+-   <receiver>ActionDialogBase</receiver>
+-   <slot>accept()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>245</x>
+-     <y>474</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>157</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>buttonBox</sender>
+-   <signal>rejected()</signal>
+-   <receiver>ActionDialogBase</receiver>
+-   <slot>reject()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>313</x>
+-     <y>474</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>286</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pGroupType</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>104</x>
+-     <y>194</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>110</x>
+-     <y>132</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchInDirection</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>118</x>
+-     <y>322</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>81</x>
+-     <y>129</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioLockCursorToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>101</x>
+-     <y>353</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>68</x>
+-     <y>126</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioPress</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>48</x>
+-     <y>48</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>45</x>
+-     <y>129</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioRelease</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>135</x>
+-     <y>70</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>148</x>
+-     <y>125</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioPressAndRelease</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>194</x>
+-     <y>100</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>201</x>
+-     <y>125</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pComboSwitchToScreen</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>148</x>
+-     <y>291</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>350</x>
+-     <y>290</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchInDirection</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pComboSwitchInDirection</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>158</x>
+-     <y>322</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>350</x>
+-     <y>321</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioLockCursorToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pComboLockCursorToScreen</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>180</x>
+-     <y>353</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>350</x>
+-     <y>352</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioPress</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>25</x>
+-     <y>47</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>33</x>
+-     <y>155</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>48</x>
+-     <y>278</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>98</x>
+-     <y>153</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioRelease</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>264</x>
+-     <y>67</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>241</x>
+-     <y>158</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioPressAndRelease</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setEnabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>286</x>
+-     <y>98</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>290</x>
+-     <y>156</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchInDirection</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>38</x>
+-     <y>313</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>64</x>
+-     <y>195</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioLockCursorToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pGroupBoxScreens</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>48</x>
+-     <y>339</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>79</x>
+-     <y>234</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pRadioSwitchToScreen</sender>
+-   <signal>toggled(bool)</signal>
+-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+-   <slot>setDisabled(bool)</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>84</x>
+-     <y>280</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>185</x>
+-     <y>123</y>
+-    </hint>
+-   </hints>
+-  </connection>
+- </connections>
+-</ui>
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>ActionDialogBase</class>
++ <widget class="QDialog" name="ActionDialogBase">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>372</width>
++    <height>484</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Configure Action</string>
++  </property>
++  <layout class="QVBoxLayout">
++   <item>
++    <widget class="QGroupBox" name="m_pGroupType">
++     <property name="title">
++      <string>Choose the action to perform</string>
++     </property>
++     <layout class="QVBoxLayout">
++      <item>
++       <widget class="QRadioButton" name="m_pRadioPress">
++        <property name="text">
++         <string>Press a hotkey</string>
++        </property>
++        <property name="checked">
++         <bool>true</bool>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="QRadioButton" name="m_pRadioRelease">
++        <property name="text">
++         <string>Release a hotkey</string>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="QRadioButton" name="m_pRadioPressAndRelease">
++        <property name="text">
++         <string>Press and release a hotkey</string>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey">
++        <property name="sizePolicy">
++         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
++          <horstretch>1</horstretch>
++          <verstretch>0</verstretch>
++         </sizepolicy>
++        </property>
++        <property name="minimumSize">
++         <size>
++          <width>256</width>
++          <height>0</height>
++         </size>
++        </property>
++        <property name="text">
++         <string/>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="QGroupBox" name="m_pGroupBoxScreens">
++        <property name="title">
++         <string>only on these screens</string>
++        </property>
++        <property name="flat">
++         <bool>true</bool>
++        </property>
++        <property name="checkable">
++         <bool>true</bool>
++        </property>
++        <layout class="QHBoxLayout">
++         <item>
++          <spacer>
++           <property name="orientation">
++            <enum>Qt::Horizontal</enum>
++           </property>
++           <property name="sizeHint" stdset="0">
++            <size>
++             <width>40</width>
++             <height>20</height>
++            </size>
++           </property>
++          </spacer>
++         </item>
++         <item>
++          <widget class="QListWidget" name="m_pListScreens">
++           <property name="minimumSize">
++            <size>
++             <width>128</width>
++             <height>64</height>
++            </size>
++           </property>
++           <property name="selectionMode">
++            <enum>QAbstractItemView::ExtendedSelection</enum>
++           </property>
++          </widget>
++         </item>
++        </layout>
++       </widget>
++      </item>
++      <item>
++       <widget class="Line" name="line">
++        <property name="orientation">
++         <enum>Qt::Horizontal</enum>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <layout class="QHBoxLayout">
++        <item>
++         <widget class="QRadioButton" name="m_pRadioSwitchToScreen">
++          <property name="text">
++           <string>Switch to screen</string>
++          </property>
++         </widget>
++        </item>
++        <item>
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Horizontal</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>40</width>
++            <height>20</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++        <item>
++         <widget class="QComboBox" name="m_pComboSwitchToScreen">
++          <property name="enabled">
++           <bool>false</bool>
++          </property>
++         </widget>
++        </item>
++       </layout>
++      </item>
++      <item>
++       <layout class="QHBoxLayout">
++        <item>
++         <widget class="QRadioButton" name="m_pRadioSwitchInDirection">
++          <property name="text">
++           <string>Switch in direction</string>
++          </property>
++         </widget>
++        </item>
++        <item>
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Horizontal</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>40</width>
++            <height>20</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++        <item>
++         <widget class="QComboBox" name="m_pComboSwitchInDirection">
++          <property name="enabled">
++           <bool>false</bool>
++          </property>
++          <item>
++           <property name="text">
++            <string>left</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>right</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>up</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>down</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++       </layout>
++      </item>
++      <item>
++       <layout class="QHBoxLayout">
++        <item>
++         <widget class="QRadioButton" name="m_pRadioLockCursorToScreen">
++          <property name="text">
++           <string>Lock cursor to screen</string>
++          </property>
++         </widget>
++        </item>
++        <item>
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Horizontal</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>40</width>
++            <height>20</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++        <item>
++         <widget class="QComboBox" name="m_pComboLockCursorToScreen">
++          <property name="enabled">
++           <bool>false</bool>
++          </property>
++          <item>
++           <property name="text">
++            <string>toggle</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>on</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>off</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++       </layout>
++      </item>
++     </layout>
++    </widget>
++   </item>
++   <item>
++    <widget class="QGroupBox" name="groupBox_2">
++     <property name="title">
++      <string>This action is performed when</string>
++     </property>
++     <layout class="QHBoxLayout">
++      <item>
++       <widget class="QRadioButton" name="m_pRadioHotkeyPressed">
++        <property name="text">
++         <string>the hotkey is pressed</string>
++        </property>
++        <property name="checked">
++         <bool>true</bool>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="QRadioButton" name="m_pRadioHotkeyReleased">
++        <property name="text">
++         <string>the hotkey is released</string>
++        </property>
++       </widget>
++      </item>
++     </layout>
++    </widget>
++   </item>
++   <item>
++    <widget class="QDialogButtonBox" name="buttonBox">
++     <property name="orientation">
++      <enum>Qt::Horizontal</enum>
++     </property>
++     <property name="standardButtons">
++      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
++     </property>
++    </widget>
++   </item>
++  </layout>
++ </widget>
++ <customwidgets>
++  <customwidget>
++   <class>KeySequenceWidget</class>
++   <extends>QLineEdit</extends>
++   <header>KeySequenceWidget.h</header>
++  </customwidget>
++ </customwidgets>
++ <resources/>
++ <connections>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>ActionDialogBase</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>245</x>
++     <y>474</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>ActionDialogBase</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>313</x>
++     <y>474</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pGroupType</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>104</x>
++     <y>194</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>110</x>
++     <y>132</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchInDirection</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>118</x>
++     <y>322</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>81</x>
++     <y>129</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioLockCursorToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>101</x>
++     <y>353</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>68</x>
++     <y>126</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioPress</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>48</x>
++     <y>48</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>45</x>
++     <y>129</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioRelease</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>135</x>
++     <y>70</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>148</x>
++     <y>125</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioPressAndRelease</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>194</x>
++     <y>100</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>201</x>
++     <y>125</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pComboSwitchToScreen</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>148</x>
++     <y>291</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>350</x>
++     <y>290</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchInDirection</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pComboSwitchInDirection</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>158</x>
++     <y>322</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>350</x>
++     <y>321</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioLockCursorToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pComboLockCursorToScreen</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>180</x>
++     <y>353</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>350</x>
++     <y>352</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioPress</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>25</x>
++     <y>47</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>33</x>
++     <y>155</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>48</x>
++     <y>278</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>98</x>
++     <y>153</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioRelease</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>264</x>
++     <y>67</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>241</x>
++     <y>158</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioPressAndRelease</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>286</x>
++     <y>98</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>290</x>
++     <y>156</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchInDirection</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>38</x>
++     <y>313</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>64</x>
++     <y>195</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioLockCursorToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pGroupBoxScreens</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>48</x>
++     <y>339</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>79</x>
++     <y>234</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pRadioSwitchToScreen</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>m_pKeySequenceWidgetHotkey</receiver>
++   <slot>setDisabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>84</x>
++     <y>280</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>185</x>
++     <y>123</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/src/ActivationDialog.ui src/gui/src/ActivationDialog.ui
+new file mode 100644
+index 00000000..86fea30d
+--- /dev/null
++++ src/gui/src/ActivationDialog.ui
+@@ -0,0 +1,163 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>ActivationDialog</class>
++ <widget class="QDialog" name="ActivationDialog">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>410</width>
++    <height>211</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Activate Synergy</string>
++  </property>
++  <layout class="QVBoxLayout" name="verticalLayout">
++   <item>
++    <widget class="QLabel" name="label">
++     <property name="font">
++      <font>
++       <weight>75</weight>
++       <bold>true</bold>
++      </font>
++     </property>
++     <property name="text">
++      <string>Serial key</string>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="QLabel" name="label_5">
++     <property name="text">
++      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++     </property>
++     <property name="openExternalLinks">
++      <bool>true</bool>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="QTextEdit" name="m_pTextEditSerialKey">
++     <property name="enabled">
++      <bool>true</bool>
++     </property>
++     <property name="tabChangesFocus">
++      <bool>true</bool>
++     </property>
++     <property name="html">
++      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
++&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
++p, li { white-space: pre-wrap; }
++&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
++&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++     </property>
++     <property name="acceptRichText">
++      <bool>false</bool>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="QWidget" name="m_trialWidget" native="true">
++     <layout class="QHBoxLayout" name="horizontalLayout_5">
++      <property name="leftMargin">
++       <number>2</number>
++      </property>
++      <property name="topMargin">
++       <number>0</number>
++      </property>
++      <property name="rightMargin">
++       <number>0</number>
++      </property>
++      <property name="bottomMargin">
++       <number>8</number>
++      </property>
++      <item>
++       <widget class="QLabel" name="label_3">
++        <property name="text">
++         <string/>
++        </property>
++        <property name="pixmap">
++         <pixmap resource="Synergy.qrc">:/res/icons/16x16/money.png</pixmap>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <widget class="QLabel" name="m_trialLabel">
++        <property name="text">
++         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++        </property>
++        <property name="openExternalLinks">
++         <bool>true</bool>
++        </property>
++       </widget>
++      </item>
++      <item>
++       <spacer name="horizontalSpacer">
++        <property name="orientation">
++         <enum>Qt::Horizontal</enum>
++        </property>
++        <property name="sizeHint" stdset="0">
++         <size>
++          <width>40</width>
++          <height>20</height>
++         </size>
++        </property>
++       </spacer>
++      </item>
++     </layout>
++    </widget>
++   </item>
++   <item>
++    <widget class="QDialogButtonBox" name="buttonBox">
++     <property name="orientation">
++      <enum>Qt::Horizontal</enum>
++     </property>
++     <property name="standardButtons">
++      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
++     </property>
++    </widget>
++   </item>
++  </layout>
++ </widget>
++ <tabstops>
++  <tabstop>m_pTextEditSerialKey</tabstop>
++ </tabstops>
++ <resources>
++  <include location="Synergy.qrc"/>
++ </resources>
++ <connections>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>ActivationDialog</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>248</x>
++     <y>254</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>ActivationDialog</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>316</x>
++     <y>260</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/res/AddClientDialogBase.ui src/gui/src/AddClientDialogBase.ui
+similarity index 100%
+rename from src/gui/res/AddClientDialogBase.ui
+rename to src/gui/src/AddClientDialogBase.ui
+diff --git src/gui/src/CancelActivationDialog.ui src/gui/src/CancelActivationDialog.ui
+new file mode 100644
+index 00000000..054b3fe6
+--- /dev/null
++++ src/gui/src/CancelActivationDialog.ui
+@@ -0,0 +1,89 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>CancelActivationDialog</class>
++ <widget class="QDialog" name="CancelActivationDialog">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>400</width>
++    <height>165</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Cancel Activation</string>
++  </property>
++  <layout class="QVBoxLayout" name="verticalLayout">
++   <item>
++    <widget class="QLabel" name="label">
++     <property name="text">
++      <string>Are you sure?
++
++If you don't activate Synergy you'll be missing out on some great features.</string>
++     </property>
++     <property name="wordWrap">
++      <bool>true</bool>
++     </property>
++     <property name="openExternalLinks">
++      <bool>true</bool>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="QLabel" name="label_2">
++     <property name="text">
++      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/pricing?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++     </property>
++     <property name="openExternalLinks">
++      <bool>true</bool>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="QDialogButtonBox" name="buttonBox">
++     <property name="orientation">
++      <enum>Qt::Horizontal</enum>
++     </property>
++     <property name="standardButtons">
++      <set>QDialogButtonBox::No|QDialogButtonBox::Yes</set>
++     </property>
++    </widget>
++   </item>
++  </layout>
++ </widget>
++ <resources/>
++ <connections>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>CancelActivationDialog</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>248</x>
++     <y>254</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>CancelActivationDialog</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>316</x>
++     <y>260</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/src/FailedLoginDialog.ui src/gui/src/FailedLoginDialog.ui
+new file mode 100644
+index 00000000..d3c6b507
+--- /dev/null
++++ src/gui/src/FailedLoginDialog.ui
+@@ -0,0 +1,108 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>FailedLoginDialog</class>
++ <widget class="QDialog" name="FailedLoginDialog">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>400</width>
++    <height>165</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Activation Error</string>
++  </property>
++  <widget class="QDialogButtonBox" name="buttonBox">
++   <property name="geometry">
++    <rect>
++     <x>50</x>
++     <y>120</y>
++     <width>341</width>
++     <height>32</height>
++    </rect>
++   </property>
++   <property name="orientation">
++    <enum>Qt::Horizontal</enum>
++   </property>
++   <property name="standardButtons">
++    <set>QDialogButtonBox::Close</set>
++   </property>
++  </widget>
++  <widget class="QLabel" name="label_2">
++   <property name="geometry">
++    <rect>
++     <x>10</x>
++     <y>90</y>
++     <width>382</width>
++     <height>30</height>
++    </rect>
++   </property>
++   <property name="text">
++    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account/reset/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Forgotten your password?&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++   </property>
++   <property name="openExternalLinks">
++    <bool>true</bool>
++   </property>
++  </widget>
++  <widget class="QLabel" name="messageLabel">
++   <property name="geometry">
++    <rect>
++     <x>10</x>
++     <y>10</y>
++     <width>382</width>
++     <height>72</height>
++    </rect>
++   </property>
++   <property name="text">
++    <string>An error occurred while trying to activate Synergy. The Symless server returned the following error:
++
++%1</string>
++   </property>
++   <property name="wordWrap">
++    <bool>true</bool>
++   </property>
++   <property name="openExternalLinks">
++    <bool>true</bool>
++   </property>
++  </widget>
++  <zorder>label_2</zorder>
++  <zorder>messageLabel</zorder>
++  <zorder>buttonBox</zorder>
++ </widget>
++ <resources/>
++ <connections>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>FailedLoginDialog</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>248</x>
++     <y>254</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>FailedLoginDialog</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>316</x>
++     <y>260</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/res/HotkeyDialogBase.ui src/gui/src/HotkeyDialogBase.ui
+similarity index 95%
+rename from src/gui/res/HotkeyDialogBase.ui
+rename to src/gui/src/HotkeyDialogBase.ui
+index cccccf22..0ebcb438 100644
+--- src/gui/res/HotkeyDialogBase.ui
++++ src/gui/src/HotkeyDialogBase.ui
+@@ -1,81 +1,81 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<ui version="4.0">
+- <class>HotkeyDialogBase</class>
+- <widget class="QDialog" name="HotkeyDialogBase">
+-  <property name="geometry">
+-   <rect>
+-    <x>0</x>
+-    <y>0</y>
+-    <width>344</width>
+-    <height>86</height>
+-   </rect>
+-  </property>
+-  <property name="windowTitle">
+-   <string>Hotkey</string>
+-  </property>
+-  <layout class="QVBoxLayout">
+-   <item>
+-    <widget class="QLabel" name="label">
+-     <property name="text">
+-      <string>Enter the specification for the hotkey:</string>
+-     </property>
+-    </widget>
+-   </item>
+-   <item>
+-    <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey"/>
+-   </item>
+-   <item>
+-    <widget class="QDialogButtonBox" name="buttonBox">
+-     <property name="orientation">
+-      <enum>Qt::Horizontal</enum>
+-     </property>
+-     <property name="standardButtons">
+-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+-     </property>
+-    </widget>
+-   </item>
+-  </layout>
+- </widget>
+- <customwidgets>
+-  <customwidget>
+-   <class>KeySequenceWidget</class>
+-   <extends>QLineEdit</extends>
+-   <header>KeySequenceWidget.h</header>
+-  </customwidget>
+- </customwidgets>
+- <resources/>
+- <connections>
+-  <connection>
+-   <sender>buttonBox</sender>
+-   <signal>accepted()</signal>
+-   <receiver>HotkeyDialogBase</receiver>
+-   <slot>accept()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>248</x>
+-     <y>254</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>157</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>buttonBox</sender>
+-   <signal>rejected()</signal>
+-   <receiver>HotkeyDialogBase</receiver>
+-   <slot>reject()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>316</x>
+-     <y>260</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>286</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+- </connections>
+-</ui>
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>HotkeyDialogBase</class>
++ <widget class="QDialog" name="HotkeyDialogBase">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>344</width>
++    <height>86</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Hotkey</string>
++  </property>
++  <layout class="QVBoxLayout">
++   <item>
++    <widget class="QLabel" name="label">
++     <property name="text">
++      <string>Enter the specification for the hotkey:</string>
++     </property>
++    </widget>
++   </item>
++   <item>
++    <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey"/>
++   </item>
++   <item>
++    <widget class="QDialogButtonBox" name="buttonBox">
++     <property name="orientation">
++      <enum>Qt::Horizontal</enum>
++     </property>
++     <property name="standardButtons">
++      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
++     </property>
++    </widget>
++   </item>
++  </layout>
++ </widget>
++ <customwidgets>
++  <customwidget>
++   <class>KeySequenceWidget</class>
++   <extends>QLineEdit</extends>
++   <header>KeySequenceWidget.h</header>
++  </customwidget>
++ </customwidgets>
++ <resources/>
++ <connections>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>HotkeyDialogBase</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>248</x>
++     <y>254</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>buttonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>HotkeyDialogBase</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>316</x>
++     <y>260</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/res/MainWindowBase.ui src/gui/src/MainWindowBase.ui
+similarity index 88%
+rename from src/gui/res/MainWindowBase.ui
+rename to src/gui/src/MainWindowBase.ui
+index 0a47e0d3..b3fb0a75 100644
+--- src/gui/res/MainWindowBase.ui
++++ src/gui/src/MainWindowBase.ui
+@@ -1,4 +1,4 @@
+-<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="UTF-8"?>
+ <ui version="4.0">
+  <class>MainWindowBase</class>
+  <widget class="QMainWindow" name="MainWindowBase">
+@@ -27,6 +27,57 @@
+   </property>
+   <widget class="QWidget" name="centralwidget">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
++    <item>
++     <widget class="QWidget" name="m_trialWidget" native="true">
++      <layout class="QHBoxLayout" name="horizontalLayout_5">
++       <property name="leftMargin">
++        <number>2</number>
++       </property>
++       <property name="topMargin">
++        <number>0</number>
++       </property>
++       <property name="rightMargin">
++        <number>0</number>
++       </property>
++       <property name="bottomMargin">
++        <number>8</number>
++       </property>
++       <item>
++        <widget class="QLabel" name="label_3">
++         <property name="text">
++          <string/>
++         </property>
++         <property name="pixmap">
++          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
++         </property>
++        </widget>
++       </item>
++       <item>
++        <widget class="QLabel" name="m_trialLabel">
++         <property name="text">
++          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++         </property>
++         <property name="openExternalLinks">
++          <bool>true</bool>
++         </property>
++        </widget>
++       </item>
++       <item>
++        <spacer name="horizontalSpacer">
++         <property name="orientation">
++          <enum>Qt::Horizontal</enum>
++         </property>
++         <property name="sizeHint" stdset="0">
++          <size>
++           <width>40</width>
++           <height>20</height>
++          </size>
++         </property>
++        </spacer>
++       </item>
++      </layout>
++     </widget>
++    </item>
+     <item>
+      <widget class="QWidget" name="m_pWidgetUpdate" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+@@ -40,7 +91,7 @@
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+-        <number>7</number>
++        <number>8</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="m_pIconUpdate">
+@@ -128,7 +179,7 @@
+             </sizepolicy>
+            </property>
+            <property name="text">
+-            <string>Fingerprint:</string>
++            <string>SSL Fingerprint:</string>
+            </property>
+           </widget>
+          </item>
+@@ -481,12 +532,12 @@
+     <string notr="true"/>
+    </property>
+   </action>
+-  <action name="m_pActionWizard">
++  <action name="m_pActivate">
+    <property name="text">
+-    <string>Run Wizard</string>
++    <string>Activate</string>
+    </property>
+-   <property name="shortcut">
+-    <string notr="true"/>
++   <property name="toolTip">
++    <string>Activate</string>
+    </property>
+   </action>
+  </widget>
+diff --git src/gui/res/ScreenSettingsDialogBase.ui src/gui/src/ScreenSettingsDialogBase.ui
+similarity index 96%
+rename from src/gui/res/ScreenSettingsDialogBase.ui
+rename to src/gui/src/ScreenSettingsDialogBase.ui
+index 95c48685..0d6d7689 100644
+--- src/gui/res/ScreenSettingsDialogBase.ui
++++ src/gui/src/ScreenSettingsDialogBase.ui
+@@ -1,543 +1,543 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<ui version="4.0">
+- <class>ScreenSettingsDialogBase</class>
+- <widget class="QDialog" name="ScreenSettingsDialogBase">
+-  <property name="geometry">
+-   <rect>
+-    <x>0</x>
+-    <y>0</y>
+-    <width>434</width>
+-    <height>437</height>
+-   </rect>
+-  </property>
+-  <property name="windowTitle">
+-   <string>Screen Settings</string>
+-  </property>
+-  <layout class="QVBoxLayout">
+-   <item>
+-    <layout class="QHBoxLayout">
+-     <item>
+-      <widget class="QLabel" name="label_7">
+-       <property name="text">
+-        <string>Screen &amp;name:</string>
+-       </property>
+-       <property name="buddy">
+-        <cstring>m_pLineEditName</cstring>
+-       </property>
+-      </widget>
+-     </item>
+-     <item>
+-      <widget class="QLineEdit" name="m_pLineEditName"/>
+-     </item>
+-    </layout>
+-   </item>
+-   <item>
+-    <layout class="QHBoxLayout">
+-     <item>
+-      <widget class="QGroupBox" name="m_pGroupAliases">
+-       <property name="enabled">
+-        <bool>true</bool>
+-       </property>
+-       <property name="title">
+-        <string>A&amp;liases</string>
+-       </property>
+-       <property name="checked">
+-        <bool>false</bool>
+-       </property>
+-       <layout class="QGridLayout">
+-        <item row="0" column="0">
+-         <widget class="QLineEdit" name="m_pLineEditAlias"/>
+-        </item>
+-        <item row="0" column="1">
+-         <widget class="QPushButton" name="m_pButtonAddAlias">
+-          <property name="enabled">
+-           <bool>false</bool>
+-          </property>
+-          <property name="text">
+-           <string>&amp;Add</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="0" rowspan="2">
+-         <widget class="QListWidget" name="m_pListAliases">
+-          <property name="selectionMode">
+-           <enum>QAbstractItemView::ExtendedSelection</enum>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="1">
+-         <widget class="QPushButton" name="m_pButtonRemoveAlias">
+-          <property name="enabled">
+-           <bool>false</bool>
+-          </property>
+-          <property name="text">
+-           <string>&amp;Remove</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="2" column="1">
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Vertical</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>20</width>
+-            <height>126</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-       </layout>
+-      </widget>
+-     </item>
+-     <item>
+-      <widget class="QGroupBox" name="m_pGroupModifiers">
+-       <property name="title">
+-        <string>&amp;Modifier keys</string>
+-       </property>
+-       <property name="checked">
+-        <bool>false</bool>
+-       </property>
+-       <layout class="QGridLayout">
+-        <item row="0" column="0">
+-         <widget class="QLabel" name="label_2">
+-          <property name="text">
+-           <string>&amp;Shift:</string>
+-          </property>
+-          <property name="buddy">
+-           <cstring>m_pComboBoxShift</cstring>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="0" column="1">
+-         <widget class="QComboBox" name="m_pComboBoxShift">
+-          <item>
+-           <property name="text">
+-            <string>Shift</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Ctrl</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Alt</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Meta</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Super</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>None</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-        <item row="1" column="0">
+-         <widget class="QLabel" name="label_3">
+-          <property name="text">
+-           <string>&amp;Ctrl:</string>
+-          </property>
+-          <property name="buddy">
+-           <cstring>m_pComboBoxCtrl</cstring>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="1">
+-         <widget class="QComboBox" name="m_pComboBoxCtrl">
+-          <property name="currentIndex">
+-           <number>1</number>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>Shift</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Ctrl</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Alt</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Meta</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Super</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>None</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-        <item row="2" column="0">
+-         <widget class="QLabel" name="label_4">
+-          <property name="text">
+-           <string>Al&amp;t:</string>
+-          </property>
+-          <property name="buddy">
+-           <cstring>m_pComboBoxAlt</cstring>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="2" column="1">
+-         <widget class="QComboBox" name="m_pComboBoxAlt">
+-          <property name="currentIndex">
+-           <number>2</number>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>Shift</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Ctrl</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Alt</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Meta</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Super</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>None</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-        <item row="3" column="0">
+-         <widget class="QLabel" name="label_5">
+-          <property name="text">
+-           <string>M&amp;eta:</string>
+-          </property>
+-          <property name="buddy">
+-           <cstring>m_pComboBoxMeta</cstring>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="3" column="1">
+-         <widget class="QComboBox" name="m_pComboBoxMeta">
+-          <property name="currentIndex">
+-           <number>3</number>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>Shift</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Ctrl</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Alt</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Meta</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Super</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>None</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-        <item row="4" column="0">
+-         <widget class="QLabel" name="label_6">
+-          <property name="text">
+-           <string>S&amp;uper:</string>
+-          </property>
+-          <property name="buddy">
+-           <cstring>m_pComboBoxSuper</cstring>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="4" column="1">
+-         <widget class="QComboBox" name="m_pComboBoxSuper">
+-          <property name="currentIndex">
+-           <number>4</number>
+-          </property>
+-          <item>
+-           <property name="text">
+-            <string>Shift</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Ctrl</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Alt</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Meta</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>Super</string>
+-           </property>
+-          </item>
+-          <item>
+-           <property name="text">
+-            <string>None</string>
+-           </property>
+-          </item>
+-         </widget>
+-        </item>
+-        <item row="5" column="0">
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Vertical</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>20</width>
+-            <height>40</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-       </layout>
+-      </widget>
+-     </item>
+-    </layout>
+-   </item>
+-   <item>
+-    <layout class="QHBoxLayout">
+-     <item>
+-      <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+-       <property name="title">
+-        <string>&amp;Dead corners</string>
+-       </property>
+-       <property name="checked">
+-        <bool>false</bool>
+-       </property>
+-       <layout class="QGridLayout">
+-        <item row="0" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+-          <property name="text">
+-           <string>Top-left</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="0" column="1">
+-         <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+-          <property name="text">
+-           <string>Top-right</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+-          <property name="text">
+-           <string>Bottom-left</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="1">
+-         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+-          <property name="text">
+-           <string>Bottom-right</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="2" column="0" colspan="2">
+-         <layout class="QHBoxLayout">
+-          <item>
+-           <widget class="QLabel" name="label">
+-            <property name="text">
+-             <string>Corner Si&amp;ze:</string>
+-            </property>
+-            <property name="buddy">
+-             <cstring>m_pSpinBoxSwitchCornerSize</cstring>
+-            </property>
+-           </widget>
+-          </item>
+-          <item>
+-           <spacer>
+-            <property name="orientation">
+-             <enum>Qt::Horizontal</enum>
+-            </property>
+-            <property name="sizeHint" stdset="0">
+-             <size>
+-              <width>40</width>
+-              <height>20</height>
+-             </size>
+-            </property>
+-           </spacer>
+-          </item>
+-          <item>
+-           <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
+-          </item>
+-         </layout>
+-        </item>
+-       </layout>
+-      </widget>
+-     </item>
+-     <item>
+-      <widget class="QGroupBox" name="m_pGroupFixes">
+-       <property name="title">
+-        <string>&amp;Fixes</string>
+-       </property>
+-       <property name="checked">
+-        <bool>false</bool>
+-       </property>
+-       <layout class="QGridLayout">
+-        <item row="0" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxCapsLock">
+-          <property name="text">
+-           <string>Fix CAPS LOCK key</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="1" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxNumLock">
+-          <property name="text">
+-           <string>Fix NUM LOCK key</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="2" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxScrollLock">
+-          <property name="text">
+-           <string>Fix SCROLL LOCK key</string>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="3" column="0">
+-         <widget class="QCheckBox" name="m_pCheckBoxXTest">
+-          <property name="text">
+-           <string>Fix XTest for Xinerama</string>
+-          </property>
+-          <property name="checked">
+-           <bool>false</bool>
+-          </property>
+-         </widget>
+-        </item>
+-        <item row="4" column="0">
+-         <spacer>
+-          <property name="orientation">
+-           <enum>Qt::Vertical</enum>
+-          </property>
+-          <property name="sizeHint" stdset="0">
+-           <size>
+-            <width>20</width>
+-            <height>40</height>
+-           </size>
+-          </property>
+-         </spacer>
+-        </item>
+-       </layout>
+-      </widget>
+-     </item>
+-    </layout>
+-   </item>
+-   <item>
+-    <spacer>
+-     <property name="orientation">
+-      <enum>Qt::Vertical</enum>
+-     </property>
+-     <property name="sizeHint" stdset="0">
+-      <size>
+-       <width>20</width>
+-       <height>40</height>
+-      </size>
+-     </property>
+-    </spacer>
+-   </item>
+-   <item>
+-    <widget class="QDialogButtonBox" name="m_pButtonBox">
+-     <property name="orientation">
+-      <enum>Qt::Horizontal</enum>
+-     </property>
+-     <property name="standardButtons">
+-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+-     </property>
+-    </widget>
+-   </item>
+-  </layout>
+- </widget>
+- <resources/>
+- <connections>
+-  <connection>
+-   <sender>m_pButtonBox</sender>
+-   <signal>accepted()</signal>
+-   <receiver>ScreenSettingsDialogBase</receiver>
+-   <slot>accept()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>222</x>
+-     <y>502</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>157</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+-  <connection>
+-   <sender>m_pButtonBox</sender>
+-   <signal>rejected()</signal>
+-   <receiver>ScreenSettingsDialogBase</receiver>
+-   <slot>reject()</slot>
+-   <hints>
+-    <hint type="sourcelabel">
+-     <x>290</x>
+-     <y>508</y>
+-    </hint>
+-    <hint type="destinationlabel">
+-     <x>286</x>
+-     <y>274</y>
+-    </hint>
+-   </hints>
+-  </connection>
+- </connections>
+-</ui>
++<?xml version="1.0" encoding="UTF-8"?>
++<ui version="4.0">
++ <class>ScreenSettingsDialogBase</class>
++ <widget class="QDialog" name="ScreenSettingsDialogBase">
++  <property name="geometry">
++   <rect>
++    <x>0</x>
++    <y>0</y>
++    <width>434</width>
++    <height>437</height>
++   </rect>
++  </property>
++  <property name="windowTitle">
++   <string>Screen Settings</string>
++  </property>
++  <layout class="QVBoxLayout">
++   <item>
++    <layout class="QHBoxLayout">
++     <item>
++      <widget class="QLabel" name="label_7">
++       <property name="text">
++        <string>Screen &amp;name:</string>
++       </property>
++       <property name="buddy">
++        <cstring>m_pLineEditName</cstring>
++       </property>
++      </widget>
++     </item>
++     <item>
++      <widget class="QLineEdit" name="m_pLineEditName"/>
++     </item>
++    </layout>
++   </item>
++   <item>
++    <layout class="QHBoxLayout">
++     <item>
++      <widget class="QGroupBox" name="m_pGroupAliases">
++       <property name="enabled">
++        <bool>true</bool>
++       </property>
++       <property name="title">
++        <string>A&amp;liases</string>
++       </property>
++       <property name="checked">
++        <bool>false</bool>
++       </property>
++       <layout class="QGridLayout">
++        <item row="0" column="0">
++         <widget class="QLineEdit" name="m_pLineEditAlias"/>
++        </item>
++        <item row="0" column="1">
++         <widget class="QPushButton" name="m_pButtonAddAlias">
++          <property name="enabled">
++           <bool>false</bool>
++          </property>
++          <property name="text">
++           <string>&amp;Add</string>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="0" rowspan="2">
++         <widget class="QListWidget" name="m_pListAliases">
++          <property name="selectionMode">
++           <enum>QAbstractItemView::ExtendedSelection</enum>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="1">
++         <widget class="QPushButton" name="m_pButtonRemoveAlias">
++          <property name="enabled">
++           <bool>false</bool>
++          </property>
++          <property name="text">
++           <string>&amp;Remove</string>
++          </property>
++         </widget>
++        </item>
++        <item row="2" column="1">
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Vertical</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>20</width>
++            <height>126</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++       </layout>
++      </widget>
++     </item>
++     <item>
++      <widget class="QGroupBox" name="m_pGroupModifiers">
++       <property name="title">
++        <string>&amp;Modifier keys</string>
++       </property>
++       <property name="checked">
++        <bool>false</bool>
++       </property>
++       <layout class="QGridLayout">
++        <item row="0" column="0">
++         <widget class="QLabel" name="label_2">
++          <property name="text">
++           <string>&amp;Shift:</string>
++          </property>
++          <property name="buddy">
++           <cstring>m_pComboBoxShift</cstring>
++          </property>
++         </widget>
++        </item>
++        <item row="0" column="1">
++         <widget class="QComboBox" name="m_pComboBoxShift">
++          <item>
++           <property name="text">
++            <string>Shift</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Ctrl</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Alt</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Meta</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Super</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>None</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++        <item row="1" column="0">
++         <widget class="QLabel" name="label_3">
++          <property name="text">
++           <string>&amp;Ctrl:</string>
++          </property>
++          <property name="buddy">
++           <cstring>m_pComboBoxCtrl</cstring>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="1">
++         <widget class="QComboBox" name="m_pComboBoxCtrl">
++          <property name="currentIndex">
++           <number>1</number>
++          </property>
++          <item>
++           <property name="text">
++            <string>Shift</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Ctrl</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Alt</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Meta</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Super</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>None</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++        <item row="2" column="0">
++         <widget class="QLabel" name="label_4">
++          <property name="text">
++           <string>Al&amp;t:</string>
++          </property>
++          <property name="buddy">
++           <cstring>m_pComboBoxAlt</cstring>
++          </property>
++         </widget>
++        </item>
++        <item row="2" column="1">
++         <widget class="QComboBox" name="m_pComboBoxAlt">
++          <property name="currentIndex">
++           <number>2</number>
++          </property>
++          <item>
++           <property name="text">
++            <string>Shift</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Ctrl</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Alt</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Meta</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Super</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>None</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++        <item row="3" column="0">
++         <widget class="QLabel" name="label_5">
++          <property name="text">
++           <string>M&amp;eta:</string>
++          </property>
++          <property name="buddy">
++           <cstring>m_pComboBoxMeta</cstring>
++          </property>
++         </widget>
++        </item>
++        <item row="3" column="1">
++         <widget class="QComboBox" name="m_pComboBoxMeta">
++          <property name="currentIndex">
++           <number>3</number>
++          </property>
++          <item>
++           <property name="text">
++            <string>Shift</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Ctrl</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Alt</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Meta</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Super</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>None</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++        <item row="4" column="0">
++         <widget class="QLabel" name="label_6">
++          <property name="text">
++           <string>S&amp;uper:</string>
++          </property>
++          <property name="buddy">
++           <cstring>m_pComboBoxSuper</cstring>
++          </property>
++         </widget>
++        </item>
++        <item row="4" column="1">
++         <widget class="QComboBox" name="m_pComboBoxSuper">
++          <property name="currentIndex">
++           <number>4</number>
++          </property>
++          <item>
++           <property name="text">
++            <string>Shift</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Ctrl</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Alt</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Meta</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>Super</string>
++           </property>
++          </item>
++          <item>
++           <property name="text">
++            <string>None</string>
++           </property>
++          </item>
++         </widget>
++        </item>
++        <item row="5" column="0">
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Vertical</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>20</width>
++            <height>40</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++       </layout>
++      </widget>
++     </item>
++    </layout>
++   </item>
++   <item>
++    <layout class="QHBoxLayout">
++     <item>
++      <widget class="QGroupBox" name="m_pGroupSwitchCorners">
++       <property name="title">
++        <string>&amp;Dead corners</string>
++       </property>
++       <property name="checked">
++        <bool>false</bool>
++       </property>
++       <layout class="QGridLayout">
++        <item row="0" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
++          <property name="text">
++           <string>Top-left</string>
++          </property>
++         </widget>
++        </item>
++        <item row="0" column="1">
++         <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
++          <property name="text">
++           <string>Top-right</string>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
++          <property name="text">
++           <string>Bottom-left</string>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="1">
++         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
++          <property name="text">
++           <string>Bottom-right</string>
++          </property>
++         </widget>
++        </item>
++        <item row="2" column="0" colspan="2">
++         <layout class="QHBoxLayout">
++          <item>
++           <widget class="QLabel" name="label">
++            <property name="text">
++             <string>Corner Si&amp;ze:</string>
++            </property>
++            <property name="buddy">
++             <cstring>m_pSpinBoxSwitchCornerSize</cstring>
++            </property>
++           </widget>
++          </item>
++          <item>
++           <spacer>
++            <property name="orientation">
++             <enum>Qt::Horizontal</enum>
++            </property>
++            <property name="sizeHint" stdset="0">
++             <size>
++              <width>40</width>
++              <height>20</height>
++             </size>
++            </property>
++           </spacer>
++          </item>
++          <item>
++           <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
++          </item>
++         </layout>
++        </item>
++       </layout>
++      </widget>
++     </item>
++     <item>
++      <widget class="QGroupBox" name="m_pGroupFixes">
++       <property name="title">
++        <string>&amp;Fixes</string>
++       </property>
++       <property name="checked">
++        <bool>false</bool>
++       </property>
++       <layout class="QGridLayout">
++        <item row="0" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxCapsLock">
++          <property name="text">
++           <string>Fix CAPS LOCK key</string>
++          </property>
++         </widget>
++        </item>
++        <item row="1" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxNumLock">
++          <property name="text">
++           <string>Fix NUM LOCK key</string>
++          </property>
++         </widget>
++        </item>
++        <item row="2" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxScrollLock">
++          <property name="text">
++           <string>Fix SCROLL LOCK key</string>
++          </property>
++         </widget>
++        </item>
++        <item row="3" column="0">
++         <widget class="QCheckBox" name="m_pCheckBoxXTest">
++          <property name="text">
++           <string>Fix XTest for Xinerama</string>
++          </property>
++          <property name="checked">
++           <bool>false</bool>
++          </property>
++         </widget>
++        </item>
++        <item row="4" column="0">
++         <spacer>
++          <property name="orientation">
++           <enum>Qt::Vertical</enum>
++          </property>
++          <property name="sizeHint" stdset="0">
++           <size>
++            <width>20</width>
++            <height>40</height>
++           </size>
++          </property>
++         </spacer>
++        </item>
++       </layout>
++      </widget>
++     </item>
++    </layout>
++   </item>
++   <item>
++    <spacer>
++     <property name="orientation">
++      <enum>Qt::Vertical</enum>
++     </property>
++     <property name="sizeHint" stdset="0">
++      <size>
++       <width>20</width>
++       <height>40</height>
++      </size>
++     </property>
++    </spacer>
++   </item>
++   <item>
++    <widget class="QDialogButtonBox" name="m_pButtonBox">
++     <property name="orientation">
++      <enum>Qt::Horizontal</enum>
++     </property>
++     <property name="standardButtons">
++      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
++     </property>
++    </widget>
++   </item>
++  </layout>
++ </widget>
++ <resources/>
++ <connections>
++  <connection>
++   <sender>m_pButtonBox</sender>
++   <signal>accepted()</signal>
++   <receiver>ScreenSettingsDialogBase</receiver>
++   <slot>accept()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>222</x>
++     <y>502</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>157</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>m_pButtonBox</sender>
++   <signal>rejected()</signal>
++   <receiver>ScreenSettingsDialogBase</receiver>
++   <slot>reject()</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>290</x>
++     <y>508</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>286</x>
++     <y>274</y>
++    </hint>
++   </hints>
++  </connection>
++ </connections>
++</ui>
+diff --git src/gui/res/ServerConfigDialogBase.ui src/gui/src/ServerConfigDialogBase.ui
+similarity index 97%
+rename from src/gui/res/ServerConfigDialogBase.ui
+rename to src/gui/src/ServerConfigDialogBase.ui
+index cc44f66e..5478f360 100644
+--- src/gui/res/ServerConfigDialogBase.ui
++++ src/gui/src/ServerConfigDialogBase.ui
+@@ -6,8 +6,8 @@
+    <rect>
+     <x>0</x>
+     <y>0</y>
+-    <width>740</width>
+-    <height>514</height>
++    <width>795</width>
++    <height>534</height>
+    </rect>
+   </property>
+   <property name="windowTitle">
+@@ -44,7 +44,7 @@
+             <string/>
+            </property>
+            <property name="pixmap">
+-            <pixmap>:/res/icons/64x64/user-trash.png</pixmap>
++            <pixmap resource="Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
+            </property>
+           </widget>
+          </item>
+@@ -82,7 +82,7 @@
+             <string/>
+            </property>
+            <property name="pixmap">
+-            <pixmap>:/res/icons/64x64/video-display.png</pixmap>
++            <pixmap resource="Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
+            </property>
+           </widget>
+          </item>
+@@ -408,6 +408,36 @@ Double click on a screen to edit its settings.</string>
+           <string>&amp;Options</string>
+          </property>
+          <layout class="QGridLayout">
++          <item row="3" column="0">
++           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
++            <property name="enabled">
++             <bool>true</bool>
++            </property>
++            <property name="text">
++             <string>Don't take &amp;foreground window on Windows servers</string>
++            </property>
++           </widget>
++          </item>
++          <item row="1" column="0">
++           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
++            <property name="enabled">
++             <bool>true</bool>
++            </property>
++            <property name="text">
++             <string>Use &amp;relative mouse moves</string>
++            </property>
++           </widget>
++          </item>
++          <item row="2" column="0">
++           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
++            <property name="enabled">
++             <bool>true</bool>
++            </property>
++            <property name="text">
++             <string>S&amp;ynchronize screen savers</string>
++            </property>
++           </widget>
++          </item>
+           <item row="0" column="0">
+            <layout class="QHBoxLayout">
+             <item>
+@@ -461,33 +491,23 @@ Double click on a screen to edit its settings.</string>
+             </item>
+            </layout>
+           </item>
+-          <item row="1" column="0">
+-           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+-            <property name="enabled">
+-             <bool>true</bool>
+-            </property>
+-            <property name="text">
+-             <string>Use &amp;relative mouse moves</string>
+-            </property>
+-           </widget>
+-          </item>
+-          <item row="2" column="0">
+-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
+-            <property name="enabled">
+-             <bool>true</bool>
++          <item row="7" column="0">
++           <spacer>
++            <property name="orientation">
++             <enum>Qt::Vertical</enum>
+             </property>
+-            <property name="text">
+-             <string>S&amp;ynchronize screen savers</string>
++            <property name="sizeHint" stdset="0">
++             <size>
++              <width>20</width>
++              <height>16</height>
++             </size>
+             </property>
+-           </widget>
++           </spacer>
+           </item>
+-          <item row="3" column="0">
+-           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
+-            <property name="enabled">
+-             <bool>true</bool>
+-            </property>
++          <item row="5" column="0">
++           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
+             <property name="text">
+-             <string>Don't take &amp;foreground window on Windows servers</string>
++             <string>Enable drag and drop file transfers</string>
+             </property>
+            </widget>
+           </item>
+@@ -498,25 +518,15 @@ Double click on a screen to edit its settings.</string>
+             </property>
+            </widget>
+           </item>
+-          <item row="5" column="0">
+-           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
+-            <property name="text">
+-             <string>Enable drag and drop file transfers</string>
+-            </property>
+-           </widget>
+-          </item>
+           <item row="6" column="0">
+-           <spacer>
+-            <property name="orientation">
+-             <enum>Qt::Vertical</enum>
++           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
++            <property name="text">
++             <string>Enable clipboard sharing</string>
+             </property>
+-            <property name="sizeHint" stdset="0">
+-             <size>
+-              <width>20</width>
+-              <height>16</height>
+-             </size>
++            <property name="checked">
++             <bool>true</bool>
+             </property>
+-           </spacer>
++           </widget>
+           </item>
+          </layout>
+         </widget>
+@@ -651,7 +661,9 @@ Double click on a screen to edit its settings.</string>
+    <header>TrashScreenWidget.h</header>
+   </customwidget>
+  </customwidgets>
+- <resources/>
++ <resources>
++  <include location="Synergy.qrc"/>
++ </resources>
+  <connections>
+   <connection>
+    <sender>m_pButtonBox</sender>
+diff --git src/gui/res/SettingsDialogBase.ui src/gui/src/SettingsDialogBase.ui
+similarity index 89%
+rename from src/gui/res/SettingsDialogBase.ui
+rename to src/gui/src/SettingsDialogBase.ui
+index c7a5d3ec..f604cf7a 100644
+--- src/gui/res/SettingsDialogBase.ui
++++ src/gui/src/SettingsDialogBase.ui
+@@ -7,7 +7,7 @@
+     <x>0</x>
+     <y>0</y>
+     <width>368</width>
+-    <height>377</height>
++    <height>380</height>
+    </rect>
+   </property>
+   <property name="windowTitle">
+@@ -114,17 +114,42 @@
+       <item row="0" column="1">
+        <widget class="QComboBox" name="m_pComboLanguage"/>
+       </item>
+-      <item row="4" column="0">
+-       <widget class="QCheckBox" name="m_pCheckBoxElevateMode">
++      <item row="5" column="0">
++       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+         <property name="text">
+-         <string>Elevate mode</string>
++         <string>&amp;Hide on startup</string>
+         </property>
+        </widget>
+       </item>
+-      <item row="5" column="0">
+-       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
++      <item row="4" column="1">
++       <widget class="QComboBox" name="m_pComboElevate">
++        <property name="toolTip">
++         <string>Specify when the Synergy service should run at an elevated privilege level</string>
++        </property>
++        <property name="currentIndex">
++         <number>0</number>
++        </property>
++        <item>
++         <property name="text">
++          <string>As Needed</string>
++         </property>
++        </item>
++        <item>
++         <property name="text">
++          <string>Always</string>
++         </property>
++        </item>
++        <item>
++         <property name="text">
++          <string>Never</string>
++         </property>
++        </item>
++       </widget>
++      </item>
++      <item row="4" column="0">
++       <widget class="QLabel" name="m_pLabelElevate">
+         <property name="text">
+-         <string>&amp;Hide on startup</string>
++         <string>Elevate</string>
+         </property>
+        </widget>
+       </item>
+@@ -151,8 +176,11 @@
+       </property>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
++        <property name="enabled">
++         <bool>false</bool>
++        </property>
+         <property name="text">
+-         <string>Use &amp;SSL encryption (unique certificate)</string>
++         <string>Use &amp;SSL encryption</string>
+         </property>
+        </widget>
+       </item>
+@@ -302,11 +330,13 @@
+   <tabstop>m_pLineEditScreenName</tabstop>
+   <tabstop>m_pSpinBoxPort</tabstop>
+   <tabstop>m_pLineEditInterface</tabstop>
++  <tabstop>m_pComboElevate</tabstop>
++  <tabstop>m_pCheckBoxAutoHide</tabstop>
++  <tabstop>m_pCheckBoxEnableCrypto</tabstop>
+   <tabstop>m_pComboLogLevel</tabstop>
+   <tabstop>m_pCheckBoxLogToFile</tabstop>
+   <tabstop>m_pLineEditLogFilename</tabstop>
+   <tabstop>m_pButtonBrowseLog</tabstop>
+-  <tabstop>buttonBox</tabstop>
+  </tabstops>
+  <resources/>
+  <connections>
+diff --git src/gui/res/SetupWizardBase.ui src/gui/src/SetupWizardBase.ui
+similarity index 60%
+rename from src/gui/res/SetupWizardBase.ui
+rename to src/gui/src/SetupWizardBase.ui
+index 8339e54a..8c089886 100644
+--- src/gui/res/SetupWizardBase.ui
++++ src/gui/src/SetupWizardBase.ui
+@@ -120,193 +120,6 @@
+     </item>
+    </layout>
+   </widget>
+-  <widget class="QWizardPage" name="m_pActivatePage">
+-   <property name="title">
+-    <string>Activate</string>
+-   </property>
+-   <layout class="QVBoxLayout" name="verticalLayout">
+-    <item>
+-     <widget class="QRadioButton" name="m_pRadioButtonActivate">
+-      <property name="text">
+-       <string>Log in</string>
+-      </property>
+-      <property name="checked">
+-       <bool>true</bool>
+-      </property>
+-     </widget>
+-    </item>
+-    <item>
+-     <layout class="QFormLayout" name="formLayout">
+-      <property name="fieldGrowthPolicy">
+-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+-      </property>
+-      <property name="horizontalSpacing">
+-       <number>20</number>
+-      </property>
+-      <property name="verticalSpacing">
+-       <number>10</number>
+-      </property>
+-      <item row="0" column="0">
+-       <widget class="QLabel" name="m_pLabelEmail">
+-        <property name="text">
+-         <string>Email:</string>
+-        </property>
+-       </widget>
+-      </item>
+-      <item row="0" column="1">
+-       <widget class="QLineEdit" name="m_pLineEditEmail">
+-        <property name="sizePolicy">
+-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+-          <horstretch>0</horstretch>
+-          <verstretch>0</verstretch>
+-         </sizepolicy>
+-        </property>
+-        <property name="minimumSize">
+-         <size>
+-          <width>200</width>
+-          <height>0</height>
+-         </size>
+-        </property>
+-        <property name="echoMode">
+-         <enum>QLineEdit::Normal</enum>
+-        </property>
+-       </widget>
+-      </item>
+-      <item row="1" column="0">
+-       <widget class="QLabel" name="label">
+-        <property name="text">
+-         <string>Password:</string>
+-        </property>
+-       </widget>
+-      </item>
+-      <item row="1" column="1">
+-       <widget class="QLineEdit" name="m_pLineEditPassword">
+-        <property name="sizePolicy">
+-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+-          <horstretch>0</horstretch>
+-          <verstretch>0</verstretch>
+-         </sizepolicy>
+-        </property>
+-        <property name="minimumSize">
+-         <size>
+-          <width>200</width>
+-          <height>0</height>
+-         </size>
+-        </property>
+-        <property name="echoMode">
+-         <enum>QLineEdit::Password</enum>
+-        </property>
+-       </widget>
+-      </item>
+-      <item row="2" column="1">
+-       <widget class="QLabel" name="label_2">
+-        <property name="text">
+-         <string>&lt;a href=&quot;https://synergy-project.org/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</string>
+-        </property>
+-        <property name="openExternalLinks">
+-         <bool>true</bool>
+-        </property>
+-       </widget>
+-      </item>
+-     </layout>
+-    </item>
+-    <item>
+-     <spacer name="verticalSpacer_8">
+-      <property name="orientation">
+-       <enum>Qt::Vertical</enum>
+-      </property>
+-      <property name="sizeType">
+-       <enum>QSizePolicy::Fixed</enum>
+-      </property>
+-      <property name="sizeHint" stdset="0">
+-       <size>
+-        <width>20</width>
+-        <height>10</height>
+-       </size>
+-      </property>
+-     </spacer>
+-    </item>
+-    <item>
+-     <widget class="QRadioButton" name="m_pRadioButtonSubscription">
+-      <property name="text">
+-       <string>Subscription</string>
+-      </property>
+-     </widget>
+-    </item>
+-    <item>
+-     <layout class="QFormLayout" name="formLayout_2">
+-      <property name="horizontalSpacing">
+-       <number>20</number>
+-      </property>
+-      <property name="verticalSpacing">
+-       <number>10</number>
+-      </property>
+-      <item row="0" column="0">
+-       <widget class="QLabel" name="label_6">
+-        <property name="text">
+-         <string>Serial Key:</string>
+-        </property>
+-       </widget>
+-      </item>
+-      <item row="0" column="1">
+-       <widget class="QLineEdit" name="m_pLineEditSerialKey">
+-        <property name="sizePolicy">
+-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+-          <horstretch>0</horstretch>
+-          <verstretch>0</verstretch>
+-         </sizepolicy>
+-        </property>
+-        <property name="minimumSize">
+-         <size>
+-          <width>400</width>
+-          <height>0</height>
+-         </size>
+-        </property>
+-       </widget>
+-      </item>
+-     </layout>
+-    </item>
+-    <item>
+-     <spacer name="verticalSpacer_5">
+-      <property name="orientation">
+-       <enum>Qt::Vertical</enum>
+-      </property>
+-      <property name="sizeType">
+-       <enum>QSizePolicy::Fixed</enum>
+-      </property>
+-      <property name="sizeHint" stdset="0">
+-       <size>
+-        <width>20</width>
+-        <height>10</height>
+-       </size>
+-      </property>
+-     </spacer>
+-    </item>
+-    <item>
+-     <widget class="QRadioButton" name="m_pRadioButtonSkip">
+-      <property name="text">
+-       <string>&amp;Skip activation</string>
+-      </property>
+-     </widget>
+-    </item>
+-    <item>
+-     <spacer name="verticalSpacer_3">
+-      <property name="orientation">
+-       <enum>Qt::Vertical</enum>
+-      </property>
+-      <property name="sizeType">
+-       <enum>QSizePolicy::Expanding</enum>
+-      </property>
+-      <property name="sizeHint" stdset="0">
+-       <size>
+-        <width>20</width>
+-        <height>500</height>
+-       </size>
+-      </property>
+-     </spacer>
+-    </item>
+-   </layout>
+-  </widget>
+   <widget class="QWizardPage" name="m_pNodePage">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+-- 
+2.43.0
+

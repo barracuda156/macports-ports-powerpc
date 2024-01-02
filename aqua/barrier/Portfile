@@ -37,8 +37,16 @@ configure.args-append \
     -DBARRIER_BUILD_TESTS=OFF \
     -DBARRIER_USE_EXTERNAL_GTEST=ON
 
-# the gui requires metal
-if { ${os.major} < 16 } {
+if { ${os.major} < 11 } {
+    PortGroup  qt4 1.0
+
+    patchfiles-append \
+        0001-Add-CMake-build-option-for-GUI.patch
+        0002-Fix-bonjour-linkage-on-non-Windows-platforms.patch
+        0003-Fix-CMakeLists-for-Qt4.patch
+
+} elseif { ${os.major} < 16 } {
+    # New gui requires metal
     configure.args-append \
         -DBARRIER_BUILD_GUI=OFF
 } else {

@@ -1,0 +1,28 @@
+From 7588f6c4ef27115d428ad9fde1f52ac9fc2eb2c1 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Tue, 2 Jan 2024 16:35:03 +0800
+Subject: [PATCH 2/3] Fix bonjour linkage on non-Windows platforms
+
+Backport of https://github.com/debauchee/barrier/commit/e3f3b7424cc8d27606ef7a832c084511aff8cf61
+---
+ src/gui/CMakeLists.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git src/gui/CMakeLists.txt src/gui/CMakeLists.txt
+index 3ef5c65b..e1e75a12 100644
+--- src/gui/CMakeLists.txt
++++ src/gui/CMakeLists.txt
+@@ -26,5 +26,8 @@ endif()
+ 
+ qt5_use_modules (synergyx Widgets Network)
+ target_link_libraries (synergyx ${DNSSD_LIB} shared)
+-set_target_properties (synergyx PROPERTIES 
+-							    LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
++
++if (WIN32)
++    set_target_properties (synergyx PROPERTIES 
++                           LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
++endif()
+-- 
+2.43.0
+

@@ -5,7 +5,6 @@ PortSystem          1.0
 name                fpc
 version             3.2.2
 categories          lang pascal
-platforms           darwin
 license             {GPL-2 LGPL-2}
 maintainers         {@kamischi web.de:karl-michael.schindler} openmaintainer
 description         Free Pascal, an open source Pascal and Object Pascal compiler.
@@ -20,8 +19,8 @@ homepage            https://www.freepascal.org
 set boot_v          3.0.4
 
 master_sites        sourceforge:freepascal:main \
-                    https://downloads.freepascal.org/fpc/dist/${boot_v}/bootstrap/:bootstrap \
-                    https://downloads.freepascal.org/fpc/dist/${boot_v}/powerpc-macosx/:bootstrap
+                    ftp://ftp.freepascal.org/pub/fpc/dist/${boot_v}/bootstrap/:bootstrap \
+                    ftp://ftp.freepascal.org/pub/fpc/dist/${boot_v}/powerpc-macosx/:bootstrap
 
 set src             ${name}build-${version}.tar.gz
 checksums           ${src} \
@@ -36,9 +35,6 @@ if {${configure.build_arch} in [list ppc ppc64]} {
                     rmd160  c1dbe7fb71382a69146023b2cdac768e05fea8e3 \
                     sha256  587a6ae199d2fb992794c6b4ff9a7aa0c4646687ed5bbab5a6c96bdc322ba53c \
                     size    98748823
-#                     rmd160  a60d58fa1bf2767d3279baed17a232f918b9a6ac \
-#                     sha256  bb3db0d8c898aa0c433baa2dd6462e0c412cc319126edd8b4f98de57133ec295 \
-#                     size    158131470
 } else {
     set pp          x86_64-macosx-10.9-ppcx64.tar.bz2
     checksums-append \
@@ -61,10 +57,6 @@ use_configure       no
 universal_variant   no
 
 set fpcbasepath     ${prefix}/libexec/${name}
-
-if {${os.major} >= 13} { # Ventura, fix obsolete linker options
-    patchfiles-append   t_darwin.pas.patch
-}
 
 subport "chmcmd-${name}" {
     revision        0
@@ -94,9 +86,6 @@ subport "chmcmd-${name}" {
     configure.pre_args
     configure.args  -r -v Makefile.fpc.fpcmake
     configure.post_args
-
-    patchfiles-delete   t_darwin.pas.patch
-
     build.env       PREFIX=${prefix}
     build.target
     build.post_args-append \
@@ -119,7 +108,6 @@ subport "${name}-cross" {
 
     worksrcdir      ${name}build-${version}/fpcsrc/compiler
     use_configure   no
-    patch.pre_args  -p1
     build.args      OPT="-ap -v0"
     build.target    aarch64 arm avr i386 i8086 jvm m68k mips mipsel powerpc powerpc64 sparc x86_64
     switch ${build_arch} {
@@ -252,32 +240,9 @@ subport "${name}-cross-x86-64-win64" {
 }
 
 if {${subport} eq "${name}"} {
-    revision            1
+    revision            2
 
     installs_libs       yes
-
-    if {${configure.build_arch} in [list ppc ppc64]} {
-        post-extract {
-            xinstall -d /tmp/boot
-            system "hdiutil attach ${distpath}/${pp} -private -nobrowse -mountpoint /tmp/boot"
-            copy /tmp/boot/${name}-${boot_v}.powerpc-macosx.pkg ${workpath}/pkg
-            system -W ${workpath} "gunzip -d pkg/Contents/Archive.pax.gz"
-            system -W ${workpath}/pkg "pax -r < Contents/Archive.pax"
-            copy ${workpath}/pkg/usr/local/lib/${name}/${boot_v}/${bootstrapCompiler} ${workpath}
-            # system "hdiutil detach /tmp/boot"
-            # file delete -force /tmp/boot
-        }
-    } else {
-        extract.only-append ${pp}
-    }
-
-    post-patch {
-        # adjust the path "codfilepath" for plex from /usr/local to MacPort's prefix.
-        reinplace "s|/usr/local|${prefix}|g" \
-            ${worksrcpath}/utils/tply/pyacc.y \
-            ${worksrcpath}/utils/tply/pyacc.pas \
-            ${worksrcpath}/utils/tply/plex.pas
-    }
 
     switch ${build_arch} {
         x86_64 {
@@ -307,67 +272,70 @@ if {${subport} eq "${name}"} {
         }
     }
 
-    if       {${os.major} >= 20}   { # Big Sur
-        set otherOptions "-WM11.0 -XR${configure.sdkroot}"
-    } elseif {${os.major} >= 13} { # Mavericks
-        set otherOptions "-WM10.9"
-    } elseif {${configure.build_arch} in [list ppc ppc64]} {
-#        depends_build-append \
-            port:gmake \
-            port:strip7
-        patchfiles-append patch-powerpc.diff
-#        pre-build {
-            # We need a custom strip.
-            # if {![file_exists ${workpath}/bin]} {
-#             xinstall -m 0755 -d ${workpath}/bin
-# 
-#             ln -s ${prefix}/bin/strip7 ${workpath}/bin/strip
-#             ln -s /usr/bin/ar ${workpath}/bin/ar
-#             ln -s /usr/bin/as ${workpath}/bin/as
-#             ln -s /usr/bin/ld ${workpath}/bin/ld
-#             ln -s /usr/bin/libtool ${workpath}/bin/libtool
-#             ln -s /usr/bin/nm ${workpath}/bin/nm
-#             ln -s /usr/bin/libtool ${workpath}/bin/ranlib
-            # }
-#        }
-        set otherOptions "-WM${macosx_deployment_target} -XX-"
-        # set otherOptions "-WM${macosx_deployment_target} -XR${configure.sdkroot} -Fl=/usr/lib -FD${workpath}/bin"
-        # build.cmd       ${prefix}/bin/gmake
-    } else   {
+    if {${configure.build_arch} in [list ppc ppc64]} {
+        post-extract {
+            xinstall -d /tmp/boot
+            system "hdiutil attach ${distpath}/${pp} -private -nobrowse -mountpoint /tmp/boot"
+            copy /tmp/boot/${name}-${boot_v}.powerpc-macosx.pkg ${workpath}/pkg
+            system -W ${workpath} "gunzip -d pkg/Contents/Archive.pax.gz"
+            system -W ${workpath}/pkg "pax -r < Contents/Archive.pax"
+            copy ${workpath}/pkg/usr/local/lib/${name}/${boot_v}/${bootstrapCompiler} ${workpath}
+            system "hdiutil detach /tmp/boot"
+            file delete -force /tmp/boot
+        }
+    } else {
+        extract.only-append ${pp}
+    }
+
+    patch.dir ${workpath}/fpcbuild-${version}
+
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        # Re macro: set to true, it breaks the build on 10.6.
+        # Apparently, automatic detection does not work correctly.
+        # Re pastojs: Fatal: There were 1 errors compiling module, stopping
         # ld: symbol dyld_stub_binding_helper not defined (usually in crt1.o/dylib1.o/bundle1.o)
-        # https://trac.macports.org/ticket/25190
-        # https://trac.macports.org/ticket/52466
-        # patchfiles-append patch-10.6-linking.diff
-        # patchfiles-append patch-pastojs.diff
-        # https://forum.lazarus.freepascal.org/index.php?topic=50515.15
-        # set otherOptions "-WM10.5 -XR/Developer/SDKs/MacOSX10.5.sdk -Aas-darwin -Xs-"
-        # set otherOptions "-WM10.6 -XR/Developer/SDKs/MacOSX10.5.sdk -Aas-darwin -FD/usr/bin"
-        # set otherOptions "-FD/usr/bin -WM10.5 -k/usr/lib/bundle1.o"
-        # set otherOptions "-WM10.6 -XR/Developer/SDKs/MacOSX10.6.sdk -Fl=/usr/lib"
-        set otherOptions ""
+        # See a note from upstream for 10.6: https://sourceforge.net/projects/freepascal/files/Mac%20OS%20X/3.2.2
+        # With pas2js the same does not help, however. And if crt1 is passed, linking fails with:
+        # ld: duplicate symbol start in /usr/lib/crt1.o and /usr/lib/crt1.10.5.o
+        # Therefore, disable it for now.
+        patchfiles-append \
+            patch-unbreak-old-macos.diff \
+            patch-10.6-linking.diff \
+            patch-avoid-broken-pas2js.diff
+    }
+
+    post-patch {
+        # adjust the path "codfilepath" for plex from /usr/local to MacPort's prefix.
+        reinplace "s|/usr/local|${prefix}|g" \
+            ${worksrcpath}/utils/tply/pyacc.y \
+            ${worksrcpath}/utils/tply/pyacc.pas \
+            ${worksrcpath}/utils/tply/plex.pas
+    }
+
+    # os.major = 20 is macOS = 11 (BigSur)
+    if {${os.major} >= 20} {
+        set linkerOptions -XR${configure.sdkroot}
+    } elseif {${os.major} < 12} {
+        set linkerOptions -WM${macosx_deployment_target}
+    } else {
+        set linkerOptions ""
     }
 
     worksrcdir          ${name}build-${version}/fpcsrc
     build.env           PP=${workpath}/${bootstrapCompiler} \
                         PREFIX=${destroot}${fpcbasepath}
-    build.args          OPT="-v0 -ap ${otherOptions}" CPU_TARGET=${cpuTarget} UTILS=1
+    build.args          OPT="-ap -v0 ${linkerOptions}" CPU_TARGET=${cpuTarget} UTILS=1
 
     destroot.args       {*}${build.args}
     destroot.env        {*}${build.env}
-
-    # codesign for older systems does not have a --remove-signature option
-    # work around: replace codesign by a dummy.
-    if {[vercmp ${os.version} 10.11] <= 0} { # El Capitan
-        build.args-append   CODESIGN=/usr/bin/true
-    }
 
     # build the compiler utilities msgdif and msg2inc
     post-build {
         system -W ${worksrcpath}/compiler/utils \
                "../${compiler} -ap -v0 -Fu../../rtl/units/${cpuTarget}-darwin \
-                  ${otherOptions} msgdif.pp && \
+                  -WM${macosx_deployment_target} ${linkerOptions} msgdif.pp && \
                 ../${compiler} -ap -v0 -Fu../../rtl/units/${cpuTarget}-darwin \
-                  ${otherOptions} msg2inc.pp"
+                  -WM${macosx_deployment_target} ${linkerOptions} msg2inc.pp"
     }
 
     post-destroot {
@@ -378,24 +346,20 @@ if {${subport} eq "${name}"} {
             system -W ${worksrcpath} \
                    "make utils_install FPC=${worksrcpath}/compiler/${compiler} \
                        PREFIX=${destroot}${fpcbasepath} \
-                       OPT=\"-Furtl/units/${cpuTarget}-darwin -ap -v0 ${otherOptions}\""
+                       OPT=\"-Furtl/units/${cpuTarget}-darwin -ap -v0 ${linkerOptions}\""
         }
         # generate a configuration file
         xinstall -d ${destroot}${fpcbasepath}/etc
         system -W ${destroot}${fpcbasepath} \
                "bin/fpcmkcfg -d basepath=${fpcbasepath}/lib/${name}/${version} -o etc/fpc.cfg"
         ln -s ${fpcbasepath}/etc/fpc.cfg ${destroot}${prefix}/etc
+        # do not break earlier versions
         system "patch ${destroot}${fpcbasepath}/etc/fpc.cfg ${filespath}/fpc.cfg.patch"
-
-        # remove the -WM option for older systems or update it as needed
-        if {[vercmp ${os.version} 10.7] < 0} { # Lion
-            reinplace "s|-WM10.9||g" ${destroot}${fpcbasepath}/etc/fpc.cfg
-        } elseif {${os.major} >=  11} { # Big Sur
-            reinplace "s|-WM10.9|-WM11.0|g" ${destroot}${fpcbasepath}/etc/fpc.cfg
+        if {${os.major} > 12} {
+            reinplace "s|@TARGET@|10.9|" ${destroot}${fpcbasepath}/etc/fpc.cfg
+        } else {
+            reinplace "s|@TARGET@|${macosx_deployment_target}|" ${destroot}${fpcbasepath}/etc/fpc.cfg
         }
-
-        # set prefix of search path for qt4pas
-        reinplace "s|PREFIX|${prefix}|g" ${destroot}${fpcbasepath}/etc/fpc.cfg
 
         # install man
         xinstall -d ${destroot}${fpcbasepath}/man

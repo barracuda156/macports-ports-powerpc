@@ -20,7 +20,7 @@
 +# Avoids harmless but annoying ld warning
 +# Patch in sync with fpc and macOS
 +#ifdef darwin
-+-WM10.9
++-WM10.6
 +#endif
  
  # -------------

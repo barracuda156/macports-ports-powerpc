@@ -1,0 +1,12 @@
+--- fpcsrc/packages/pastojs/Makefile.fpc
++++ fpcsrc/packages/pastojs/Makefile.fpc
+@@ -41,6 +41,7 @@
+ FPMAKE_OPT+=$(addprefix -o ,$(FPCOPT))
+ FPMAKE_OPT+=--compiler=$(FPC)
+ FPMAKE_OPT+=-bu
++FPMAKE_OPT+=-k-no_order_inits
+ .NOTPARALLEL:
+ 
+ fpmake$(SRCEXEEXT): fpmake.pp
+
+

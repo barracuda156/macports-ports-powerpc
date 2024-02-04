@@ -1,0 +1,17 @@
+--- fpcsrc/utils/fpmake_proc.inc	2018-08-10 15:12:49.000000000 +0800
++++ fpcsrc/utils/fpmake_proc.inc	2023-08-06 07:22:01.000000000 +0800
+@@ -35,6 +35,3 @@
+ {$include tply/fpmake.pp}
+ 
+ {$include unicode/fpmake.pp}
+-
+-{$include pas2js/fpmake.pp}
+-
+
+--- fpcsrc/utils/fpmake_add.inc	2018-08-10 15:12:49.000000000 +0800
++++ fpcsrc/utils/fpmake_add.inc	2023-08-06 07:21:47.000000000 +0800
+@@ -17,4 +17,3 @@
+   add_rmwait(ADirectory+IncludeTrailingPathDelimiter('rmwait'));
+   add_tply(ADirectory+IncludeTrailingPathDelimiter('tply'));
+   add_unicode(ADirectory+IncludeTrailingPathDelimiter('unicode'));
+-  add_pas2js(ADirectory+IncludeTrailingPathDelimiter('pas2js'));

@@ -1,0 +1,13 @@
+--- packages/pastojs/fpmake.pp	2021-05-13 19:42:31.000000000 +0800
++++ packages/pastojs/fpmake.pp	2024-01-30 18:42:30.000000000 +0800
+@@ -15,6 +15,10 @@
+ 
+     P:=AddPackage('pastojs');
+     P.ShortName := 'p2js';
++    P.Options.Add('-Fl/usr/lib');
++    P.Options.Add('-k-lSystem');
++    P.Options.Add('-Xc');
++
+ {$ifdef ALLPACKAGES}
+     P.Directory:=ADirectory;
+ {$endif ALLPACKAGES}

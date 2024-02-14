@@ -1,0 +1,30 @@
+From 7dbc7c1aae5ca53e7c5580d6fa91736b0476310d Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Fri, 9 Feb 2024 16:50:51 -0500
+Subject: [PATCH 10/18] extern sam3atimeval2ms, sam3ams2timeval
+
+---
+ src/libsam3a/libsam3a.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index e4625ec..688de23 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -77,11 +77,11 @@ int libsam3a_debug = 0;
+ #define DEFAULT_UDP_PORT (7655)
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+-uint64_t sam3atimeval2ms(const struct timeval *tv) {
++extern uint64_t sam3atimeval2ms(const struct timeval *tv) {
+   return ((uint64_t)tv->tv_sec) * 1000 + ((uint64_t)tv->tv_usec) / 1000;
+ }
+ 
+-void sam3ams2timeval(struct timeval *tv, uint64_t ms) {
++extern void sam3ams2timeval(struct timeval *tv, uint64_t ms) {
+   tv->tv_sec = ms / 1000;
+   tv->tv_usec = (ms % 1000) * 1000;
+ }
+-- 
+2.43.1
+

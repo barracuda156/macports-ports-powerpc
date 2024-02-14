@@ -1,0 +1,60 @@
+From 94478efec2340fa89f4744e2e08b49309a2ef933 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Fri, 22 Dec 2023 12:04:24 -0500
+Subject: [PATCH 01/18] Fix some of the headers to make progress on fixing OSX
+ builds
+
+---
+ src/libsam3/libsam3.c   | 3 ++-
+ src/libsam3/libsam3.h   | 1 +
+ src/libsam3a/libsam3a.c | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 318ce64..2916adc 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -48,13 +48,14 @@
+ #endif
+ #endif
+ 
+-#ifdef __unix__
++#if defined(__unix__) || defined(__APPLE__)
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #include <sys/socket.h>
+ #include <sys/sysinfo.h>
+ #include <sys/types.h>
++#include <sys/ioctl.h>
+ #endif
+ ////////////////////////////////////////////////////////////////////////////////
+ int libsam3_debug = 0;
+diff --git src/libsam3/libsam3.h src/libsam3/libsam3.h
+index 889fff7..316e122 100644
+--- src/libsam3/libsam3.h
++++ src/libsam3/libsam3.h
+@@ -28,6 +28,7 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdlib.h>
++#include <sys/types.h>
+ 
+ #ifndef _SSIZE_T_DEFINED
+ #define _SSIZE_T_DEFINED
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 2568436..a996ee6 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -48,7 +48,7 @@
+ #endif
+ #endif
+ 
+-#ifdef __unix__
++#if defined(__unix__) || defined(__APPLE__)
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+-- 
+2.43.1
+

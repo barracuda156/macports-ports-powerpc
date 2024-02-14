@@ -1,0 +1,26 @@
+From e567bb463c80ea61caa1d6df8ba2b18ab25a7147 Mon Sep 17 00:00:00 2001
+From: idk <hankhill19580@gmail.com>
+Date: Thu, 8 Feb 2024 16:21:56 +0000
+Subject: [PATCH 05/18] Update src/libsam3a/libsam3a.c
+
+Co-authored-by: Sergey Fedorov <vital.had@gmail.com>
+---
+ src/libsam3a/libsam3a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 778f2d3..895e397 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -48,7 +48,7 @@
+ #endif
+ #endif
+ 
+-#if defined(__unix__) || !defined(__APPLE__)
++#if defined(__unix__) && !defined(__APPLE__)
+ #include <sys/sysinfo.h>
+ #endif
+ 
+-- 
+2.43.1
+

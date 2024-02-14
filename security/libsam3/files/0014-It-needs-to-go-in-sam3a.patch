@@ -1,0 +1,39 @@
+From 344c62307dedb3a113d7ab1dad013f977bea1cf6 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:31:54 -0500
+Subject: [PATCH 14/18] It needs to go in sam3a
+
+---
+ src/libsam3/libsam3.c   | 1 -
+ src/libsam3a/libsam3a.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 36d84dc..e126e24 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -63,7 +63,6 @@
+ 
+ #if defined(__APPLE__)
+ #include <mach/mach_time.h>
+-#include <netinet/tcp.h>
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+   uint32_t mul = 0x80d9594e;
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 502be31..4aa3319 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -63,8 +63,7 @@
+ 
+ #if defined(__APPLE__)
+ #include <mach/mach_time.h>
+-
+-#include <mach/mach_time.h>
++#include <netinet/tcp.h>
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+   uint32_t mul = 0x80d9594e;
+-- 
+2.43.1
+

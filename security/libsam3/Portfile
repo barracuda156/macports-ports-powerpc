@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+#vPortGroup           legacysupport 1.1
+PortGroup           makefile 1.0
+PortGroup           github 1.0
+
+# O_CLOEXEC
+# legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        i2p libsam3 2226ef0a20a001ec0942be6abe5e909c15447d8e
+version             2024.02.08
+revision            0
+categories          sysutils
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+
+description         C library for the SAM v3 API
+long_description    {*}${description}
+license             MIT
+homepage            https://geti2p.net/en/docs/api/samv3
+
+checksums           rmd160  7eba9fb3268edf3a8c53cefd0325507b2cd4456b \
+                    sha256  b8bb972265c0a069d5cef47e5cc3965766182b2f8b6b91d5db05ab682c2cc311 \
+                    size    39673
+github.tarball_from archive
+
+# https://github.com/i2p/libsam3/issues/20
+patchfiles-append   0001-Fix-some-of-the-headers-to-make-progress-on-fixing-O.patch \
+                    0002-Use-PID-TickCount-for-random-nickname-string-on-__AP.patch \
+                    0003-Disable-use-of-sysinfo.h-on-Mac-OSX-and-replace-depr.patch \
+                    0004-Update-src-libsam3-libsam3.c.patch \
+                    0005-Update-src-libsam3a-libsam3a.c.patch \
+                    0006-Use-getpid-and-TickCount-when-on-OSX-platforms.patch \
+                    0007-Include-mach_time-on-osx-platforms.patch \
+                    0008-Remove-sysinfo.h-from-the-Apple-header-section.patch \
+                    0009-Update-src-libsam3a-libsam3a.c.patch \
+                    0010-extern-sam3atimeval2ms-sam3ams2timeval.patch \
+                    0011-since-SOL_SOCKET-doesn-t-exist-on-Mac-pass-SOL_TCP-o.patch \
+                    0012-that-was-a-misidentification-use-netinet-tcp-instead.patch \
+                    0013-that-was-a-misidentification-use-netinet-tcp-instead.patch \
+                    0014-It-needs-to-go-in-sam3a.patch \
+                    0015-Include-section-needs-to-be-true-if-__APPLE__-is-def.patch \
+                    0016-define-SOCK_NONBLOCK-and-SOCK_CLOEXEC-for-OSX.patch \
+                    0017-fix-typo.patch \
+                    0018-include-time-header.patch
+
+build.target        build
+
+test.run            yes
+test.target         check

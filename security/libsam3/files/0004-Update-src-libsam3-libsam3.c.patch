@@ -1,0 +1,29 @@
+From 883932c0732574814715fc6901b62b788863fae7 Mon Sep 17 00:00:00 2001
+From: idk <hankhill19580@gmail.com>
+Date: Thu, 8 Feb 2024 16:21:24 +0000
+Subject: [PATCH 04/18] Update src/libsam3/libsam3.c
+
+Co-authored-by: Sergey Fedorov <vital.had@gmail.com>
+---
+ src/libsam3/libsam3.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 2916adc..522bb82 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -57,6 +57,11 @@
+ #include <sys/types.h>
+ #include <sys/ioctl.h>
+ #endif
++
++#if defined(__unix__) && !defined(__APPLE__)
++#include <sys/sysinfo.h>
++#endif
++
+ ////////////////////////////////////////////////////////////////////////////////
+ int libsam3_debug = 0;
+ 
+-- 
+2.43.1
+

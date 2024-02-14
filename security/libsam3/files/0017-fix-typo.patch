@@ -1,0 +1,25 @@
+From a71a49800fee81784983b3c9dce36e95ce95435f Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:47:43 -0500
+Subject: [PATCH 17/18] fix typo
+
+---
+ src/libsam3a/libsam3a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 040770c..bcbaa8a 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -68,7 +68,7 @@
+ #define SOCK_CLOEXEC 0
+ #endif
+ #ifndef SOCK_NONBLOCK
+-#include <fnctl.h>
++#include <fcntl.h>
+ #define SOCK_NONBLOCK O_NONBLOCK
+ #endif
+ uint32_t TickCount() {
+-- 
+2.43.1
+

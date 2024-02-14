@@ -1,0 +1,26 @@
+From c38987ac1c9956066d63f56e5b53f884fbfffdfa Mon Sep 17 00:00:00 2001
+From: idk <hankhill19580@gmail.com>
+Date: Fri, 9 Feb 2024 17:21:46 +0000
+Subject: [PATCH 09/18] Update src/libsam3a/libsam3a.c
+
+Co-authored-by: Sergey Fedorov <vital.had@gmail.com>
+---
+ src/libsam3a/libsam3a.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index e4625ec..ba944a6 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -62,6 +62,8 @@
+ #endif
+ 
+ #if defined(__APPLE__)
++#include <mach/mach_time.h>
++
+ #include <mach/mach_time.h>
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+-- 
+2.43.1
+

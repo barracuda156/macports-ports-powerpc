@@ -1,0 +1,24 @@
+From 02b3826685ff554cee6c3f735712827c48e63289 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 12:05:00 -0500
+Subject: [PATCH 18/18] include time header
+
+---
+ src/libsam3a/libsam3a.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git src/libsam3a/libsam3a.h src/libsam3a/libsam3a.h
+index 55819a4..85f2d9b 100644
+--- src/libsam3a/libsam3a.h
++++ src/libsam3a/libsam3a.h
+@@ -31,6 +31,7 @@
+ #include <time.h>
+ 
+ #include <sys/types.h>
++#include <sys/time.h>
+ 
+ #ifdef __MINGW32__
+ //#include <winsock.h>
+-- 
+2.43.1
+

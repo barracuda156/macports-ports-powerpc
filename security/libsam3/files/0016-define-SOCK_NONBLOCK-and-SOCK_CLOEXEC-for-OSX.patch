@@ -1,0 +1,30 @@
+From 3166418a2ddbd9aba7e4efa2c783fd2c3fc964da Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:46:06 -0500
+Subject: [PATCH 16/18] define SOCK_NONBLOCK and SOCK_CLOEXEC for OSX"
+
+---
+ src/libsam3a/libsam3a.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 27795bb..040770c 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -64,6 +64,13 @@
+ #if defined(__APPLE__)
+ #include <mach/mach_time.h>
+ #include <netinet/tcp.h>
++#ifndef SOCK_CLOEXEC
++#define SOCK_CLOEXEC 0
++#endif
++#ifndef SOCK_NONBLOCK
++#include <fnctl.h>
++#define SOCK_NONBLOCK O_NONBLOCK
++#endif
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+   uint32_t mul = 0x80d9594e;
+-- 
+2.43.1
+

@@ -1,0 +1,26 @@
+From b5ae6552d09108e7afb764b5c303750d2574add4 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:36:37 -0500
+Subject: [PATCH 15/18] Include section needs to be true if __APPLE__ is
+ defined
+
+---
+ src/libsam3a/libsam3a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 4aa3319..27795bb 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -52,7 +52,7 @@
+ #include <sys/sysinfo.h>
+ #endif
+ 
+-#if defined(__unix__)
++#if defined(__unix__) || defined(__APPLE__)
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+-- 
+2.43.1
+

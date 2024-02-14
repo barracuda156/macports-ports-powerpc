@@ -1,0 +1,43 @@
+From 7edf37b89381f16d139f2cdd7443181f2dae78b0 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:24:55 -0500
+Subject: [PATCH 13/18] that was a misidentification, use netinet/tcp instead
+
+---
+ src/libsam3/libsam3.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 13204ce..36d84dc 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -93,7 +93,7 @@ int sam3tcpSetTimeoutSend(int fd, int timeoutms) {
+     struct timeval tv;
+     //
+     ms2timeval(&tv, timeoutms);
+-    return (setsockopt(fd, solSocket(), SO_SNDTIMEO, &tv, sizeof(tv)) < 0 ? -1
++    return (setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0 ? -1
+                                                                          : 0);
+   }
+   return -1;
+@@ -104,7 +104,7 @@ int sam3tcpSetTimeoutReceive(int fd, int timeoutms) {
+     struct timeval tv;
+     //
+     ms2timeval(&tv, timeoutms);
+-    return (setsockopt(fd, solSocket(), SO_RCVTIMEO, &tv, sizeof(tv)) < 0 ? -1
++    return (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0 ? -1
+                                                                          : 0);
+   }
+   return -1;
+@@ -145,7 +145,7 @@ int sam3tcpConnectIP(uint32_t ip, int port) {
+     }
+   }
+   //
+-  setsockopt(fd, solSocket(), SO_KEEPALIVE, &val, sizeof(val));
++  setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(val));
+   //
+   if (connect(fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
+     if (libsam3_debug)
+-- 
+2.43.1
+

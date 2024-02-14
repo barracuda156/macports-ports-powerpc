@@ -1,0 +1,45 @@
+From 8b554c13b5920addc3f1e092d8e758add7e43571 Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Thu, 8 Feb 2024 11:23:59 -0500
+Subject: [PATCH 07/18] Include mach_time on osx platforms
+
+---
+ src/libsam3/libsam3.c   | 9 +++++++++
+ src/libsam3a/libsam3a.c | 1 +
+ 2 files changed, 10 insertions(+)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index a619955..6221652 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -62,6 +62,15 @@
+ #include <sys/sysinfo.h>
+ #endif
+ 
++#if defined(__APPLE__)
++#include <mach/mach_time.h>
++uint32_t TickCount() {
++  uint64_t mat = mach_absolute_time();
++  uint32_t mul = 0x80d9594e;
++  return ((((0xffffffff & mat) * mul) >> 32) + (mat >> 32) * mul) >> 23;
++}
++#endif
++
+ ////////////////////////////////////////////////////////////////////////////////
+ int libsam3_debug = 0;
+ 
+diff --git src/libsam3a/libsam3a.c src/libsam3a/libsam3a.c
+index 895e397..e4625ec 100644
+--- src/libsam3a/libsam3a.c
++++ src/libsam3a/libsam3a.c
+@@ -62,6 +62,7 @@
+ #endif
+ 
+ #if defined(__APPLE__)
++#include <mach/mach_time.h>
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+   uint32_t mul = 0x80d9594e;
+-- 
+2.43.1
+

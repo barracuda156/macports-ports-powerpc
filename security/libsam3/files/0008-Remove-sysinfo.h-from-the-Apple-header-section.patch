@@ -1,0 +1,24 @@
+From 92b38de9cbc6ee395ab4aea189e05e212862c84f Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Fri, 9 Feb 2024 10:25:48 -0500
+Subject: [PATCH 08/18] Remove sysinfo.h from the Apple header section
+
+---
+ src/libsam3/libsam3.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 6221652..e126e24 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -53,7 +53,6 @@
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #include <sys/socket.h>
+-#include <sys/sysinfo.h>
+ #include <sys/types.h>
+ #include <sys/ioctl.h>
+ #endif
+-- 
+2.43.1
+

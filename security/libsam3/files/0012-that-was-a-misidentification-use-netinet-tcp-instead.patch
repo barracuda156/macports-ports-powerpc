@@ -1,0 +1,39 @@
+From 140adb214130807ff886c999e795444da3fe735e Mon Sep 17 00:00:00 2001
+From: eyedeekay <idk@mulder>
+Date: Tue, 13 Feb 2024 10:24:37 -0500
+Subject: [PATCH 12/18] that was a misidentification, use netinet/tcp instead
+
+---
+ src/libsam3/libsam3.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git src/libsam3/libsam3.c src/libsam3/libsam3.c
+index 48b150e..13204ce 100644
+--- src/libsam3/libsam3.c
++++ src/libsam3/libsam3.c
+@@ -59,21 +59,16 @@
+ 
+ #if defined(__unix__) && !defined(__APPLE__)
+ #include <sys/sysinfo.h>
+-int solSocket() {
+-  return SOL_SOCKET;
+-}
+ #endif
+ 
+ #if defined(__APPLE__)
+ #include <mach/mach_time.h>
++#include <netinet/tcp.h>
+ uint32_t TickCount() {
+   uint64_t mat = mach_absolute_time();
+   uint32_t mul = 0x80d9594e;
+   return ((((0xffffffff & mat) * mul) >> 32) + (mat >> 32) * mul) >> 23;
+ }
+-int solSocket() {
+-  return SOL_TCP;
+-}
+ #endif
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+-- 
+2.43.1
+

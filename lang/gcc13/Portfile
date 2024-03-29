@@ -366,6 +366,14 @@ if {${subport} eq ${libgccname}} {
     # Activate hack for new libgcc
     # https://trac.macports.org/wiki/PortfileRecipes#deactivatehack
     pre-activate {
+        if {![catch {set installed [lindex [registry_active libgcc7] 0]}]} {
+            # Extract the epoch of the installed libgcc7
+            set _epoch [lindex $installed 5]
+            # If < 4 need to deactivate
+            if {[vercmp $_epoch < 4]} {
+                registry_deactivate_composite libgcc7 "" [list ports_nodepcheck 1]
+            }
+        }
         if {![catch {set installed [lindex [registry_active libgcc8] 0]}]} {
             # Extract the epoch of the installed libgcc8
             set _epoch [lindex $installed 5]

@@ -120,7 +120,14 @@ platform darwin {
         # alignment to 2
         patchfiles-append   boehm-gc-darwin15-hack.patch
     }
-    configure.pre_args-append --build=${build_arch}-apple-darwin${os.major}
+
+    if {${configure.build_arch} eq "ppc"} {
+        configure.pre_args-append --build=powerpc-apple-darwin${os.major}
+    } elseif {${configure.build_arch} eq "ppc64"} {
+        configure.pre_args-append --build=powerpc64-apple-darwin${os.major}
+    } else {
+        configure.pre_args-append --build=${build_arch}-apple-darwin${os.major}
+    }
 }
 
 platform darwin 11 {

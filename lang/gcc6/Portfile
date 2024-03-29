@@ -11,7 +11,7 @@ name                gcc6
 epoch               3
 version             6.5.0
 revision            8
-subport             libgcc6 { revision 4 }
+subport             libgcc6 { revision 5 }
 platforms           {darwin < 15}
 categories          lang
 maintainers         nomaintainer

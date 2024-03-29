@@ -95,6 +95,9 @@ if { ${os.arch} eq "arm" || ${os.platform} ne "darwin" } {
         lappend gcc_versions 5 6 7 8 9
     }
     lappend gcc_versions 10 11 12 13 devel
+    if { ${os.arch} eq "powerpc" } {
+        lappend gcc_versions powerpc
+    }
 }
 # GCC version providing the primary runtime
 # Note settings here *must* match those in the lang/libgcc port.

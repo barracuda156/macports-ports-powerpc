@@ -11,7 +11,6 @@ name                gcc-devel
 
 homepage            https://gcc.gnu.org/
 
-platforms           {darwin >= 10}
 categories          lang
 maintainers         nomaintainer
 # an exception in the license allows dependents to not be GPL
@@ -70,6 +69,15 @@ depends_lib-append  port:cctools \
                     port:zstd
 depends_run-append  port:gcc_select \
                     port:libgcc-devel
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    configure.compiler.add_deps \
+                    no
+    depends_build-append \
+                    port:gcc10-bootstrap
+    configure.cc    ${prefix}/libexec/gcc10-bootstrap/bin/gcc
+    configure.cxx   ${prefix}/libexec/gcc10-bootstrap/bin/g++
+}
 
 depends_skip_archcheck-append gcc_select ld64 cctools
 license_noconflict  gmp mpfr ppl libmpc zlib

@@ -12,7 +12,7 @@ name                gcc9
 version             9.5.0
 revision            1
 subport             libgcc9 { revision 2 }
-platforms           {darwin >= 10 < 15}
+platforms           {darwin < 15}
 categories          lang
 maintainers         nomaintainer
 # an exception in the license allows dependents to not be GPL
@@ -84,6 +84,15 @@ depends_lib         port:cctools \
                     port:zlib
 depends_run         port:gcc_select \
                     port:libgcc9
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    configure.compiler.add_deps \
+                    no
+    depends_build-append \
+                    port:gcc10-bootstrap
+    configure.cc    ${prefix}/libexec/gcc10-bootstrap/bin/gcc
+    configure.cxx   ${prefix}/libexec/gcc10-bootstrap/bin/g++
+}
 
 depends_skip_archcheck-append gcc_select ld64 cctools
 license_noconflict  gmp mpfr ppl libmpc zlib

@@ -12,7 +12,7 @@ name                gcc8
 version             8.5.0
 revision            2
 subport             libgcc8 { revision 1 }
-platforms           {darwin >= 10 < 15}
+platforms           {darwin < 15}
 categories          lang
 maintainers         nomaintainer
 # an exception in the license allows dependents to not be GPL
@@ -100,6 +100,15 @@ if { ${isLastSupported} } {
     depends_run-append  path:share/doc/libgcc/README:libgcc
 } else {
     depends_run-append  port:libgcc8
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    configure.compiler.add_deps \
+                    no
+    depends_build-append \
+                    port:gcc10-bootstrap
+    configure.cc    ${prefix}/libexec/gcc10-bootstrap/bin/gcc
+    configure.cxx   ${prefix}/libexec/gcc10-bootstrap/bin/g++
 }
 
 depends_skip_archcheck-append gcc_select ld64 cctools

@@ -13,7 +13,7 @@ name                gcc11
 version             11.4.0
 revision            1
 
-platforms           {darwin >= 10 < 22}
+platforms           {darwin < 22}
 categories          lang
 maintainers         nomaintainer
 # an exception in the license allows dependents to not be GPL
@@ -113,6 +113,15 @@ depends_lib-append  port:cctools \
                     port:zstd
 depends_run-append  port:gcc_select \
                     port:libgcc11
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    configure.compiler.add_deps \
+                    no
+    depends_build-append \
+                    port:gcc10-bootstrap
+    configure.cc    ${prefix}/libexec/gcc10-bootstrap/bin/gcc
+    configure.cxx   ${prefix}/libexec/gcc10-bootstrap/bin/g++
+}
 
 depends_skip_archcheck-append gcc_select ld64 cctools
 license_noconflict  gmp mpfr ppl libmpc zlib

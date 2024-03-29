@@ -81,12 +81,7 @@ options compilers.add_gcc_rpath_support
 default compilers.add_gcc_rpath_support yes
 
 # Set a default gcc version
-if {${os.major} < 10 && ${os.platform} eq "darwin" } {
-    # see https://trac.macports.org/ticket/57135
-    set compilers.gcc_default gcc7
-} else {
-    set compilers.gcc_default gcc13
-}
+set compilers.gcc_default gcc13
 
 set compilers.list {cc cxx cpp objc fc f77 f90}
 
@@ -99,17 +94,12 @@ if { ${os.arch} eq "arm" || ${os.platform} ne "darwin" } {
     if { ${os.major} < 15 } {
         lappend gcc_versions 5 6 7 8 9
     }
-    if { ${os.major} >= 10 } {
-        lappend gcc_versions 10 11 12 13 devel
-    }
+    lappend gcc_versions 10 11 12 13 devel
 }
 # GCC version providing the primary runtime
 # Note settings here *must* match those in the lang/libgcc port.
-if { ${os.major} < 10 && ${os.platform} eq "darwin" } {
-    set gcc_main_version 7
-} else {
-    set gcc_main_version 13
-}
+set gcc_main_version 13
+
 ui_debug "GCC versions for Darwin ${os.major} ${os.arch} - ${gcc_versions}"
 foreach ver ${gcc_versions} {
     # Remove dot from version if present

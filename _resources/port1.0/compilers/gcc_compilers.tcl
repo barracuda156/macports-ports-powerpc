@@ -18,3 +18,8 @@ if {${os.major} < 22} {
 }
 
 lappend compilers macports-gcc-devel
+
+global os.arch
+if {${os.arch} eq "powerpc"} {
+    lappend compilers macports-gcc-powerpc
+}

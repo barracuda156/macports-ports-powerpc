@@ -488,6 +488,11 @@ if {${subport} eq ${libgccname}} {
         # For binary compatibility with binaries that linked against the old libstdcxx port
         ln -s libgcc/libstdc++.6.dylib ${destroot}${prefix}/lib/libstdc++.6.dylib
 
+        # Create README detailing runtime installed.
+        # Also used as file checked for path-like port dependency for libgcc/libgcc-devel deps.
+        xinstall -d ${destroot}${prefix}/share/doc/libgcc
+        system "echo 'libgcc runtime is provided by ${subport}' > ${destroot}${prefix}/share/doc/libgcc/README"
+
     }
 
 }

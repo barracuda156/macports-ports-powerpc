@@ -68,6 +68,9 @@ platform darwin powerpc {
     } elseif {[string match macports-gcc-13 ${configure.compiler}]} {
         set gcc_v_major 13
         set gcc_v_full  ${gcc_v_major}.2.0
+    } elseif {[string match macports-gcc-powerpc ${configure.compiler}]} {
+        set gcc_v_major -powerpc
+        set gcc_v_full  13.2.1
     } elseif {[string match macports-gcc-devel ${configure.compiler}]} {
         set gcc_v_major -devel
         set gcc_v_full  14.0.0

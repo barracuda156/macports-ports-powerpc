@@ -2,6 +2,7 @@
 
 PortSystem          1.0
 PortGroup           active_variants 1.1
+PortGroup           bootstrap 1.0
 PortGroup           compiler_blacklist_versions 1.0
 PortGroup           conflicts_build 1.0
 PortGroup           select 1.0
@@ -63,14 +64,7 @@ master_sites-append https://mirror.koddos.net/gcc/snapshots/${version}/ \
 distname            gcc-${version}
 use_xz              yes
 
-# gcc10 is the last version bootstrappable with Apple toolchain.
-depends_build-append \
-                    port:gcc10-bootstrap
-configure.cc        ${prefix}/libexec/gcc10-bootstrap/bin/gcc
-configure.cxx       ${prefix}/libexec/gcc10-bootstrap/bin/g++
-
-configure.compiler.add_deps \
-                    no
+bootstrap.force_gcc10   yes
 
 depends_build-append \
                     port:texinfo

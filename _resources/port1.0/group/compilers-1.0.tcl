@@ -829,7 +829,7 @@ proc compilers::add_fortran_legacy_support {} {
     global compilers.allow_arguments_mismatch
     if {${compilers.allow_arguments_mismatch}} {
         set gcc_v [compilers::get_current_gcc_version]
-        if { ${gcc_v} >= 10 || ${gcc_v} == "devel" } {
+        if { ${gcc_v} >= 10 || ${gcc_v} == "devel" || ${gcc_v} == "powerpc" } {
             configure.fflags-delete     -fallow-argument-mismatch
             configure.fcflags-delete    -fallow-argument-mismatch
             configure.f90flags-delete   -fallow-argument-mismatch
@@ -845,7 +845,7 @@ port::register_callback compilers::add_fortran_legacy_support
 proc compilers::add_gcc_rpath_support {} {
     global prefix os.platform os.major
     set gcc_v [compilers::get_current_gcc_version]
-    if { ${gcc_v} >= 10 || ${gcc_v} == "devel" } {
+    if { ${gcc_v} >= 10 || ${gcc_v} == "devel" || ${gcc_v} == "powerpc" } {
         if {${os.platform} eq "darwin" && ${os.major} > 8} {
             ui_debug "compilers PG: RPATH added to ldflags as GCC version is ${gcc_v}"
             configure.ldflags-delete  -Wl,-rpath,${prefix}/lib/libgcc

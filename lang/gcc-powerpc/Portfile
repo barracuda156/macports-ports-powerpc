@@ -31,7 +31,7 @@ long_description    {*}${description}, including front-ends \
                     for C, C++, Objective-C, Objective-C++ and Fortran. \
                     This is an !experimental! version for Darwin PowerPC.
 
-version             13-20240323
+version             13-20240406
 revision            0
 
 set libgccname      lib${name}
@@ -39,9 +39,9 @@ set libcxxname      ${name}-libcxx
 
 subport             ${libgccname} { revision [ expr ${revision} + 0 ] }
 
-checksums           rmd160  b2b5d3dae4eada2ca561f147908203339d1610aa \
-                    sha256  e0aded078235b9a42a4eab7bf8adcd310ba3cf716b3442aa49db7b6b0c743fa0 \
-                    size    84414636
+checksums           rmd160  dda5c81ef614f37d401e4dbb27a10038f66f4c0a \
+                    sha256  f9d34bce1465b6eb04b1562860682ab1eb40065e380c987532fb5004b7a763f4 \
+                    size    84392728
 
 # Primary releases
 master_sites        https://ftpmirror.gnu.org/gcc/gcc-${version}/ \
@@ -150,6 +150,10 @@ variant G5 conflicts G4 description "Optimize for G5" {
                     --with-tune-cpu=G5
 }
 
+configure.env-append \
+                    STAGE1_CFLAGS="-O1 -pipe -mdynamic-no-pic" \
+                    STAGE1_CXXFLAGS="-O1 -pipe -mdynamic-no-pic"
+
 # Disable ccache
 configure.ccache    no
 
@@ -190,12 +194,7 @@ patchfiles-append   patch-disable-sys-header-missing-abort.diff
 patchfiles-append   patch-gcc10-disable-macports-cctools-as-changes.diff
 
 # Backports from upstream, to be dropped on the next update:
-patchfiles-append   eb6061e72e3f3b48d6c6d28e3a241c30049ea36f.diff \
-                    296a03dcd6fe9be2210fbb7720372fe97d7e31d8.diff \
-                    cd0b73b47407f8d7af5d381932327b5e0a477bc3.diff \
-                    c5326a9b357e333d9d07d43e7295c782d60d680f.diff \
-                    0e68d5e86a79eaf8fc47cfe661458910710bbf93.diff \
-                    a44dd4ca93911222c3ba22ef93512810cb75f92d.diff
+patchfiles-append   eb6061e72e3f3b48d6c6d28e3a241c30049ea36f.diff
 
 # https://github.com/iains/darwin-toolchains-start-here/discussions/13
 patchfiles-append   patch-contrib-fat-gcc.sh.diff

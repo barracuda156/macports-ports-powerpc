@@ -9,8 +9,8 @@ Subject: [PATCH] xprScreen.c: fix for SL
 
 diff --git hw/xquartz/xpr/xprScreen.c hw/xquartz/xpr/xprScreen.c
 index 1dc23211c..3b30461d8 100644
---- hw/xquartz/xpr/xprScreen.c
-+++ hw/xquartz/xpr/xprScreen.c
+--- a/hw/xquartz/xpr/xprScreen.c
++++ b/hw/xquartz/xpr/xprScreen.c
 @@ -333,45 +333,10 @@ xprAddScreen(int index, ScreenPtr pScreen)
      DEBUG_LOG("index=%d depth=%d\n", index, depth);
  

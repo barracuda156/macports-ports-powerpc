@@ -1,0 +1,22 @@
+From 0a4a8619a2a89921974d383c9146909c73fcd7c5 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Thu, 11 Jul 2024 12:06:40 +0800
+Subject: [PATCH] DatagramChannelImpl.c: fix for powerpc
+
+---
+ jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
+index ff1290756f..730ff52c86 100644
+--- jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
++++ jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
+@@ -89,7 +89,7 @@ Java_sun_nio_ch_DatagramChannelImpl_disconnect0(JNIEnv *env, jobject this,
+ 
+ #ifdef __solaris__
+     rv = connect(fd, 0, 0);
+-#elif defined(__APPLE__)
++#elif defined(__APPLE__) && !defined(__POWERPC__)
+     // On macOS systems we use disconnectx
+     rv = disconnectx(fd, SAE_ASSOCID_ANY, SAE_CONNID_ANY);
+ #elif defined(__linux__) || defined(_ALLBSD_SOURCE) || defined(_AIX)

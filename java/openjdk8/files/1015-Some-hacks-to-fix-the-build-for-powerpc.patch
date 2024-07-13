@@ -1,15 +1,17 @@
-From 9e78df8209452d432606a93ca50215610636cdf1 Mon Sep 17 00:00:00 2001
+From 3f5bda4b33b9098109917b155c0d6c4227568e03 Mon Sep 17 00:00:00 2001
 From: Sergey Fedorov <vital.had@gmail.com>
 Date: Sun, 7 Jul 2024 21:05:23 +0800
 Subject: [PATCH] Some hacks to fix the build for powerpc
 
 Mostly borrowed from https://github.com/nilsvanvelzen/mac_ppc_openjdk8u60
-with some modifications.
+with some modifications and updates.
 ---
+ hotspot/agent/src/os/bsd/Makefile             |  4 +-
+ hotspot/make/bsd/makefiles/saproc.make        |  1 -
  hotspot/src/os/bsd/vm/os_bsd.cpp              |  4 +-
  jdk/make/Bundles.gmk                          |  2 +-
  jdk/make/CompileLaunchers.gmk                 | 20 ++--
- jdk/make/lib/Awt2dLibraries.gmk               | 50 +++++-----
+ jdk/make/lib/Awt2dLibraries.gmk               | 52 +++++-----
  jdk/make/lib/PlatformLibraries.gmk            | 11 +--
  jdk/src/macosx/bin/java_md_macosx.c           |  4 +
  .../media/sound/PLATFORM_API_MacOSX_PCM.cpp   |  7 ++
@@ -22,8 +24,36 @@ with some modifications.
  .../solaris/native/sun/awt/awt_LoadLibrary.c  | 10 +-
  jdk/src/solaris/native/sun/awt/fontpath.c     |  7 +-
  jdk/src/solaris/native/sun/awt/jawt.c         |  2 +-
- 16 files changed, 86 insertions(+), 174 deletions(-)
+ .../native/sun/nio/ch/DatagramChannelImpl.c   |  2 +-
+ 19 files changed, 89 insertions(+), 180 deletions(-)
 
+diff --git hotspot/agent/src/os/bsd/Makefile hotspot/agent/src/os/bsd/Makefile
+index af22b597b8..3ae3f1fb4f 100644
+--- hotspot/agent/src/os/bsd/Makefile
++++ hotspot/agent/src/os/bsd/Makefile
+@@ -51,8 +51,8 @@ SOURCES  = symtab.c     \
+ OBJS    = $(SOURCES:.c=.o)
+ OBJSPLUS = MacosxDebuggerLocal.o sadis.o $(OBJS)
+ EXTINCLUDE = -I.
+-EXTCFLAGS = -m64 -D__APPLE__ -framework JavaNativeFoundation
+-FOUNDATIONFLAGS = -framework Foundation -framework JavaNativeFoundation -framework Security -framework CoreFoundation
++EXTCFLAGS = -D__APPLE__
++FOUNDATIONFLAGS = -framework Foundation -framework Security -framework CoreFoundation
+ LIBSA = $(ARCH)/libsaproc.dylib
+ endif   # Darwin
+ 
+diff --git hotspot/make/bsd/makefiles/saproc.make hotspot/make/bsd/makefiles/saproc.make
+index 5c837895f6..284cb2ebba 100644
+--- hotspot/make/bsd/makefiles/saproc.make
++++ hotspot/make/bsd/makefiles/saproc.make
+@@ -66,7 +66,6 @@ else
+     SASRCFILES = $(DARWIN_NON_STUB_SASRCFILES)
+     SALIBS = -g \
+              -framework Foundation \
+-             -framework JavaNativeFoundation \
+              -framework Security \
+              -framework CoreFoundation
+     #objc compiler blows up on -march=i586, perhaps it should not be included in the macosx intel 32-bit C++ compiles?
 diff --git hotspot/src/os/bsd/vm/os_bsd.cpp hotspot/src/os/bsd/vm/os_bsd.cpp
 index 87eec228fa..b640906a86 100644
 --- hotspot/src/os/bsd/vm/os_bsd.cpp
@@ -98,7 +128,7 @@ index 61973b3bd6..ceae21ed26 100644
  $(eval $(call SetupLauncher,rmic, \
      -DEXPAND_CLASSPATH_WILDCARDS \
 diff --git jdk/make/lib/Awt2dLibraries.gmk jdk/make/lib/Awt2dLibraries.gmk
-index cd579f7a9a..a44e0c3095 100644
+index cd579f7a9a..b2ec36284d 100644
 --- jdk/make/lib/Awt2dLibraries.gmk
 +++ jdk/make/lib/Awt2dLibraries.gmk
 @@ -186,7 +186,7 @@ ifeq ($(OPENJDK_TARGET_OS)-$(OPENJDK_TARGET_CPU_ARCH), solaris-sparc)
@@ -119,7 +149,7 @@ index cd579f7a9a..a44e0c3095 100644
    LIBAWT_DIRS += \
        $(JDK_TOPDIR)/src/$(OPENJDK_TARGET_OS_API_DIR)/native/sun/java2d/x11
  endif
-@@ -477,7 +477,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBAWT, \
+@@ -477,11 +477,9 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBAWT, \
      LDFLAGS_SUFFIX_linux := -ljvm $(LIBM) $(LIBDL) -ljava, \
      LDFLAGS_SUFFIX_solaris := -ljvm $(LIBM) $(LIBDL) -ljava -lc, \
      LDFLAGS_SUFFIX_aix :=-ljvm $(LIBM) $(LIBDL) -ljava -lm,\
@@ -127,8 +157,12 @@ index cd579f7a9a..a44e0c3095 100644
 +    LDFLAGS_SUFFIX_macosx := -ljvm $(LIBM) \
          -framework Cocoa \
          -framework OpenGL \
-         -framework JavaNativeFoundation \
-@@ -504,7 +504,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBAWT, \
+-        -framework JavaNativeFoundation \
+-        -framework JavaRuntimeSupport \
+         -framework ApplicationServices \
+         -framework AudioToolbox \
+         -ljava, \
+@@ -504,7 +502,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBAWT, \
  
  $(BUILD_LIBAWT): $(BUILD_LIBJAVA)
  
@@ -137,7 +171,7 @@ index cd579f7a9a..a44e0c3095 100644
    $(BUILD_LIBAWT): $(BUILD_LIBMLIB_IMAGE)
  endif
  
-@@ -764,7 +764,7 @@ BUILD_LIBRARIES += $(BUILD_LIBJPEG)
+@@ -764,7 +762,7 @@ BUILD_LIBRARIES += $(BUILD_LIBJPEG)
  
  ifeq ($(BUILD_HEADLESS), true)
    # Mac and Windows only use the native AWT lib, do not build libawt_headless
@@ -146,7 +180,7 @@ index cd579f7a9a..a44e0c3095 100644
  
      LIBAWT_HEADLESS_DIRS := $(JDK_TOPDIR)/src/share/native/sun/font \
          $(JDK_TOPDIR)/src/share/native/sun/java2d/opengl \
-@@ -773,7 +773,7 @@ ifeq ($(BUILD_HEADLESS), true)
+@@ -773,7 +771,7 @@ ifeq ($(BUILD_HEADLESS), true)
          $(JDK_TOPDIR)/src/solaris/native/sun/java2d/opengl \
          $(JDK_TOPDIR)/src/solaris/native/sun/java2d/x11
  
@@ -155,7 +189,7 @@ index cd579f7a9a..a44e0c3095 100644
        LIBAWT_HEADLESS_DIRS += $(JDK_TOPDIR)/src/macosx/native/sun/font
      endif
  
-@@ -873,7 +873,7 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
+@@ -873,7 +871,7 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
    LIBFONTMANAGER_EXCLUDE_FILES += X11FontScaler.c \
        X11TextRenderer.c
    LIBFONTMANAGER_OPTIMIZATION := HIGHEST
@@ -164,7 +198,7 @@ index cd579f7a9a..a44e0c3095 100644
    LIBFONTMANAGER_EXCLUDE_FILES += X11FontScaler.c \
        X11TextRenderer.c \
        fontpath.c \
-@@ -969,6 +969,9 @@ ifndef OPENJDK
+@@ -969,6 +967,9 @@ ifndef OPENJDK
        -I$(JDK_TOPDIR)/src/$(OPENJDK_TARGET_OS_API_DIR)/native/sun/java2d \
        -I$(JDK_TOPDIR)/src/share/native/sun/java2d
  
@@ -174,7 +208,7 @@ index cd579f7a9a..a44e0c3095 100644
    $(eval $(call SetupNativeCompilation,BUILD_LIBT2K, \
        LIBRARY := t2k, \
        OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
-@@ -987,7 +990,7 @@ ifndef OPENJDK
+@@ -987,7 +988,7 @@ ifndef OPENJDK
            $(call SET_SHARED_LIBRARY_ORIGIN), \
        LDFLAGS_windows := user32.lib $(JDK_OUTPUTDIR)/objs/libfontmanager/fontmanager.lib, \
        LDFLAGS_SUFFIX_posix := $(LIBM) $(LIBCXX) -lfontmanager -ljava -ljvm -lc, \
@@ -183,7 +217,7 @@ index cd579f7a9a..a44e0c3095 100644
        VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
        RC_FLAGS := $(RC_FLAGS) \
            -D "JDK_FNAME=t2k.dll" \
-@@ -1043,17 +1046,17 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
+@@ -1043,17 +1044,17 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
  
  else # OPENJDK_TARGET_OS not windows
  
@@ -204,7 +238,7 @@ index cd579f7a9a..a44e0c3095 100644
      else
        JAWT_LIBS += -lawt_headless
        HEADLESS_CFLAG += -DHEADLESS
-@@ -1089,7 +1092,7 @@ else # OPENJDK_TARGET_OS not windows
+@@ -1089,7 +1090,7 @@ else # OPENJDK_TARGET_OS not windows
      $(BUILD_LIBJAWT): $(INSTALL_LIBRARIES_HERE)/$(LIBRARY_PREFIX)awt_headless$(SHARED_LIBRARY_SUFFIX)
    endif
  
@@ -213,7 +247,7 @@ index cd579f7a9a..a44e0c3095 100644
      $(BUILD_LIBJAWT): $(INSTALL_LIBRARIES_HERE)/$(LIBRARY_PREFIX)awt_lwawt$(SHARED_LIBRARY_SUFFIX)
    endif
  
-@@ -1149,7 +1152,7 @@ ifndef BUILD_HEADLESS_ONLY
+@@ -1149,7 +1150,7 @@ ifndef BUILD_HEADLESS_ONLY
      GIFLIB_CFLAGS := -I$(JDK_TOPDIR)/src/share/native/sun/awt/giflib
    endif
  
@@ -222,7 +256,7 @@ index cd579f7a9a..a44e0c3095 100644
      LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/$(OPENJDK_TARGET_OS_API_DIR)/native/sun/awt/splashscreen
    else
      LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/macosx/native/sun/awt/splashscreen
-@@ -1165,7 +1168,7 @@ ifndef BUILD_HEADLESS_ONLY
+@@ -1165,7 +1166,7 @@ ifndef BUILD_HEADLESS_ONLY
      endif
    endif
  
@@ -231,7 +265,7 @@ index cd579f7a9a..a44e0c3095 100644
      LIBSPLASHSCREEN_CFLAGS := -I$(JDK_TOPDIR)/src/macosx/native/sun/awt/splashscreen \
          $(LIBSPLASHSCREEN_CFLAGS)
      LIBSPLASHSCREEN_CFLAGS += -DWITH_MACOSX
-@@ -1192,16 +1195,15 @@ ifndef BUILD_HEADLESS_ONLY
+@@ -1192,16 +1193,15 @@ ifndef BUILD_HEADLESS_ONLY
      LIBSPLASHSCREEN_CFLAGS += $(ZLIB_CPPFLAGS)
    endif
  
@@ -250,7 +284,7 @@ index cd579f7a9a..a44e0c3095 100644
    endif
  
    $(eval $(call SetupNativeCompilation,LIBSPLASHSCREEN, \
-@@ -1227,7 +1229,7 @@ ifndef BUILD_HEADLESS_ONLY
+@@ -1227,7 +1227,7 @@ ifndef BUILD_HEADLESS_ONLY
  
    BUILD_LIBRARIES += $(LIBSPLASHSCREEN)
  
@@ -259,7 +293,7 @@ index cd579f7a9a..a44e0c3095 100644
      $(LIBSPLASHSCREEN): $(INSTALL_LIBRARIES_HERE)/$(LIBRARY_PREFIX)osxapp$(SHARED_LIBRARY_SUFFIX)
    endif
  
-@@ -1276,7 +1278,7 @@ endif
+@@ -1276,7 +1276,7 @@ endif
  
  ##########################################################################################
  
@@ -268,7 +302,7 @@ index cd579f7a9a..a44e0c3095 100644
  
    LIBAWT_LWAWT_FILES := \
        awt.m \
-@@ -1383,7 +1385,7 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
+@@ -1383,7 +1383,7 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
            -I$(JDK_TOPDIR)/src/share/native/sun/awt/debug, \
        LDFLAGS := $(LDFLAGS_JDKLIB) \
            $(call SET_SHARED_LIBRARY_ORIGIN), \
@@ -277,7 +311,7 @@ index cd579f7a9a..a44e0c3095 100644
            -framework Accelerate \
            -framework ApplicationServices \
            -framework AudioToolbox \
-@@ -1391,10 +1393,8 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
+@@ -1391,10 +1391,8 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
            -framework Cocoa \
            -framework Security \
            -framework ExceptionHandling \
@@ -289,7 +323,7 @@ index cd579f7a9a..a44e0c3095 100644
        OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libawt_lwawt, \
        DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
  
-@@ -1412,7 +1412,7 @@ endif
+@@ -1412,7 +1410,7 @@ endif
  
  ##########################################################################################
  
@@ -298,7 +332,7 @@ index cd579f7a9a..a44e0c3095 100644
  
    $(eval $(call SetupNativeCompilation,BUILD_LIBOSXUI, \
        LIBRARY := osxui, \
-@@ -1431,8 +1431,6 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
+@@ -1431,8 +1429,6 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
            -framework Cocoa \
            -framework Carbon \
            -framework ApplicationServices \
@@ -827,3 +861,16 @@ index 64284bc6e9..1ed9c44048 100644
      /* there are no AWT libs available at all */
      return JNI_FALSE;
  #else
+diff --git jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
+index ff1290756f..730ff52c86 100644
+--- jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
++++ jdk/src/solaris/native/sun/nio/ch/DatagramChannelImpl.c
+@@ -89,7 +89,7 @@ Java_sun_nio_ch_DatagramChannelImpl_disconnect0(JNIEnv *env, jobject this,
+ 
+ #ifdef __solaris__
+     rv = connect(fd, 0, 0);
+-#elif defined(__APPLE__)
++#elif defined(__APPLE__) && !defined(__POWERPC__)
+     // On macOS systems we use disconnectx
+     rv = disconnectx(fd, SAE_ASSOCID_ANY, SAE_CONNID_ANY);
+ #elif defined(__linux__) || defined(_ALLBSD_SOURCE) || defined(_AIX)

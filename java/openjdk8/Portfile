@@ -80,8 +80,7 @@ platform powerpc {
                     1012-toolchain.m4-hack-around-a-broken-Xcode-version-dete.patch \
                     1013-os_bsd.cpp-fix-running-VM.patch \
                     1014-portconfig-try-fix-broken-pipe.patch \
-                    1015-Some-hacks-to-fix-the-build-for-powerpc.patch \
-                    1016-DatagramChannelImpl.c-fix-for-powerpc.patch
+                    1015-Some-hacks-to-fix-the-build-for-powerpc.patch
 }
 
 # Active libnet breaks linking of libnio which should link
@@ -181,8 +180,8 @@ post-patch {
 }
 
 if {${configure.build_arch} eq "ppc"} {
-    # depends_build-append    port:openjdk7-bootstrap
-    configure.args-append   --with-boot-jdk=/Users/svacchanda/java8/jvm/openjdk-1.8.0-internal
+    depends_build-append    port:openjdk7-bootstrap
+    configure.args-append   --with-boot-jdk=/Library/Java/JavaVirtualMachines/openjdk7-bootstrap
     configure.post_args     --disable-headful
 
     # https://chromium.googlesource.com/chromium/src/+/52.0.2743.117/docs/mac_build_instructions.md

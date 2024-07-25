@@ -1,0 +1,53 @@
+From e2b810be9c07cd23f8675a22ce59afa03e09099a Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Mon, 22 Jul 2024 18:27:05 +0800
+Subject: [PATCH 3/5] evtloop_cf.cpp: fix for macOS
+
+---
+ src/osx/core/evtloop_cf.cpp | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git src/osx/core/evtloop_cf.cpp src/osx/core/evtloop_cf.cpp
+index 54d7e36c80..9cbcf26717 100644
+--- src/osx/core/evtloop_cf.cpp
++++ src/osx/core/evtloop_cf.cpp
+@@ -31,7 +31,7 @@
+ 
+ #include "wx/scopedptr.h"
+ 
+-#include "wx/osx/private.h"
++#include "wx/osx/core/cfstring.h"
+ #include "wx/osx/core/cfref.h"
+ #include "wx/thread.h"
+ 
+@@ -39,7 +39,9 @@
+     #include "wx/nonownedwnd.h"
+ #endif
+ 
++#include <CoreFoundation/CoreFoundation.h>
+ #include <CoreFoundation/CFSocket.h>
++#include <Carbon/Carbon.h>
+ 
+ // ============================================================================
+ // wxCFEventLoopSource and wxCFEventLoop implementation
+@@ -118,7 +120,7 @@ wxCFEventLoop::DefaultModeObserverCallBack(CFRunLoopObserverRef WXUNUSED(observe
+     if ( activity & kCFRunLoopBeforeTimers )
+     {
+     }
+-    
++
+     if ( activity & kCFRunLoopBeforeWaiting )
+     {
+     }
+@@ -134,7 +136,7 @@ wxCFEventLoop::wxCFEventLoop()
+ #if wxUSE_UIACTIONSIMULATOR
+     m_shouldWaitForEvent = false;
+ #endif
+-    
++
+     m_runLoop = CFGetCurrentRunLoop();
+ 
+     CFRunLoopObserverContext ctxt;
+-- 
+2.45.2
+

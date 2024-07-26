@@ -1,0 +1,82 @@
+diff -ruNpw -U8 wxWidgets-3.2.2.1-orig/include/wx/defs.h wxWidgets-3.2.2.1/include/wx/defs.h
+--- include/wx/defs.h	2023-02-13 08:45:39.000000000 -0600
++++ include/wx/defs.h	2023-06-12 21:16:32.000000000 -0500
+@@ -2810,10 +2810,6 @@
+ #ifdef __DARWIN__
+ #define DECLARE_WXOSX_OPAQUE_CFREF( name ) typedef struct __##name* name##Ref;
+ #define DECLARE_WXOSX_OPAQUE_CONST_CFREF( name ) typedef const struct __##name* name##Ref;
+-
+-#endif
+-
+-#ifdef __WXMAC__
+ 
+ #define WX_OPAQUE_TYPE( name ) struct wxOpaque##name
+ 
+@@ -2832,7 +2828,9 @@
+ 
+ typedef WX_OPAQUE_TYPE(PicHandle ) * WXHMETAFILE ;
+ 
++#if !defined(__WXX11__) && !defined(__WXGTK__)
+ typedef void*       WXDisplay;
++#endif
+ 
+ /*
+  * core frameworks
+@@ -2910,7 +2908,7 @@
+ 
+ #endif // __WXMAC__
+ 
+-#if defined(__WXMAC__)
++#if defined(__WXMAC__) || defined(__OBJC__)
+ 
+ /* Objective-C type declarations.
+  * These are to be used in public headers in lieu of NSSomething* because
+
+diff -ruNpw -U8 wxWidgets-3.2.2.1-orig/src/osx/core/evtloop_cf.cpp wxWidgets-3.2.2.1/src/osx/core/evtloop_cf.cpp
+--- src/osx/core/evtloop_cf.cpp	2023-02-13 08:45:39.000000000 -0600
++++ src/osx/core/evtloop_cf.cpp	2023-06-12 21:19:34.000000000 -0500
+@@ -26,17 +26,19 @@
+     #include "wx/log.h"
+     #include "wx/app.h"
+ #endif
+ 
+ #include "wx/evtloopsrc.h"
+ 
+ #include "wx/scopedptr.h"
+ 
+-#include "wx/osx/private.h"
++#include <CoreFoundation/CoreFoundation.h>
++#include <Carbon/Carbon.h>
++#include "wx/osx/core/cfstring.h"
+ #include "wx/osx/core/cfref.h"
+ #include "wx/thread.h"
+ 
+ #if wxUSE_GUI
+     #include "wx/nonownedwnd.h"
+ #endif
+ 
+ #include <CoreFoundation/CFSocket.h>
+diff -ruNpw -U8 wxWidgets-3.2.2.1-orig/src/osx/core/mimetype.cpp wxWidgets-3.2.2.1/src/osx/core/mimetype.cpp
+--- src/osx/core/mimetype.cpp	2023-02-13 08:45:39.000000000 -0600
++++ src/osx/core/mimetype.cpp	2023-06-12 21:15:03.000000000 -0500
+@@ -13,17 +13,19 @@
+ 
+ #ifndef WX_PRECOMP
+ #include "wx/defs.h"
+ #endif
+ 
+ #if wxUSE_MIMETYPE
+ 
+ #include "wx/osx/mimetype.h"
+-#include "wx/osx/private.h"
++#include <CoreFoundation/CoreFoundation.h>
++#include <Carbon/Carbon.h>
++#include "wx/osx/core/cfstring.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ // Helper functions
+ /////////////////////////////////////////////////////////////////////////////
+ 
+ 
+ // Read a string or array of strings from a CFDictionary for a given key
+ // Return an empty list on error

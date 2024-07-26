@@ -1,0 +1,28 @@
+--- src/osx/cocoa/utils_base.mm.orig	2024-05-14 00:22:43
++++ src/osx/cocoa/utils_base.mm	2024-07-23 05:04:31
+@@ -24,6 +24,8 @@
+ #include "wx/osx/private.h"
+ #include "wx/osx/private/available.h"
+ 
++#include <AppKit/AppKit.h>
++
+ #if wxUSE_SOCKETS
+ // global pointer which lives in the base library, set from the net one (see
+ // sockosx.cpp) and used from the GUI code (see utilsexc_cf.cpp) -- ugly but
+@@ -249,15 +251,13 @@
+             }
+         }
+     }
+-    
++
+     [params release];
+ 
+     if( app != nil )
+         pid = [app processIdentifier];
+     else
+     {
+-        wxString errorDesc = wxCFStringRef::AsString([error localizedDescription]);
+-        wxLogDebug( "wxCocoaLaunch failure: error is %s", errorDesc );
+         return false;
+     }
+     return true;

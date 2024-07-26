@@ -1,0 +1,22 @@
+diff --git a/Makefile.in b/Makefile.in
+index 383cde57e2..8338d3b4f7 100644
+--- Makefile.in
++++ Makefile.in
+@@ -2697,7 +2697,8 @@ COND_TOOLKIT_OSX_COCOA_BASE_OSX_HDR =  \
+ 	wx/unix/pipe.h \
+ 	wx/unix/stackwalk.h \
+ 	wx/unix/fswatcher_kqueue.h \
+-	wx/osx/fswatcher_fsevents.h
++	wx/osx/fswatcher_fsevents.h \
++	wx/osx/cocoa/stdpaths.h
+ @COND_TOOLKIT_OSX_COCOA@BASE_OSX_HDR = $(COND_TOOLKIT_OSX_COCOA_BASE_OSX_HDR)
+ COND_TOOLKIT_X11_BASE_OSX_HDR =  \
+ 	wx/unix/app.h \
+@@ -3357,7 +3358,6 @@ COND_TOOLKIT_OSX_COCOA_GUI_HDR =  \
+ 	wx/osx/cocoa/evtloop.h \
+ 	wx/osx/cocoa/private.h \
+ 	wx/generic/region.h \
+-	wx/osx/cocoa/stdpaths.h \
+ 	wx/osx/sound.h \
+ 	wx/osx/dvrenderer.h \
+ 	wx/osx/cocoa/dataview.h \

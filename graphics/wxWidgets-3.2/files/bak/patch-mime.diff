@@ -1,0 +1,47 @@
+--- include/wx/unix/mimetype.h.orig	2024-05-14 00:22:43
++++ include/wx/unix/mimetype.h	2024-07-23 07:01:55
+@@ -86,6 +86,7 @@
+     // Load XDG globs files
+     void LoadXDGGlobs(const wxString& filename);
+
++#ifndef __APPLE__
+     // functions used to do associations
+     virtual int AddToMimeData(const wxString& strType,
+                       const wxString& strIcon,
+@@ -98,6 +99,7 @@
+                        wxMimeTypeCommands *entry,
+                        const wxArrayString& strExtensions,
+                        const wxString& strDesc);
++#endif
+
+     virtual wxString GetIconFromMimeType(const wxString& mime);
+
+
+--- src/unix/mimetype.cpp.orig	2024-05-14 00:22:43
++++ src/unix/mimetype.cpp	2024-07-23 07:01:42
+@@ -261,7 +261,9 @@
+
+        wxString icon = GetIconFromMimeType(mime);
+
++#ifndef __APPLE__
+        AddToMimeData(mime, icon, NULL, exts, wxEmptyString, true );
++#endif
+     }
+ }
+
+@@ -716,6 +718,7 @@
+     return wxString();
+ }
+
++#ifndef __APPLE__
+ bool wxMimeTypesManagerImpl::DoAssociation(const wxString& strType,
+                                            const wxString& strIcon,
+                                            wxMimeTypeCommands *entry,
+@@ -851,6 +854,7 @@
+
+     return nIndex;
+ }
++#endif
+
+ wxFileType * wxMimeTypesManagerImpl::GetFileTypeFromExtension(const wxString& ext)
+ {

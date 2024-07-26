@@ -1,15 +1,26 @@
---- src/osx/core/display.cpp.orig	2024-05-14 00:22:43
-+++ src/osx/core/display.cpp	2024-07-23 08:01:53
-@@ -30,6 +30,8 @@
- #endif
+From 2e9c9fb007c241bd54aa1f77e191f697693fe985 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Fri, 26 Jul 2024 11:51:06 +0800
+Subject: [PATCH 03/10] display: fix
+
+---
+ src/osx/core/display.cpp | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
+
+diff --git src/osx/core/display.cpp src/osx/core/display.cpp
+index 6b8004da4c..4fd775e6a0 100644
+--- src/osx/core/display.cpp
++++ src/osx/core/display.cpp
+@@ -31,6 +31,8 @@
  
  #include "wx/osx/private.h"
-+
-+#ifdef __WXMAC__
  
++#ifdef __WXMAC__
++
  // ----------------------------------------------------------------------------
  // common helpers compiled even in wxUSE_DISPLAY==0 case
-@@ -320,7 +322,7 @@
+ // ----------------------------------------------------------------------------
+@@ -320,7 +322,7 @@ static int wxOSXCGDisplayModeGetBitsPerPixel( CGDisplayModeRef theValue )
          depth = 16;
      else if ( CFStringCompare( pixelEncoding, CFSTR(IO8BitIndexedPixels) , kCFCompareCaseInsensitive) == kCFCompareEqualTo )
          depth = 8;
@@ -18,7 +29,7 @@
      return depth;
  }
  
-@@ -329,17 +331,17 @@
+@@ -329,17 +331,17 @@ wxArrayVideoModes wxDisplayImplMacOSX::GetModes(const wxVideoMode& mode) const
      wxArrayVideoModes resultModes;
  
      wxCFRef<CFArrayRef> theArray(CGDisplayCopyAllDisplayModes( m_id ,NULL ) );
@@ -39,7 +50,7 @@
          if (theMode.Matches( mode ))
              resultModes.Add( theMode );
      }
-@@ -350,7 +352,7 @@
+@@ -350,7 +352,7 @@ wxArrayVideoModes wxDisplayImplMacOSX::GetModes(const wxVideoMode& mode) const
  wxVideoMode wxDisplayImplMacOSX::GetCurrentMode() const
  {
      wxCFRef<CGDisplayModeRef> theValue( CGDisplayCopyDisplayMode( m_id ) );
@@ -48,7 +59,7 @@
      return wxVideoMode(
                         CGDisplayModeGetWidth(theValue),
                         CGDisplayModeGetHeight(theValue),
-@@ -370,20 +372,20 @@
+@@ -370,20 +372,20 @@ bool wxDisplayImplMacOSX::ChangeMode( const wxVideoMode& mode )
  
      wxCHECK_MSG( mode.GetWidth() && mode.GetHeight(), false,
                  wxT("at least the width and height must be specified") );
@@ -73,7 +84,7 @@
          if ( theMode.GetWidth() == mode.GetWidth() && theMode.GetHeight() == mode.GetHeight() &&
              ( mode.GetDepth() == 0 || theMode.GetDepth() == mode.GetDepth() ) &&
              ( mode.GetRefresh() == 0 || theMode.GetRefresh() == mode.GetRefresh() ) )
-@@ -393,7 +395,7 @@
+@@ -393,7 +395,7 @@ bool wxDisplayImplMacOSX::ChangeMode( const wxVideoMode& mode )
              break;
          }
      }
@@ -82,7 +93,7 @@
      return bOK;
  }
  
-@@ -441,4 +443,13 @@
+@@ -441,4 +443,13 @@ protected:
      return new wxDisplayFactorySingleMacOSX;
  }
  
@@ -96,3 +107,6 @@
 +#endif
 +
  #endif // wxUSE_DISPLAY
+-- 
+2.45.2
+

@@ -158,7 +158,8 @@ if {${subport} eq "wxgtk-3.2"} {
 
     patchfiles-append       1001-Revert-Replace-deprecated-LSGetApplicationForInfo.patch \
                             1002-Revert-Remove-Cocoa-type-declarations-from-wx-defs.h.patch \
-                            1003-Revert-some-breakages.patch
+                            1003-Revert-some-breakages.patch \
+                            1004-utilsunx-no-memset_s.patch
 }
 
 if {${subport} eq "wxx11-3.2"} {

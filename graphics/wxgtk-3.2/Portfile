@@ -1,0 +1,176 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake           1.1
+PortGroup           github          1.0
+PortGroup           legacysupport   1.1
+PortGroup           select          1.0
+PortGroup           wxWidgets       1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+# remember to bump version of wxWidgets-common
+github.setup        wxWidgets wxWidgets 3.2.5 v
+github.tarball_from releases
+revision            0
+
+name                wxgtk-3.2
+
+set installname     wxGTK
+set wxtype          gtk3
+wxWidgets.use       wxGTK-3.2
+
+set branch          [join [lrange [split ${version} .] 0 1] .]
+
+categories          graphics devel
+license             wxwidgets-3.1
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+
+description         C++ framework for cross-platform GUI development
+long_description    wxWidgets ${branch} is an open-source cross-platform C++ \
+                    GUI framework for Mac OS, Unix, Linux, Windows.
+
+homepage            https://www.wxwidgets.org
+
+distname            wxWidgets-${version}
+use_bzip2           yes
+
+checksums           rmd160  c08487a538b0ba9983229a266b380ca0fa0de658 \
+                    sha256  0ad86a3ad3e2e519b6a705248fc9226e3a09bbf069c6c692a02acf7c2d1c6b51 \
+                    size    27539152
+
+dist_subdir         wxWidgets/${version}
+worksrcdir          ${distname}/build
+patch.dir           ${worksrcpath}/..
+
+set selectdir       ${workpath}/select
+select.group        wxWidgets
+select.file         ${selectdir}/${subport}
+
+compiler.c_standard   2011
+compiler.cxx_standard 2011
+compiler.thread_local_storage yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo \
+                    port:curl \
+                    port:expat \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:jbigkit \
+                    port:libGLU \
+                    port:libiconv \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libpng \
+                    port:libsdl2 \
+                    port:libsdl2_mixer \
+                    port:mesa \
+                    port:pcre2 \
+                    port:tiff \
+                    port:zlib
+
+require_active_variants path:lib/pkgconfig/cairo.pc:cairo x11
+require_active_variants gtk3 x11
+
+depends_run         port:wxWidgets-common \
+                    port:wxWidgets_select
+
+post-patch {
+    file mkdir ${selectdir}
+    system "echo \"${wxWidgets.wxdir}/wx-config\n${wxWidgets.wxdir}/wxrc-${branch}\" > ${select.file}"
+}
+
+configure.args-append \
+                    -DCMAKE_INSTALL_PREFIX=${wxWidgets.prefix} \
+                    -DwxBUILD_COMPATIBILITY=3.0 \
+                    -DwxBUILD_MONOLITHIC=OFF \
+                    -DwxBUILD_OPTIMISE=OFF \
+                    -DwxBUILD_SHARED=ON \
+                    -DwxBUILD_TESTS=OFF \
+                    -DwxCXX_STANDARD_DEFAULT=11 \
+                    -DwxDEFAULT_TOOLKIT=gtk3 \
+                    -DwxDEFAULT_wxUSE_AUTOID_MANAGEMENT=OFF \
+                    -DwxUSE_AUI=ON \
+                    -DwxUSE_CAIRO_DEFAULT=ON \
+                    -DwxUSE_COMPILER_TLS=ON \
+                    -DwxUSE_DEBUGREPORT=OFF \
+                    -DwxUSE_DISPLAY=ON \
+                    -DwxUSE_EXPAT=ON \
+                    -DwxUSE_GEOMETRY=ON \
+                    -DwxUSE_GLCANVAS_EGL=OFF \
+                    -DwxUSE_GRAPHICS_CONTEXT=OFF \
+                    -DwxUSE_GUI=ON \
+                    -DwxUSE_HTML=ON \
+                    -DwxUSE_LIBICONV=ON \
+                    -DwxUSE_LIBJPEG=ON \
+                    -DwxUSE_LIBLZMA=OFF \
+                    -DwxUSE_LIBNOTIFY=OFF \
+                    -DwxUSE_LIBPNG=ON \
+                    -DwxUSE_LIBSDL=OFF \
+                    -DwxUSE_LIBTIFF=ON \
+                    -DwxUSE_LISTBOX=ON \
+                    -DwxUSE_MIMETYPE=ON \
+                    -DwxUSE_OPENGL=ON \
+                    -DwxUSE_POSTSCRIPT=ON \
+                    -DwxUSE_PRINTF_POS_PARAMS=ON \
+                    -DwxUSE_REGEX=ON \
+                    -DwxUSE_REPRODUCIBLE_BUILD=ON \
+                    -DwxUSE_RICHTEXT=ON \
+                    -DwxUSE_SECRETSTORE=ON \
+                    -DwxUSE_SOCKETS=ON \
+                    -DwxUSE_SPELLCHECK=OFF \
+                    -DwxUSE_STC=OFF \
+                    -DwxUSE_STDPATHS=ON \
+                    -DwxUSE_THREADS=ON \
+                    -DwxUSE_UNICODE=ON \
+                    -DwxUSE_UNSAFE_WXSTRING_CONV=OFF \
+                    -DwxUSE_WEBREQUEST=ON \
+                    -DwxUSE_WEBREQUEST_CURL_DEFAULT=OFF \
+                    -DwxUSE_WEBREQUEST_URLSESSION=ON \
+                    -DwxUSE_WEBVIEW=OFF \
+                    -DwxUSE_XLOCALE=ON \
+                    -DwxUSE_XRC=ON \
+                    -DwxUSE_ZLIB=ON
+
+# https://github.com/wxWidgets/wxWidgets/issues/23475
+platform darwin {
+    patchfiles-append \
+                    0001-cfstring-fix.patch \
+                    0002-dirctrlg.cpp-fix.patch \
+                    0003-display-fix.patch \
+                    0004-mimetype-fix.patch \
+                    0005-evtloop_cf-fix.patch \
+                    0006-defs.h-fix.patch \
+                    0007-intl.cpp-fix.patch \
+                    0008-webrequest_urlsession.h-fix.patch \
+                    0009-utils_base.mm-fix.patch \
+                    0010-toolkit.cmake-fix-options.patch \
+                    0011-options.cmake-amend-for-Apple.patch
+
+    if {${os.platform} < 16} {
+        patchfiles-append \
+                    1001-Revert-Replace-deprecated-LSGetApplicationForInfo.patch \
+                    1002-Revert-Remove-Cocoa-type-declarations-from-wx-defs.h.patch \
+                    1003-Revert-some-breakages.patch \
+                    1004-utilsunx-no-memset_s.patch
+
+        configure.args-replace \
+                    -DwxUSE_STDPATHS=ON -DwxUSE_STDPATHS=OFF \
+                    -DwxUSE_WEBREQUEST_CURL_DEFAULT=OFF -DwxUSE_WEBREQUEST_CURL_DEFAULT=ON \
+                    -DwxUSE_WEBREQUEST_URLSESSION=ON -DwxUSE_WEBREQUEST_URLSESSION=OFF \
+                    -DwxUSE_XLOCALE=ON -DwxUSE_XLOCALE=OFF
+    }
+
+    configure.ldflags-append \
+                    -framework AppKit
+}
+
+post-destroot {
+    set confscript ${wxWidgets.prefix}/lib/wx/config/${wxtype}-unicode-${branch}
+    ln -sf ${confscript} ${destroot}${wxWidgets.prefix}/bin/wx-config
+}
+
+github.livecheck.regex  {([0-9.]+)}

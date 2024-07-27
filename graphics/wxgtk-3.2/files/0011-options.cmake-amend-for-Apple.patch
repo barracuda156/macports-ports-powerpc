@@ -1,0 +1,35 @@
+From e768ee701dabdebfec748b9a3bf90fc8882cabad Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Sun, 28 Jul 2024 03:47:43 +0800
+Subject: [PATCH] options.cmake: amend for Apple
+
+---
+ build/cmake/options.cmake | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git build/cmake/options.cmake build/cmake/options.cmake
+index 28f3fa461c..42f0cf68e6 100644
+--- build/cmake/options.cmake
++++ build/cmake/options.cmake
+@@ -278,15 +278,13 @@ wx_option(wxUSE_PRINTING_ARCHITECTURE "use printing architecture")
+ wx_option(wxUSE_SVG "use wxSVGFileDC device context")
+ wx_option(wxUSE_WEBVIEW "use wxWebView library")
+ 
+-# wxDC is implemented in terms of wxGraphicsContext in wxOSX so the latter
+-# can't be disabled, don't even provide an option to do it
+-if(APPLE)
++wx_option(wxUSE_GRAPHICS_CONTEXT "use graphics context 2D drawing API")
++if(WXOSX)
+     set(wxUSE_GRAPHICS_CONTEXT ON)
+-else()
+-    wx_option(wxUSE_GRAPHICS_CONTEXT "use graphics context 2D drawing API")
+-    if(WIN32)
+-        wx_option(wxUSE_GRAPHICS_DIRECT2D "enable Direct2D graphics context")
+-    endif()
++endif()
++
++if(WIN32)
++    wx_option(wxUSE_GRAPHICS_DIRECT2D "enable Direct2D graphics context")
+ endif()
+ 
+ if(WXGTK)

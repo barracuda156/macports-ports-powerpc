@@ -42,8 +42,6 @@ checksums           rmd160  c08487a538b0ba9983229a266b380ca0fa0de658 \
                     size    27539152
 
 dist_subdir         wxWidgets/${version}
-worksrcdir          ${distname}/build
-patch.dir           ${worksrcpath}/..
 
 set selectdir       ${workpath}/select
 select.group        wxWidgets
@@ -87,37 +85,35 @@ configure.args-append \
                     -DCMAKE_INSTALL_PREFIX=${wxWidgets.prefix} \
                     -DwxBUILD_COMPATIBILITY=3.0 \
                     -DwxBUILD_MONOLITHIC=OFF \
-                    -DwxBUILD_OPTIMISE=OFF \
+                    -DwxBUILD_OPTIMISE=ON \
                     -DwxBUILD_SHARED=ON \
                     -DwxBUILD_TESTS=OFF \
                     -DwxCXX_STANDARD_DEFAULT=11 \
-                    -DwxDEFAULT_TOOLKIT=gtk3 \
-                    -DwxDEFAULT_wxUSE_AUTOID_MANAGEMENT=OFF \
+                    -DwxBUILD_TOOLKIT=gtk3 \
                     -DwxUSE_AUI=ON \
                     -DwxUSE_CAIRO_DEFAULT=ON \
                     -DwxUSE_COMPILER_TLS=ON \
                     -DwxUSE_DEBUGREPORT=OFF \
                     -DwxUSE_DISPLAY=ON \
-                    -DwxUSE_EXPAT=ON \
+                    -DwxUSE_EXPAT=sys \
                     -DwxUSE_GEOMETRY=ON \
                     -DwxUSE_GLCANVAS_EGL=OFF \
-                    -DwxUSE_GRAPHICS_CONTEXT=OFF \
                     -DwxUSE_GUI=ON \
                     -DwxUSE_HTML=ON \
-                    -DwxUSE_LIBICONV=ON \
-                    -DwxUSE_LIBJPEG=ON \
+                    -DwxUSE_JOYSTICK=OFF \
+                    -DwxUSE_LIBICONV=sys \
+                    -DwxUSE_LIBJPEG=sys \
                     -DwxUSE_LIBLZMA=OFF \
                     -DwxUSE_LIBNOTIFY=OFF \
-                    -DwxUSE_LIBPNG=ON \
+                    -DwxUSE_LIBPNG=sys \
                     -DwxUSE_LIBSDL=OFF \
-                    -DwxUSE_LIBTIFF=ON \
-                    -DwxUSE_LISTBOX=ON \
+                    -DwxUSE_LIBTIFF=sys \
                     -DwxUSE_MIMETYPE=ON \
                     -DwxUSE_OPENGL=ON \
                     -DwxUSE_POSTSCRIPT=ON \
                     -DwxUSE_PRINTF_POS_PARAMS=ON \
-                    -DwxUSE_REGEX=ON \
-                    -DwxUSE_REPRODUCIBLE_BUILD=ON \
+                    -DwxUSE_REGEX=sys \
+                    -DwxUSE_REPRODUCIBLE_BUILD=OFF \
                     -DwxUSE_RICHTEXT=ON \
                     -DwxUSE_SECRETSTORE=ON \
                     -DwxUSE_SOCKETS=ON \
@@ -133,7 +129,7 @@ configure.args-append \
                     -DwxUSE_WEBVIEW=OFF \
                     -DwxUSE_XLOCALE=ON \
                     -DwxUSE_XRC=ON \
-                    -DwxUSE_ZLIB=ON
+                    -DwxUSE_ZLIB=sys
 
 # https://github.com/wxWidgets/wxWidgets/issues/23475
 platform darwin {
@@ -147,8 +143,7 @@ platform darwin {
                     0007-intl.cpp-fix.patch \
                     0008-webrequest_urlsession.h-fix.patch \
                     0009-utils_base.mm-fix.patch \
-                    0010-toolkit.cmake-fix-options.patch \
-                    0011-options.cmake-amend-for-Apple.patch
+                    0010-toolkit.cmake-fix-options.patch
 
     if {${os.platform} < 16} {
         patchfiles-append \
@@ -158,6 +153,7 @@ platform darwin {
                     1004-utilsunx-no-memset_s.patch
 
         configure.args-replace \
+                    -DwxBUILD_OPTIMISE=ON -DwxBUILD_OPTIMISE=OFF \
                     -DwxUSE_STDPATHS=ON -DwxUSE_STDPATHS=OFF \
                     -DwxUSE_WEBREQUEST_CURL_DEFAULT=OFF -DwxUSE_WEBREQUEST_CURL_DEFAULT=ON \
                     -DwxUSE_WEBREQUEST_URLSESSION=ON -DwxUSE_WEBREQUEST_URLSESSION=OFF \
@@ -165,7 +161,7 @@ platform darwin {
     }
 
     configure.ldflags-append \
-                    -framework AppKit
+                    -undefined dynamic_lookup
 }
 
 post-destroot {

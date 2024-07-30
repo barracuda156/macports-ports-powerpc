@@ -134,8 +134,8 @@ configure.args-append \
                     -DwxUSE_UNICODE=ON \
                     -DwxUSE_UNSAFE_WXSTRING_CONV=ON \
                     -DwxUSE_WEBREQUEST=ON \
-                    -DwxUSE_WEBREQUEST_CURL=OFF \
-                    -DwxUSE_WEBREQUEST_URLSESSION=ON \
+                    -DwxUSE_WEBREQUEST_CURL=ON \
+                    -DwxUSE_WEBREQUEST_URLSESSION=OFF \
                     -DwxUSE_WEBVIEW=OFF \
                     -DwxUSE_XRC=ON \
                     -DwxUSE_XTEST=ON \
@@ -152,22 +152,17 @@ platform darwin {
                     0003-Fix-mimetype.patch \
                     0004-Fix-toolkit.cmake.patch \
                     0005-Stop-breaking-webrequest.patch \
-                    0012-Avoid-broken-wxUSE_WEBREQUEST_URLSESSION.patch \
                     0006-Fix-evtloop_cf.patch \
                     0007-intl.cpp-fix.patch \
                     0008-Fix-dirctrlg.patch \
                     0009-utils_base.mm-minor-fix.patch \
                     0010-gvfs-avoid-compile-error-on-macOS.patch \
-                    0011-Fix-defs.h.patch
-
-        configure.args-replace \
-                    -DwxUSE_WEBREQUEST_CURL=OFF -DwxUSE_WEBREQUEST_CURL=ON \
-                    -DwxUSE_WEBREQUEST_URLSESSION=ON -DwxUSE_WEBREQUEST_URLSESSION=OFF
+                    0011-Fix-defs.h.patch \
+                    0012-Avoid-broken-wxUSE_WEBREQUEST_URLSESSION.patch
 
     if {${os.major} < 16} {
         # These patches are either incompatible or unsafe for later OS:
         patchfiles-append \
-                    0012-Avoid-broken-wxUSE_WEBREQUEST_URLSESSION.patch \
                     0013-Revert-7be80a858d339006113c404685f2a87c32e52acf.patch \
                     0014-Revert-6211d53c62ed93534029c64d468bef7d37868c52.patch \
                     0015-utilsunx-no-memset_s.patch \
@@ -181,10 +176,7 @@ platform darwin {
                     -DwxUSE_INTL=OFF
 
         configure.args-replace \
-                    -DwxBUILD_OPTIMISE=ON -DwxBUILD_OPTIMISE=OFF \
-                    -DwxUSE_STDPATHS=ON -DwxUSE_STDPATHS=OFF \
-                    -DwxUSE_WEBREQUEST_CURL=OFF -DwxUSE_WEBREQUEST_CURL=ON \
-                    -DwxUSE_WEBREQUEST_URLSESSION=ON -DwxUSE_WEBREQUEST_URLSESSION=OFF
+                    -DwxUSE_STDPATHS=ON -DwxUSE_STDPATHS=OFF
     }
 
     configure.ldflags-append \

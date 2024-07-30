@@ -64,7 +64,6 @@ depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo \
                     port:expat \
                     port:fontconfig \
                     path:lib/pkgconfig/glib-2.0.pc:glib2 \
-                    port:gnome-vfs \
                     path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
                     port:jbigkit \
                     port:libGLU \
@@ -129,10 +128,9 @@ configure.args-append \
                     -DwxUSE_SECRETSTORE=ON \
                     -DwxUSE_SOCKETS=ON \
                     -DwxUSE_SPELLCHECK=OFF \
-                    -DwxUSE_STD_STRING_CONV_IN_WXSTRING=ON \
                     -DwxUSE_STC=OFF \
                     -DwxUSE_STDPATHS=ON \
-                    -DwxUSE_THREADS=OFF \
+                    -DwxUSE_THREADS=ON \
                     -DwxUSE_UNICODE=ON \
                     -DwxUSE_UNSAFE_WXSTRING_CONV=ON \
                     -DwxUSE_WEBREQUEST=ON \
@@ -154,12 +152,17 @@ platform darwin {
                     0003-Fix-mimetype.patch \
                     0004-Fix-toolkit.cmake.patch \
                     0005-Stop-breaking-webrequest.patch \
+                    0012-Avoid-broken-wxUSE_WEBREQUEST_URLSESSION.patch \
                     0006-Fix-evtloop_cf.patch \
                     0007-intl.cpp-fix.patch \
                     0008-Fix-dirctrlg.patch \
                     0009-utils_base.mm-minor-fix.patch \
                     0010-gvfs-avoid-compile-error-on-macOS.patch \
                     0011-Fix-defs.h.patch
+
+        configure.args-replace \
+                    -DwxUSE_WEBREQUEST_CURL=OFF -DwxUSE_WEBREQUEST_CURL=ON \
+                    -DwxUSE_WEBREQUEST_URLSESSION=ON -DwxUSE_WEBREQUEST_URLSESSION=OFF
 
     if {${os.major} < 16} {
         # These patches are either incompatible or unsafe for later OS:

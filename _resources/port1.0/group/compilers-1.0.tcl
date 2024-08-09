@@ -90,6 +90,7 @@ if {${os.major} < 10 && ${os.platform} eq "darwin" } {
 
 set compilers.list {cc cxx cpp objc fc f77 f90}
 
+global os.arch os.platform
 # build database of gcc compiler attributes
 # Should match those in compilers/gcc_compilers.tcl
 if { ${os.arch} eq "arm" || ${os.platform} ne "darwin" } {
@@ -150,7 +151,7 @@ foreach ver ${gcc_versions} {
     set cdb(gcc$ver_nodot,f90)      ${prefix}/bin/gfortran-mp-$ver
     # The devel port, and starting with version 10, GCC will support using -stdlib=libc++,
     # so use it for improved compatibility with clang builds
-    if { ${build_arch} ni [list ppc ppc64] } {
+    if { ${build_arch} ni [list ppc ppc64 riscv64] } {
         if { $ver eq "devel" || [vercmp ${ver} >= 10]} {
             set cdb(gcc$ver_nodot,cxx_stdlib) libc++
         } else {
@@ -165,7 +166,7 @@ foreach ver ${gcc_versions} {
 # Should match those in compilers/clang_compilers.tcl
 # Also do not forget to add support of new llvm into cctools
 set clang_versions [list]
-if { ${os.arch} ne "arm" && ${os.platform} eq "darwin" } {
+if { (${os.arch} ni [list arm ppc ppc64]) && ${os.platform} eq "darwin" } {
     if {${os.major} < 16} {
         if {${os.major} < 9} {
             lappend clang_versions 3.3
@@ -185,7 +186,7 @@ if { ${os.arch} ne "arm" && ${os.platform} eq "darwin" } {
         lappend clang_versions 9.0 10
     }
 }
-if { ${os.major} >= 9 || ${os.platform} ne "darwin" } {
+if { ${os.platform} ne "darwin" || ${os.major} >= 11 } {
     lappend clang_versions 11
     if { ${os.major} >= 11 || ${os.platform} ne "darwin"} {
         lappend clang_versions 12 13 14 15 16 17 18

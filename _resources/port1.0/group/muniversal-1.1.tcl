@@ -83,7 +83,7 @@ default muniversal.arch_build_compiler  {${muniversal.arch_compiler}}
 ##########################################################################################
 foreach phase {configure build test destroot} {
     foreach command {pre_args args post_args env} {
-        foreach arch {arm64 x86_64 i386 ppc ppc64} {
+        foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
             options ${phase}.${command}.${arch}
             if {"${phase}.${command}" eq "configure.pre_args"} {
                 default ${phase}.${command}.${arch} "\[muniversal::get_triplets ${arch}\]"
@@ -95,12 +95,12 @@ foreach phase {configure build test destroot} {
 }
 unset phase command arch
 
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     options patchfiles.${arch}
 }
 unset arch
 
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     foreach flags {cppflags cflags cxxflags objcflags objcxxflags ldflags fflags f90flags fcflags} {
         options configure.${flags}.${arch}
         default configure.${flags}.${arch} {}
@@ -108,7 +108,7 @@ foreach arch {arm64 x86_64 i386 ppc ppc64} {
 }
 unset flags arch
 
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     foreach tool {cc objc cxx objcxx fc f90 f77 ld} {
         options configure.${tool}_archflags.${arch}
         default configure.${tool}_archflags.${arch} "\[muniversal::get_archflag ${tool} ${arch}\]"
@@ -119,7 +119,7 @@ unset tool arch
 ##########################################################################################
 # determine which architectures are different and which ones can be run via Rosetta
 ##########################################################################################
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     options muniversal.can_run.${arch}
     options muniversal.is_cross.${arch}
 }
@@ -130,12 +130,14 @@ default muniversal.can_run.x86_64   {[expr { (${os.arch} eq "i386" && ${os.cpu64
 default muniversal.can_run.i386     {[expr { ${os.arch} eq "i386" && ${os.major} < 19 }]}
 default muniversal.can_run.ppc      {[expr { ${os.arch} eq "powerpc" || (${os.arch} eq "i386" && ${os.major} < 11) }]}
 default muniversal.can_run.ppc64    {[expr { ${os.arch} eq "powerpc" && ${os.cpu64bit_capable} }]}
+default muniversal.can_run.riscv64  {[expr { ${os.arch} eq "riscv64"}]}
 
 default muniversal.is_cross.arm64   {[expr { ${os.arch} ne "arm" }]}
 default muniversal.is_cross.x86_64  {[expr { ${os.arch} ne "i386" || !${os.cpu64bit_capable} }]}
 default muniversal.is_cross.i386    {[expr { ${os.arch} ne "i386" || ${os.major} >= 19 }]}
 default muniversal.is_cross.ppc     {[expr { ${os.arch} ne "powerpc" }]}
 default muniversal.is_cross.ppc64   {[expr { ${os.arch} ne "powerpc" || !${os.cpu64bit_capable} }]}
+default muniversal.is_cross.riscv64 {[expr { ${os.arch} ne "riscv64" }]}
 
 ##########################################################################################
 # triplet information
@@ -161,7 +163,7 @@ default triplet.add_host    {cross}
 options triplet.add_build
 default triplet.add_build   {none}
 
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     options triplet.cpu.${arch}
 }
 unset arch
@@ -171,8 +173,9 @@ default triplet.cpu.x86_64 {x86_64}
 default triplet.cpu.i386   {i686}
 default triplet.cpu.ppc    {powerpc}
 default triplet.cpu.ppc64  {powerpc64}
+default triplet.cpu.riscv64    {riscv64}
 
-foreach arch {arm64 x86_64 i386 ppc ppc64} {
+foreach arch {arm64 x86_64 i386 ppc ppc64 riscv64} {
     options triplet.${arch}
     default triplet.${arch} "\${triplet.cpu.${arch}}-\${triplet.vendor}-\${triplet.os}"
 }
@@ -316,7 +319,7 @@ proc muniversal::get_archflag {tool arch} {
 
     if { [portconfigure::arch_flag_supported ${configure.compiler}] && ${tool} in {cc cxx objc objcxx ld} } {
         return "-arch ${arch}"
-    } elseif { ${arch} in {arm64 ppc64 x86_64} } {
+    } elseif { ${arch} in {arm64 ppc64 riscv64 x86_64} } {
         return "-m64"
     } elseif {${configure.compiler} ne "gcc-3.3"} {
         return "-m32"
